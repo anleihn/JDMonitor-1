@@ -179,11 +179,11 @@ function dealExportByUrl(url, id) {
 
     }
     // 店铺关注有礼
-    else if (url.indexOf("wxShopFollowActivity") != -1) {
+    else if (url.indexOf("wxShopFollowActivity") != -1 && url.indexOf("lzkj")!=-1) {
         if ($.recordFollowShop.indexOf(id) == -1) {
             $.followChange = true
             $.recordFollowShop += `&${id}`
-            return `export T_FOLLOW_SHOP_URL=\"${url}\"`
+            return `export jd_wxShopFollowActivity_activityId=\"${id}\"`
         }
     }
     // 七日签到
