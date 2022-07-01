@@ -126,7 +126,7 @@ function dealExportByUrl(url, id) {
         if ($.recordInteractive.indexOf(id) == -1) {
             $.fansChange = true
             $.recordInteractive += `&${id}`
-            return `export T_FANS_INTER_ACTIVITY_ID=\"${id}\"`
+            return `export jd_wxFansInterActionActivity_activityId=\"${id}\"`
         }
     } else {
         return null
