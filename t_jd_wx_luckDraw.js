@@ -143,7 +143,11 @@ async function jdmodule() {
     $.break = false
     for (let m = 0; $.canDrawTimes--; m++) {
         if (!$.break) {
-            await takePostRequest('start')
+            if ($.domain.indexOf('cjhy') != -1) {
+                await takePostRequest('cjstart')
+            } else {
+                await takePostRequest('start')
+            }
             await $.wait(parseInt(Math.random() * 1000 + 500, 10));
             if (Number($.canDrawTimes) <= 0 || m >= 5) {
                 break
@@ -237,6 +241,10 @@ async function takePostRequest(type) {
             break;
         case 'start':
             url = `https://${domain}/wxDrawActivity/start`;
+            body = `activityId=${$.activityId}&pin=${$.enPin}`
+            break;
+        case 'cjstart':
+            url = `https://${domain}/wxPointDrawActivity/start`;
             body = `activityId=${$.activityId}&pin=${$.enPin}`
             break;
         case 'followShop':
@@ -411,7 +419,7 @@ async function dealReturn(type, data) {
                         if (res.data.drawOk) {
                             console.log(`获得${res.data.name}`)
                             console.log(`还能抽` + res.data.canDrawTimes + `次`)
-                            $.message += res.data.name ;
+                            $.message += res.data.name;
                         } else {
                             console.log(`${res.errorMessage}`)
                             $.message += `${res.errorMessage}`
