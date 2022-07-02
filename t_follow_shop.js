@@ -7,6 +7,7 @@ const $ = new Env('关注店铺抽奖');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const cheerio = require('cheerio')
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 $.activityId = process.env.jd_wxShopFollowActivity_activityId ? process.env.jd_wxShopFollowActivity_activityId : "";
 $.Token = "";
@@ -37,16 +38,23 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 !(async () => {
-    
+
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    if($.activityId.indexOf("cj_") !=-1) {
-        $.activityUrl = `https://cjhy-isv.isvjcloud.com/wxShopFollowActivity/activity?activityId=${$.activityId.split("_")[1]}`
+    if ($.activityId.indexOf("isvj") != -1) {
+        $.activityUrl = $.activityId;
+        $.activityId = getQueryString($.activityUrl, 'activityId')
     } else {
         $.activityUrl = `https://lzkj-isv.isvjcloud.com/wxShopFollowActivity/activity?activityId=${$.activityId}`
     }
+    console.log($.activityId)
+    // if($.activityId.indexOf("cj_") !=-1) {
+    //     $.activityUrl = `https://cjhy-isv.isvjcloud.com/wxShopFollowActivity/activity?activityId=${$.activityId.split("_")[1]}`
+    // } else {
+    //     $.activityUrl = `https://lzkj-isv.isvjcloud.com/wxShopFollowActivity/activity?activityId=${$.activityId}`
+    // }
     console.log(`活动链接：${$.activityUrl}`)
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
@@ -112,7 +120,7 @@ async function jdmodule() {
         $.enPin = encodeURIComponent($.Pin)
         await takePostRequest("accessLogWithAD")
     }
-    await takePostRequest("getUserInfo")
+    // await takePostRequest("getUserInfo")
 
     // await takePostRequest("getActMemberInfo");
 
@@ -183,7 +191,7 @@ async function takePostRequest(type) {
         case 'accessLog':
             url = `https://${$.domain}/common/accessLog`;
             let pageurl1 = `${$.activityUrl}`
-            body = `venderId=${$.venderId}&code=${$.activityType}&pin=${$.enPin}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl1)}&subType=app&adSource=`
+            body = `venderId=${$.venderId}&code=17&pin=${$.enPin}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl1)}&subType=app&adSource=`
             break;
         case 'getUserInfo':
             url = `https://${$.domain}/wxActionCommon/getUserInfo`;
@@ -259,7 +267,7 @@ async function takePostRequest(type) {
         default:
             console.log(`错误${type}`);
     }
-    // console.log("body-----:" + body)
+    // console.log(type + " body-----:" + body)
     let myRequest = getPostRequest(url, body, method);
     // console.log(myRequest)
     return new Promise(async resolve => {
@@ -611,6 +619,7 @@ function getCK() {
                     //     $.activityEnd = true
                     //     console.log('活动已结束')
                     // }
+                    $.venderId = data.split("id=\"userId\" value=")[1].split("\"")[1]
                     setActivityCookie(resp)
                 }
             } catch (e) {
@@ -647,7 +656,7 @@ function getPostRequest(url, body, method = "POST") {
         // headers["Cookie"] = `IsvToken=${$.Token};` + `${lz_jdpin_token_cookie && lz_jdpin_token_cookie || ''}${$.Pin && "AUTH_C_USER=" + $.Pin + ";" || ""}${activityCookie}`
     }
     // console.log(headers)
-    // console.log(headers.Cookie)
+    // console.log(headers.Cookie + "\n")
     return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
 }
 
@@ -669,11 +678,12 @@ function setActivityCookie(resp) {
                 if (name.indexOf('LZ_TOKEN_VALUE=') > -1) LZ_TOKEN_VALUE = name.replace(/ /g, '') + ';'
                 if (name.indexOf('lz_jdpin_token=') > -1) lz_jdpin_token = '' + name.replace(/ /g, '') + ';'
                 if (name.indexOf('LZ_AES_PIN=') > -1) $.LZ_AES_PIN = '' + name.replace(/ /g, '') + ';'
+                if ($.domain.indexOf("cjhy") != -1) $.abbr= "APP_ABBR=CJHY;"
             }
         }
     }
     if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && !$.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE}`
-    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN}`
+    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN} ${$.abbr}`
     if (lz_jdpin_token) lz_jdpin_token_cookie = lz_jdpin_token
     // console.log(activityCookie)
 }
