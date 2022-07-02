@@ -7,7 +7,6 @@ const $ = new Env('关注店铺抽奖');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-const cheerio = require('cheerio')
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 $.activityId = process.env.jd_wxShopFollowActivity_activityId ? process.env.jd_wxShopFollowActivity_activityId : "";
 $.Token = "";
