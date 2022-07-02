@@ -111,7 +111,8 @@ async function jdmodule() {
             $.retry = true
             $.retryTime = 0
             $.today = moment(Date.now()).format('YYYY-MM-DD')
-            if ($.retry && $.retryTime <= 5) {
+            await takePostRequest("getBirthInfo")
+            while ($.retry && $.retryTime <= 5) {
                 await takePostRequest("saveBirthDay")
             }
             await takePostRequest("sendBirthGifts")
