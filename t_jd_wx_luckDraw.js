@@ -20,8 +20,11 @@ $.helpTimes = -1
 $.hasHelpedTimes = 0
 $.restartNo = 1
 $.friendUuidId = 0
+$.drawType = 0
 $.LZ_AES_PIN = ""
 $.stop = false
+$.canDrawTimes = 0
+$.drawConsume = -1
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 //IOS等用户直接用NobyDa的jd cookie
@@ -90,7 +93,7 @@ function showMsg() {
 
 async function jdmodule() {
 
-    $.message += `\n京东账号${$.index} ${$.UserName} `
+
     $.domain = $.activityUrl.match(/https?:\/\/([^/]+)/) && $.activityUrl.match(
         /https?:\/\/([^/]+)/)[1] || ''
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
@@ -122,13 +125,18 @@ async function jdmodule() {
     }
 
     // await takePostRequest("getUserInfo")
-    if ($.domain.indexOf('cjhy') != -1) {
-        await takePostRequest("cjactivityContent")
-    } else {
-        await takePostRequest("activityContent")
-    }
+    $.canDrawTimes = 0
+    $.drawConsume = -1
 
-    console.log(`抽奖次数 ${$.canDrawTimes} ${$.drawConsume > 0 && $.drawConsume + "积分抽奖一次" || ''}`)
+    await takePostRequest("cjactivityContent")
+    console.log(`积分抽奖次数 ${$.canDrawTimes} ${$.drawConsume > 0 && $.drawConsume + "积分抽奖一次" || ''}`)
+    if ($.canDrawTimes == 0) {
+        await takePostRequest("activityContent")
+        console.log(`普通抽奖次数 ${$.canDrawTimes} ${$.drawConsume > 0 && $.drawConsume + "积分抽奖一次" || ''}`)
+        if ($.canDrawTimes != 0) {
+            $.drawType = 1
+        }
+    }
     // if ($.canDrawTimes === 0) {
     //     $.stop = true
     //     return
@@ -140,13 +148,21 @@ async function jdmodule() {
         await takePostRequest("followShop")
     }
 
+    $.message += `\n京东账号${$.index} ${$.UserName} `
     $.break = false
     for (let m = 0; $.canDrawTimes--; m++) {
         if (!$.break) {
             if ($.domain.indexOf('cjhy') != -1) {
+                console.log(`积分抽奖`)
                 await takePostRequest('cjstart')
             } else {
-                await takePostRequest('start')
+                if ($.drawType == 0) {
+                    console.log(`积分抽奖`)
+                    await takePostRequest('cjstart')
+                } else {
+                    console.log(`普通抽奖`)
+                    await takePostRequest('start')
+                }
             }
             await $.wait(parseInt(Math.random() * 1000 + 500, 10));
             if (Number($.canDrawTimes) <= 0 || m >= 5) {
@@ -203,12 +219,12 @@ async function takePostRequest(type) {
         case 'accessLog':
             url = `https://${$.domain}/common/accessLog`;
             let pageurl = `${$.activityUrl}`
-            body = `venderId=${$.venderId}&code=6&pin=${$.enPin}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl)}&subType=app&adSource=`
+            body = `venderId=${$.venderId}&code=${$.activityType}&pin=${$.enPin}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl)}&subType=app&adSource=`
             break;
         case 'accessLogWithAD':
             url = `https://${$.domain}/common/accessLogWithAD`;
             let pageurl1 = `${$.activityUrl}`
-            body = `venderId=${$.venderId}&code=3&pin=${$.enPin}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl1)}&subType=app&adSource=`
+            body = `venderId=${$.venderId}&code=${$.activityType}&pin=${$.enPin}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl1)}&subType=app&adSource=`
             break;
         case 'getUserInfo':
             url = `https://${$.domain}/wxActionCommon/getUserInfo`;
@@ -394,7 +410,6 @@ async function dealReturn(type, data) {
             case 'cjactivityContent':
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
-                        console.log(JSON.stringify(res.data))
                         // console.log(JSON.stringify(res.data))
                         $.hasJoinMan = res.data.hasJoinMan || 0
                         $.member = res.data.member || false
@@ -412,6 +427,7 @@ async function dealReturn(type, data) {
                     console.log(`${type} ${data}`)
                 }
                 break;
+            case 'cjstart':
             case 'start':
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
@@ -419,17 +435,16 @@ async function dealReturn(type, data) {
                         if (res.data.drawOk) {
                             console.log(`获得${res.data.name}`)
                             console.log(`还能抽` + res.data.canDrawTimes + `次`)
+                            $.canDrawTimes = res.data.canDrawTimes
                             $.message += res.data.name;
-                        } else {
-                            console.log(`${res.errorMessage}`)
-                            $.message += `${res.errorMessage}`
-                            $.break = true
                         }
-                    } else {
-                        console.log(`${type} ${data}`)
+                    } else if (res.errorMessage) {
+                        console.log(`${res.errorMessage}`)
+                        $.message += `${res.errorMessage}`
+                        $.break = true
                     }
                 } else {
-                    console.log(`${type} ${data}`)
+                    console.log(`抽了个寂寞~`)
                 }
                 break;
             case 'getActMemberInfo':
