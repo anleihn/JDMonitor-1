@@ -440,6 +440,7 @@ async function dealReturn(type, data) {
             case 'addDrawRecord':
                 if (typeof res == 'object') {
                     if (res.ok && res.ok === true) {
+                        console.log(JSON.stringify(res.data))
                         console.log(`拆包成功`)
                     } else {
                         console.log(res.errorMessage)
