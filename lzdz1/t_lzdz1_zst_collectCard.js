@@ -29,7 +29,7 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 
-allMessage = ""
+$.allMessage = ""
 message = ""
 $.hotFlag = false
 $.outFlag = false
@@ -79,8 +79,8 @@ let cookies = []
         $.msg($.name, ``, `${msg}`);
         if ($.isNode()) await notify.sendNotify(`${$.name}`, `${msg}`);
     }
-    if (allMessage) {
-        $.msg($.name, ``, `${allMessage}`);
+    if ($.allMessage) {
+        await notify.sendNotify($.activityName, `${$.allMessage}跳转链接\nhttps://lzdz1-isv.isvjcloud.com/zst/collectCard/activity?activityId=${$.activityId}`);
         // if ($.isNode()) await notify.sendNotify(`${$.name}`, `${allMessage}`);
     }
     console.log($.toStr(cookies))
@@ -141,7 +141,6 @@ async function run() {
 
         $.shareUuids.push($.actorUuid)
         console.log(`助力池---> ${JSON.stringify($.shareUuids)}`)
-
 
         if ($.index == 1) {
             $.shareUuid = $.actorUuid
@@ -215,6 +214,7 @@ async function run() {
 
         await takePostRequest('activityContent');
         console.log(`任务已全部完成，当前分值为${$.score}`)
+        $.allMessage += `京东账号【${$.nickName || $.UserName}】分值为${$.score}\n`
         if ($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
         if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 60000, 10))
 
@@ -435,8 +435,6 @@ async function dealReturn(type, data) {
                         $.toShopStatus = data.toShopStatus
                         // 当前分值
                         $.score = data.score
-                        $.assistStatus = data.assistStatus
-                        $.assistCounts = data.assistCounts
                         $.hasEnd = data.hasEnd
                         $.actorUuid = data.actorUuid
                         // $.nick = data.nick
