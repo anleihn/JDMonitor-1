@@ -99,7 +99,7 @@ async function run() {
         $.Pin = ''
         let flag = false
         await takePostRequest('isvObfuscator');
-        console.log(`Token---> ${$.Token}`)
+        // console.log(`Token---> ${$.Token}`)
         if ($.Token == '') {
             console.log('获取[token]失败！')
             return
@@ -108,7 +108,7 @@ async function run() {
         if (activityCookie == '') {
             console.log(`获取cookie失败`); return;
         }
-        console.log(`activityCookie---> ${activityCookie}`)
+        // console.log(`activityCookie---> ${activityCookie}`)
         if ($.activityEnd === true) {
             console.log('活动结束')
             return
@@ -143,7 +143,8 @@ async function run() {
         console.log(`助力池---> ${JSON.stringify($.shareUuids)}`)
 
         if ($.index == 1) {
-            $.shareUuid = $.shareIndex
+            $.shareUuid = $.actorUuid
+            console.log(`助理码--> ${$.shareUuid}`)
         } else {
             console.log(`去助力第${$.shareIndex + 1}个账号`)
             await takePostRequest("assist")
