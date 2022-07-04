@@ -142,9 +142,10 @@ async function run() {
         $.shareUuids.push($.actorUuid)
         console.log(`助力池---> ${JSON.stringify($.shareUuids)}`)
 
+
         if ($.index == 1) {
             $.shareUuid = $.actorUuid
-            console.log(`助理码--> ${$.shareUuid}`)
+            console.log(`助力码--> ${$.shareUuid}`)
         } else {
             console.log(`去助力第${$.shareIndex + 1}个账号`)
             await takePostRequest("assist")
@@ -434,6 +435,8 @@ async function dealReturn(type, data) {
                         $.toShopStatus = data.toShopStatus
                         // 当前分值
                         $.score = data.score
+                        $.assistStatus = data.assistStatus
+                        $.assistCounts = data.assistCounts
                         $.hasEnd = data.hasEnd
                         $.actorUuid = data.actorUuid
                         // $.nick = data.nick
