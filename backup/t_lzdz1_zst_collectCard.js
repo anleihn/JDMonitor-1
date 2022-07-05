@@ -64,12 +64,12 @@ let cookies = []
             console.log(`\n\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             await getUA()
             await run();
-            if ($.helpTimes == 3) {
-                $.helpTimes == 0
-                $.shareIndex++
-                $.shareUuid = $.shareUuids[$.shareIndex]
-                console.log(`上一个账号助力完成，接下来都会助力第${$.shareIndex + 1}个账号`)
-            }
+            // if ($.helpTimes == 3) {
+            //     $.helpTimes == 0
+            //     $.shareIndex++
+            //     $.shareUuid = $.shareUuids[$.shareIndex]
+            //     console.log(`上一个账号助力完成，接下来都会助力第${$.shareIndex + 1}个账号`)
+            // }
             if (i == 0 && !$.actorUuid) break
             if ($.outFlag || $.activityEnd) break
         }
@@ -139,16 +139,16 @@ async function run() {
             return
         }
 
-        $.shareUuids.push($.actorUuid)
-        console.log(`助力池---> ${JSON.stringify($.shareUuids)}`)
+        // $.shareUuids.push($.actorUuid)
+        // console.log(`助力池---> ${JSON.stringify($.shareUuids)}`)
 
-        if ($.index == 1) {
-            $.shareUuid = $.actorUuid
-            console.log(`助力码--> ${$.shareUuid}`)
-        } else {
-            console.log(`去助力第${$.shareIndex + 1}个账号`)
-            await takePostRequest("assist")
-        }
+        // if ($.index == 1) {
+        //     $.shareUuid = $.actorUuid
+        //     console.log(`助力码--> ${$.shareUuid}`)
+        // } else {
+        //     console.log(`去助力第${$.shareIndex + 1}个账号`)
+        //     await takePostRequest("assist")
+        // }
 
 
         if ($.shopFollowStatus == 0) {
