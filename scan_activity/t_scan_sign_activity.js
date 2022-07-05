@@ -1,7 +1,8 @@
 /*
 [task_local]
 # 签到活動扫描
-7 7 7 7 7  t_scan_sign_activity.js, tag=签到活動扫描, enabled=true
+cron: 5 8-23/2 * * *  
+t_scan_sign_activity.js, tag=签到活動扫描, enabled=true
  */
 const $ = new Env('签到活动扫描');
 const notify = $.isNode() ? require('./sendNotify') : '';

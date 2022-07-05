@@ -1,7 +1,8 @@
 /*
 [task_local]
 # 福袋活動扫描
-7 7 7 7 7  t_scan_activity.js, tag=福袋活動扫描, enabled=true
+cron: 5 7-23/2 * * *  
+t_scan_activity.js, tag=福袋活動扫描, enabled=true
  */
 const $ = new Env('福袋活动扫描');
 const notify = $.isNode() ? require('./sendNotify') : '';

@@ -1,7 +1,8 @@
 /*
 [task_local]
 # 购物车锦鲤活动扫描
-7 7 7 7 7  t_scan_koi_activity.js, tag=购物车锦鲤活动扫描, enabled=true
+cron: 55 8-23/2 * * *	  
+t_scan_koi_activity.js, tag=购物车锦鲤活动扫描, enabled=true
  */
 const $ = new Env('购物车锦鲤活动扫描');
 const notify = $.isNode() ? require('./sendNotify') : '';

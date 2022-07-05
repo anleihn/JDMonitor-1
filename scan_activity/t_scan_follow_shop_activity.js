@@ -1,7 +1,8 @@
 /*
 [task_local]
 # 关注店铺活动扫描
-7 7 7 7 7  t_scan_activity.js, tag=关注店铺活动扫描, enabled=true
+cron: 55 7-23/2 * * *  
+t_scan_activity.js, tag=关注店铺活动扫描, enabled=true
  */
 const $ = new Env('关注店铺活动扫描');
 const notify = $.isNode() ? require('./sendNotify') : '';

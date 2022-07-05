@@ -1,7 +1,8 @@
 /*
 [task_local]
 # 粉丝互动活动扫描
-7 7 7 7 7  t_scan_fans_activity.js, tag=粉丝互动活动扫描, enabled=true
+cron: 25 8-23/2 * * *  
+t_scan_fans_activity.js, tag=粉丝互动活动扫描, enabled=true
  */
 const $ = new Env('粉丝互动活动扫描');
 const notify = $.isNode() ? require('./sendNotify') : '';
