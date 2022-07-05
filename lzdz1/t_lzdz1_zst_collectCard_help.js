@@ -139,7 +139,7 @@ async function run() {
             return
         }
 
-        if ($.helpTimes <= 3) {
+        if ($.helpTimes < 3) {
             console.log(`去助力${$.shareUuid}`)
             await takePostRequest("assist")
         }
@@ -511,8 +511,6 @@ async function dealReturn(type, data) {
                         } else {
                             console.log(`助力失败，没有助力次数了`)
                         }
-                    } else if (res.errorMessage) {
-                        console.log(`${type} ${res.errorMessage || ''}`)
                     } else {
                         console.log(`${type} ${data}`)
                     }
