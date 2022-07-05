@@ -82,7 +82,7 @@ async function jdmodule() {
     $.domain = $.activityUrl.match(/https?:\/\/([^/]+)/) && $.activityUrl.match(
         /https?:\/\/([^/]+)/)[1] || ''
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
-
+    $.flag = 0
     await getCK();
     console.log("lzToken=" + activityCookie)
     await takePostRequest("isvObfuscator");
@@ -107,16 +107,20 @@ async function jdmodule() {
         $.stop = true
         return
     }
-    if ($.canExgByPeopDay == 0) {
+    if ($.canExgByPeopDay != null && $.canExgByPeopDay == 0) {
         console.log(`今日已兑换过！！`)
         $.message += `京东账号${$.index} ${$.UserName} 今日已兑换过！\n`
         return
     }
-    if ($.canExgByActivity == 0) {
+    if ($.canExgByActivity != null && $.canExgByActivity == 0) {
         console.log(`本次活动京豆已全部兑换`)
         $.message += `京东账号${$.index} ${$.UserName} 本次活动京豆已全部兑换！\n`
         return
     }
+    if ($.canExgTime != null && $.canExgTime == 0) {
+        $.message += `京东账号${$.index} ${$.UserName} 本次活动没有兑换次数！\n`
+    }
+
     $.pointRate = $.point1
     if ($.userGrade == 2) {
         $.pointRate = $.point2
@@ -127,39 +131,86 @@ async function jdmodule() {
     } else if ($.userGrade == 5) {
         $.pointRate = $.point5
     }
-    if ($.userGrade > 0) {
-        $.maxExgBeans = Math.floor($.buyerPoints / $.pointRate)
-        $.canExgBeans = Math.min($.canExgByPeopDay, $.maxExgBeans)
-        $.retryExgBeans = $.canExgBeans
-        console.log(`可兑换的京豆为${$.canExgBeans}`)
+    if ($.canExgByPeopDay != null) {
+        if ($.userGrade > 0) {
+            $.maxExgBeans = Math.floor($.buyerPoints / $.pointRate)
+            $.canExgBeans = Math.min($.canExgByPeopDay, $.maxExgBeans)
+            console.log(`可兑换的京豆为${$.canExgBeans}`)
+            if ($.canExgBeans <= 0) {
+                console.log(`积分不足`)
+                return
+            }
+            if ($.userGrade > 0 && $.buyerPoints > 0) {
+                await takePostRequest("exgBeans")
+                if ($.exchangeError.indexOf(`火爆`) != -1) {
+                    console.log(`活动火爆，重新兑换1次`)
+                    await takePostRequest("exgBeans")
+                }
+                if ($.exchangeError.indexOf(`火爆`) != -1) {
+                    console.log(`活动火爆，重新兑换2次`)
+                    await takePostRequest("exgBeans")
+                }
+                if ($.exchangeError.indexOf(`火爆`) != -1) {
+                    console.log(`活动火爆，重新兑换3次`)
+                    await takePostRequest("exgBeans")
+                }
+                if ($.exchangeError.indexOf(`火爆`) != -1) {
+                    console.log(`活动火爆，重新兑换4次`)
+                    await takePostRequest("exgBeans")
+                }
+                if ($.exchangeError.indexOf(`火爆`) != -1) {
+                    console.log(`活动火爆，重新兑换5次`)
+                    await takePostRequest("exgBeans")
+                }
+                if ($.exchangeError.indexOf(`火爆`) != -1) {
+                    console.log(`活动火爆，重新兑换失败！`)
+                }
+            }
+        }
+
+    }
+    if ($.beanLevelCount != null) {
+        if ($.userGrade > 0) {
+            $.maxExgBeans = Math.floor($.buyerPoints / $.pointRate)
+            $.canExgBeans = Math.min($.maxExgBeans, $.beanLevelCount)
+            if ($.canExgBeans < $.beanLevelCount) {
+                console.log(`积分不足`)
+                return
+            }
+            $.exgTimes = Math.floor($.canExgBeans / $.beanLevelCount)
+            $.exgTimes = Math.min($.exgTimes, $.canExgTime)
+            console.log(`可兑换${$.exgTimes}次`)
+            for (let i = 0; i < $.exgTimes; i++) {
+                if ($.userGrade > 0 && $.buyerPoints > 0) {
+                    await takePostRequest("exgBeansWithLevel")
+                    if ($.exchangeError.indexOf(`火爆`) != -1) {
+                        console.log(`活动火爆，重新兑换1次`)
+                        await takePostRequest("exgBeansWithLevel")
+                    }
+                    if ($.exchangeError.indexOf(`火爆`) != -1) {
+                        console.log(`活动火爆，重新兑换2次`)
+                        await takePostRequest("exgBeansWithLevel")
+                    }
+                    if ($.exchangeError.indexOf(`火爆`) != -1) {
+                        console.log(`活动火爆，重新兑换3次`)
+                        await takePostRequest("exgBeansWithLevel")
+                    }
+                    if ($.exchangeError.indexOf(`火爆`) != -1) {
+                        console.log(`活动火爆，重新兑换4次`)
+                        await takePostRequest("exgBeansWithLevel")
+                    }
+                    if ($.exchangeError.indexOf(`火爆`) != -1) {
+                        console.log(`活动火爆，重新兑换5次`)
+                        await takePostRequest("exgBeansWithLevel")
+                    }
+                    if ($.exchangeError.indexOf(`火爆`) != -1) {
+                        console.log(`活动火爆，重新兑换失败！`)
+                    }
+                }
+            }
+        }
     }
 
-if ($.userGrade > 0 && $.buyerPoints > 0) {
-    await takePostRequest("exgBeans")
-    if ($.exchangeError.indexOf(`火爆`) != -1) {
-        console.log(`活动火爆，重新兑换1次`)
-        await takePostRequest("exgBeans")
-    }
-    if ($.exchangeError.indexOf(`火爆`) != -1) {
-        console.log(`活动火爆，重新兑换2次`)
-        await takePostRequest("exgBeans")
-    }
-    if ($.exchangeError.indexOf(`火爆`) != -1) {
-        console.log(`活动火爆，重新兑换3次`)
-        await takePostRequest("exgBeans")
-    }
-    if ($.exchangeError.indexOf(`火爆`) != -1) {
-        console.log(`活动火爆，重新兑换4次`)
-        await takePostRequest("exgBeans")
-    }
-    if ($.exchangeError.indexOf(`火爆`) != -1) {
-        console.log(`活动火爆，重新兑换5次`)
-        await takePostRequest("exgBeans")
-    }
-    if ($.exchangeError.indexOf(`火爆`) != -1) {
-        console.log(`活动火爆，重新兑换失败！`)
-    }
-}
 }
 
 //运行
@@ -213,9 +264,17 @@ async function takePostRequest(type) {
             url = `https://${$.domain}/mc/beans/selectBeansForC`;
             body = `giftId=${$.activityId}&venderId=${$.venderId}&buyerPin=${encodeURIComponent(encodeURIComponent($.Pin))}&beansLevel=`
             break;
+        case 'activityContentWithLevel':
+            url = `https://${$.domain}/mc/beans/selectBeansForC`;
+            body = `giftId=${$.activityId}&venderId=${$.venderId}&buyerPin=${encodeURIComponent(encodeURIComponent($.Pin))}&beansLevel=1`
+            break;
         case 'exgBeans':
             url = `https://${$.domain}/mc/wxPointShop/exgBeans`;
             body = `giftId=${$.activityId}&venderId=${$.venderId}&buyerNick=${encodeURIComponent($.nickname)}&buyerPin=${encodeURIComponent(encodeURIComponent($.Pin))}&beansLevel=&exgBeanNum=${$.canExgBeans}`
+            break;
+        case 'exgBeansWithLevel':
+            url = `https://${$.domain}/mc/wxPointShop/exgBeans`;
+            body = `giftId=${$.activityId}&venderId=${$.venderId}&buyerNick=${encodeURIComponent($.nickname)}&buyerPin=${encodeURIComponent(encodeURIComponent($.Pin))}&beansLevel=1&exgBeanNum=${$.canExgBeans}`
             break;
         default:
             console.log(`错误${type}`);
@@ -344,21 +403,74 @@ async function dealReturn(type, data) {
                         $.exist = $.total - $.usedNum
                         console.log(`本次活动剩余可兑换豆子数量为 ${$.exist}`)
                         $.canExgByActivity = data.canExgByActivity
-                        console.log(`该账号剩余可兑换豆子总量为 ${$.canExgByActivity}`)
+                        if ($.canExgByActivity != null) {
+                            console.log(`该账号剩余可兑换豆子总量为 ${$.canExgByActivity}`)
+                        }
                         $.canExgByPeopDay = data.canExgByPeopDay
-                        console.log(`该账号本日剩余可兑换豆子数量为 ${$.canExgByPeopDay}`)
+                        if ($.canExgByPeopDay != null) {
+                            console.log(`该账号本日剩余可兑换豆子数量为 ${$.canExgByPeopDay}`)
+                        }
+                        $.beanLevelCount = data.beansLevelCount
+                        if ($.beanLevelCount != null) {
+                            console.log(`该账号每次可兑换豆子数量为 ${$.beanLevelCount}`)
+                            $.canExgTime = data.canExgTime
+                            console.log(`该账号每次可兑换${$.canExgTime}次豆子`)
+                        }
+
                         $.point1 = data.point1 == null ? 2 : data.point1
                         $.point2 = data.point2 == null ? 2 : data.point1
                         $.point3 = data.point3 == null ? 2 : data.point1
                         $.point4 = data.point4 == null ? 2 : data.point1
                         $.point5 = data.point5 == null ? 2 : data.point1
-                    } else if (res.errorMessage) {
-                        console.log(`${type} ${res.errorMessage || ''}`)
                     } else {
-                        console.log(`${type} ${data}`)
+                        if (res.errorMessage) {
+                            console.log(`${type} ${res.errorMessage || ''}`)
+                        } else {
+                            console.log(`${type} ${data}`)
+                        }
+                        await takePostRequest("activityContentWithLevel")
                     }
-                } else {
-                    console.log(`${type} ${data}`)
+                }
+                break;
+            case 'activityContentWithLevel':
+                if (typeof res == 'object') {
+                    if (res.result && res.result === true) {
+                        console.log(JSON.stringify(res.data))
+                        let data = res.data
+                        $.activityName = $.giftName
+                        $.total = data.num
+                        console.log(`本次活动总共发放京豆数量为 ${$.total}`)
+                        $.usedNum = data.usedNum
+                        $.exist = $.total - $.usedNum
+                        console.log(`本次活动剩余可兑换豆子数量为 ${$.exist}`)
+                        $.canExgByActivity = data.canExgByActivity
+                        if ($.canExgByActivity != null) {
+                            console.log(`该账号剩余可兑换豆子总量为 ${$.canExgByActivity}`)
+                        }
+                        $.canExgByPeopDay = data.canExgByPeopDay
+                        if ($.canExgByPeopDay != null) {
+                            console.log(`该账号本日剩余可兑换豆子数量为 ${$.canExgByPeopDay}`)
+                        }
+                        $.beanLevelCount = data.beansLevelCount
+                        if ($.beanLevelCount != null) {
+                            console.log(`该账号每次可兑换豆子数量为 ${$.beanLevelCount}`)
+                            $.canExgTime = data.canExgTime
+                            console.log(`该账号每次可兑换${$.canExgTime}次豆子`)
+                        }
+
+                        $.point1 = data.point1 == null ? 2 : data.point1
+                        $.point2 = data.point2 == null ? 2 : data.point1
+                        $.point3 = data.point3 == null ? 2 : data.point1
+                        $.point4 = data.point4 == null ? 2 : data.point1
+                        $.point5 = data.point5 == null ? 2 : data.point1
+                    } else {
+                        if (res.errorMessage) {
+                            console.log(`${type} ${res.errorMessage || ''}`)
+                        } else {
+                            console.log(`${type} ${data}`)
+                        }
+                        await takePostRequest("activityContentWithLevel")
+                    }
                 }
                 break;
             case 'exgBeans':
@@ -369,8 +481,25 @@ async function dealReturn(type, data) {
                         $.exchangeError = ''
                     } else {
                         console.log(`兑换失败！`)
+                        $.flag = 1
                         $.exchangeError = res.errorMessage
                         console.log(`${type} ${data}`)
+                    }
+                } else {
+                    console.log(`${type} ${data}`)
+                }
+                break;
+            case 'exgBeansWithLevel':
+                if (typeof res == 'object') {
+                    if (res.result && res.result === true) {
+                        console.log(`兑换成功！`)
+                        $.message += `京东账号${$.index} ${$.UserName} 成功兑换${$.canExgBeans}\n`
+                        $.exchangeError = ''
+                    } else {
+                        console.log(`兑换失败！`)
+                        $.exchangeError = res.errorMessage
+                        console.log(`${type} ${data}`)
+                        await takePostRequest("exgBeansWithLevel")
                     }
                 } else {
                     console.log(`${type} ${data}`)
@@ -482,7 +611,7 @@ function setActivityCookie(resp) {
         }
     }
     if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && !$.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE}`
-    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN}`   
+    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN}`
     if (lz_jdpin_token) lz_jdpin_token_cookie = lz_jdpin_token
     // console.log(activityCookie)
 }
