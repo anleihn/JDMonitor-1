@@ -401,7 +401,7 @@ async function dealReturn(type, data) {
                     } else {
                         console.log(`签到失败 ${res.msg}`)
                         $.message += `京东账号${$.UserName} 签到失败：${res.msg}，总签到天数 ${$.totalSignNum}\n`
-                        if (res.msg.indexOf(`已经结束`) != -1) {
+                        if (res.msg.indexOf(`已结束`) != -1) {
                             return
                         }
                         if ($.exportResult.indexOf($.activityId) == -1) {

@@ -119,7 +119,7 @@ async function jdmodule() {
 
     await takePostRequest("getSimpleActInfoVo");
 
-    await takePostRequest("getOpenStatus");
+    // await takePostRequest("getOpenStatus");
 
     await takePostRequest("getMyPing");
 
