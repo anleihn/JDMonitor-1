@@ -72,10 +72,10 @@ if ($.isNode()) {
                     continue
                 }
                 await jdmodule();
-                if ($.stop) {
-                    console.log(`签到不给京豆，不跑！`)
-                    break
-                }
+                // if ($.stop) {
+                //     console.log(`签到不给京豆，不跑！`)
+                //     break
+                // }
                 if ($.index == 1) {
                     result = $.activityIds == null || $.activityIds == "" ? $.rawId : $.activityIds + `&${$.rawId}`
                 }
@@ -129,10 +129,10 @@ async function jdmodule() {
 
     await takePostRequest("getShopInfo")
 
-    if (!$.signFlag) {
-        $.stop = true
-        return
-    }
+    // if (!$.signFlag) {
+    //     $.stop = true
+    //     return
+    // }
 
     if ($.isOver === 'y' || $.contiSignDays == 7) {
         console.log(`活动已结束或已签到7天`)
