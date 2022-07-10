@@ -52,9 +52,18 @@ let cookies = []
         return;
     }
     console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/mengniu/punchclock/activity/2728778?activityId=dz16484057944a4baeb1cf4ecccc30`)
+    let rawLen = cookiesArr.length
+    for (let i = 0; i < rawLen; i++) {
+        if (i == 0) {
+            cookie = cookiesArr[i];
+            cookiesArr.splice(i, 1)
+        } else {
+            let ckidx = Math.ceil(Math.random() * cookiesArr.length)
+        
+            cookie = cookiesArr[ckidx];
+            cookiesArr.splice(ckidx, 1)
+        }
 
-    for (let i = 0; i < cookiesArr.length; i++) {
-        cookie = cookiesArr[i];
         if (cookie) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
@@ -148,9 +157,12 @@ async function run() {
 
         await takePostRequest("signDetail")
 
+        if ($.totalSignNum == 10 || $.totalSignNum == 20 || $.totalSignNum == 30) {
+            $.today = formatDate()
+            await takePostRequest("startDraw")
+        }
+
         $.allMessage += `京东账号【${$.nickName || $.UserName}】签到天数为${$.totalSignNum}\n`
-        if ($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
-        if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 60000, 10))
 
     } catch (e) {
         console.log(e)
@@ -201,6 +213,10 @@ async function takePostRequest(type) {
         case 'signTask':
             url = `${domain}/dingzhi/mengniu/punchclock/signTask`;
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
+            break;
+        case 'startDraw':
+            url = `${domain}/dingzhi/mengniu/punchclock/startDraw`;
+            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&change=${$.today}`
             break;
         default:
             console.log(`错误${type}`);
@@ -350,7 +366,7 @@ async function dealReturn(type, data) {
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
                         $.totalSignNum++
-                    } 
+                    }
                     if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
                     } else {
@@ -385,124 +401,21 @@ async function dealReturn(type, data) {
                     }
                 }
                 break;
-            case 'followShop':
-            case 'viewVideo':
-            case 'visitSku':
-            case 'followPeony':
-            case 'toShop':
-            case 'addSku':
-            case 'sign':
-            case 'addCart':
-            case 'browseGoods':
-            case '抽奖':
-                if (typeof res == 'object') {
-                    if (res.result && res.result === true) {
-                        if (typeof res.data == 'object') {
-                            let msg = ''
-                            let title = '抽奖'
-                            if (res.data.taskbeanNum) {
-                                msg = `${res.data.taskbeanNum}京豆`
-                            }
-                            if (res.data.addPoint) {
-                                msg += ` ${res.data.addPoint}游戏机会`
-                            }
-                            if (type == 'followShop') {
-                                title = '关注'
-                                if (res.data.beanNumMember && res.data.assistSendStatus) {
-                                    msg += ` 额外获得:${res.data.beanNumMember}京豆`
-                                }
-                            } else if (type == 'addSku' || type == 'addCart') {
-                                title = '加购'
-                            } else if (type == 'viewVideo') {
-                                title = '热门文章'
-                            } else if (type == 'toShop') {
-                                title = '浏览店铺'
-                            } else if (type == 'followPeony') {
-                                title = '关注频道'
-                            } else if (type == 'visitSku' || type == 'browseGoods') {
-                                title = '浏览商品'
-                            } else if (type == 'sign') {
-                                title = '签到'
-                            } else {
-                                msg = res.data.wdsrvo.drawOk == true && (res.data.wdsrvo.name || '空气💨')
-                            }
-                            if (!msg) {
-                                msg = '空气💨'
-                            }
-                            console.log(`${title}获得:${msg || data}`)
-                        } else {
-                            console.log(`${type} ${data}`)
-                        }
-                    } else if (res.errorMessage) {
-                        $.runFalag = false;
-                        console.log(`${type} ${res.errorMessage || ''}`)
-                    } else {
-                        console.log(`${type} ${data}`)
-                    }
-                } else {
-                    console.log(`${type} ${data}`)
-                }
-                break;
-            case 'getDrawRecordHasCoupon':
-                if (typeof res == 'object') {
-                    if (res.result && res.result === true) {
-                        console.log(`我的奖品：`)
-                        let num = 0
-                        let value = 0
-                        for (let i in res.data) {
-                            let item = res.data[i]
-                            if (item.infoName == '20京豆' && item.drawStatus && item.value) {
-                                num++
-                                value = item.infoName.replace('京豆', '')
-                            } else {
-                                console.log(`${item.infoName}`)
-                            }
-                        }
-                        if (num > 0) console.log(`邀请好友(${num}):${num * parseInt(value, 10) || 30}京豆`)
-                    } else if (res.errorMessage) {
-                        console.log(`${type} ${res.errorMessage || ''}`)
-                    } else {
-                        console.log(`${type} ${data}`)
-                    }
-                } else {
-                    console.log(`${type} ${data}`)
-                }
-                break;
-            case 'getShareRecord':
-                if (typeof res == 'object') {
-                    if (res.result && res.result === true && res.data) {
-                        $.ShareCount = res.data.length
-                        $.log(`=========== 你邀请了:${$.ShareCount}个\n`)
-                    } else if (res.errorMessage) {
-                        console.log(`${type} ${res.errorMessage || ''}`)
-                    } else {
-                        console.log(`${type} ${data}`)
-                    }
-                } else {
-                    console.log(`${type} ${data}`)
-                }
-                break;
-            case '邀请':
-            case '助力':
+            case 'startDraw':
                 // console.log(data)
                 if (typeof res == 'object') {
-                    if (res.data.status == 200) {
-                        if (type == '助力') {
-                            console.log('助力成功')
+                    if (res.result == true) {
+                        data = res.data;
+                        if (data.drawInfo) {
+                            drawInfo = data.drawInfo
+                            $.drawName = drawInfo.name
                         } else {
-                            $.yaoqing = true
+                            console.log(`${type} ${res}`)
                         }
-                    } else if (res.data.status == 105) {
-                        console.log('已经助力过')
-                    } else if (res.data.status == 104) {
-                        console.log('已经助力其他人')
-                    } else if (res.data.status == 101) {
-                        // console.log('已经助力过')
-                    } else {
-                        console.log(data)
+
                     }
                 } else {
-                    console.log(`${type} ${data}`)
+                    console.log(`${type} ${res}`)
                 }
 
             case 'accessLogWithAD':
@@ -603,6 +516,15 @@ function getCk() {
     })
 }
 
+function formatDate() {
+    date = new Date();
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    m = m < 10 ? '0' + m : m;
+    var d = date.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    return y + m + d;
+}
 
 function setActivityCookie(resp) {
     let LZ_TOKEN_KEY = ''
