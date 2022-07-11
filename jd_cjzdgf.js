@@ -25,6 +25,9 @@ var timestamp = new Date().getTime();
 let cookiesArr = [], cookie = '', message = '', messageTitle = '';
 activityId = $.getdata('jd_cjhy_activityId') ? $.getdata('jd_cjhy_activityId') : jd_cjhy_activityId;
 activityUrl = $.getdata('jd_cjhy_activityUrl') ? $.getdata('jd_cjhy_activityUrl') : jd_cjhy_activityUrl;
+$.signUuids = []
+$.idx = 0
+$.retry = false
 let activityCookie = '';
 if ($.isNode()) {
     if (process.env.jd_cjhy_activityId) activityId = process.env.jd_cjhy_activityId;
@@ -53,7 +56,7 @@ if (isGetCookie) {
     }
     console.log('【当前活动入口】\nhttps://cjhydz-isv.isvjcloud.com/wxTeam/activity?activityId=' + activityId);
     if (!cookiesArr[0]) {
-        $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {'open-url': 'https://bean.m.jd.com/'});
+        $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', { 'open-url': 'https://bean.m.jd.com/' });
         return;
     }
     $.memberCount = 0;
@@ -68,19 +71,20 @@ if (isGetCookie) {
             $.nickName = '';
             console.log('\n******开始【京东账号' + $.index + '】' + ($.nickName || $.UserName) + '*********\n');
             if (!$.isLogin) {
-                $.msg($.name, '【提示】cookie已失效', '京东账号' + $.index + ' ' + ($.nickName || $.UserName) + '\n请重新登录获取\nhttps://bean.m.jd.com/', {'open-url': 'https://bean.m.jd.com/'});
+                $.msg($.name, '【提示】cookie已失效', '京东账号' + $.index + ' ' + ($.nickName || $.UserName) + '\n请重新登录获取\nhttps://bean.m.jd.com/', { 'open-url': 'https://bean.m.jd.com/' });
                 if ($.isNode()) {
                     await notify.sendNotify($.name + 'cookie已失效 - ' + $.UserName, '京东账号' + $.index + ' ' + $.UserName + '\n请重新登录获取cookie');
                 }
                 continue;
             }
             await jrzd();
-            if (!$.toactivity || $.maxTeam) {
-                break;
+            if ($.retry == true) {
+                console.log(`重跑该账号`)
+                await jrzd();
             }
         }
     }
-    messageTitle += '队伍人数 ' + $.memberCount + '\n';
+
     await showMsg();
 })().catch(_0x4eace8 => {
     $.log('', ' ' + $.name + ', 失败! 原因: ' + _0x4eace8 + '!', '');
@@ -91,6 +95,7 @@ if (isGetCookie) {
 async function jrzd() {
     getUA();
     $.sid = '';
+    $.retry = false
     $.userId = '';
     $.Token = '';
     $.Pin = '';
@@ -120,9 +125,18 @@ async function jrzd() {
         await $.wait(1000);
         await getTeam();
         await $.wait(1000);
-        if ($.maxTeam) {
-            console.log('队伍已满员');
-            return;
+        while ($.maxTeam) {
+            console.log('队伍已满员，开始助力下一个号');
+            messageTitle += `第${$.idx + 1}个账号队伍已满员\n`;
+            $.idx++
+            $.signUuid = $.signUuids[$.idx]
+            $.maxTeam = false
+            $.retry = true
+            // await getTeam();
+            // await $.wait(1000);
+        }
+        for (let i = 0; i < $.signUuids.length; i++) {
+            console.log(`账号${i + 1}队伍ID为${$.signUuids[i]}`)
         }
     } else {
         console.log('【京东账号' + $.index + '】 未能获取活动信息');
@@ -217,7 +231,7 @@ function getCk() {
     return new Promise(_0x4e6307 => {
         let _0x359f21 = {
             'url': activityUrl + '/wxTeam/activity?activityId=' + activityId,
-            'headers': {'Cookie': cookie, 'User-Agent': $['UA']}
+            'headers': { 'Cookie': cookie, 'User-Agent': $['UA'] }
         };
         $.get(_0x359f21, async (_0x3f1965, _0x21b7ff, _0x2bd744) => {
             try {
@@ -487,31 +501,40 @@ function getTeam() {
                                 } else {
                                     $.memberCount = 0;
                                 }
-                                if ($.index == 1) {
+                                if ($.index <= 5) {
                                     $.saveTeam = true;
                                     $.teamNum = _0x11684e.data.active.actRule.match(/最多可以组建(\d+)个战队/);
-                                    if ($.teamNum) {
+                                    if ($.teamNum && $.index == 1) {
                                         $.teamNum = $.teamNum[1];
                                         messageTitle += '最多可以组建' + $.teamNum + '个战队';
                                     }
                                 }
-                                if ($.signUuid) {
-                                    $.log('加入队伍 id: ' + $.signUuid);
+                                if ($.signUuid && $.index != 1) {
+                                    $.log('508->加入队伍 id: ' + $.signUuid);
                                     await $.wait(1000);
                                     await joinTeam();
                                 }
                                 if ($.saveTeam) {
+                                    console.log("saveTeam-->" + JSON.stringify(_0x11684e.data.canCreate))
                                     if (_0x11684e.data.canCreate) {
                                         await $.wait(1000);
                                         await saveTeam();
                                     } else {
-                                        $.signUuid = _0x11684e.data.signUuid;
-                                        messageTitle += '队伍id: ' + $.signUuid + '\n';
-                                        message += '【京东账号' + $.index + '】 创建队伍id: ' + $.signUuid;
-                                        $.log('队伍id: ' + $.signUuid);
-                                        $.wait(1000);
-                                        $.log('加入队伍 id: ' + $.signUuid);
-                                        await joinTeam();
+                                        let teamId = _0x11684e.data.signUuid;
+                                        if ($.index == 1) {
+                                            $.signUuid = teamId
+                                        }
+                                        if ($.signUuids.indexOf(teamId) == -1) {
+                                            $.signUuids.push(teamId)
+                                            messageTitle += '队伍id: ' + teamId + '\n';
+                                            message += '【京东账号' + $.index + '】 创建队伍id: ' + teamId;
+                                            $.log('队伍id: ' + teamId);
+                                            $.wait(1000);
+                                        }
+                                        if ($.index > 5) {
+                                            $.log('523->加入队伍 id: ' + $.signUuid);
+                                            await joinTeam();
+                                        }
                                     }
                                 }
                             }
@@ -545,8 +568,11 @@ function saveTeam(_0xd519d7 = 0) {
                         if (_0x1070a3.result && _0x1070a3.data) {
                             message += '【京东账号' + $.index + '】 创建队伍id: ' + _0x1070a3.data.signUuid + ' ';
                             console.log('创建队伍成功 id: ' + _0x1070a3.data.signUuid);
-                            $.signUuid = _0x1070a3.data.signUuid;
-                            messageTitle += '队伍id: ' + $.signUuid + ' ';
+                            let teamId = _0x1070a3.data.signUuid;
+                            if ($.index == 1) {
+                                $.signUuid = teamId;
+                            }
+                            $.signUuids.push(teamId)
                         } else {
                             console.log('异常6：' + JSON.stringify(_0x1070a3));
                             if (_0x1070a3.errorMessage.indexOf('不是店铺会员') > -1 && _0xd519d7 != 3) {
@@ -815,7 +841,7 @@ function Env(t, e) {
         }
 
         send(t, e = "GET") {
-            t = "string" == typeof t ? {url: t} : t;
+            t = "string" == typeof t ? { url: t } : t;
             let s = this.get;
             return "POST" === e && (s = this.post), new Promise((e, i) => {
                 s.call(this, t, (t, s, r) => {
@@ -890,7 +916,7 @@ function Env(t, e) {
 
         getScript(t) {
             return new Promise(e => {
-                this.get({url: t}, (t, s, i) => e(i))
+                this.get({ url: t }, (t, s, i) => e(i))
             })
         }
 
@@ -902,8 +928,8 @@ function Env(t, e) {
                 r = r ? 1 * r : 20, r = e && e.timeout ? e.timeout : r;
                 const [o, h] = i.split("@"), n = {
                     url: `http://${h}/v1/scripting/evaluate`,
-                    body: {script_text: t, mock_type: "cron", timeout: r},
-                    headers: {"X-Key": o, Accept: "*/*"}
+                    body: { script_text: t, mock_type: "cron", timeout: r },
+                    headers: { "X-Key": o, Accept: "*/*" }
                 };
                 this.post(n, (t, e, i) => s(i))
             }).catch(t => this.logErr(t))
@@ -991,11 +1017,11 @@ function Env(t, e) {
 
         get(t, e = (() => {
         })) {
-            t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]), this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {"X-Surge-Skip-Scripting": !1})), $httpClient.get(t, (t, s, i) => {
+            t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]), this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.get(t, (t, s, i) => {
                 !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i)
-            })) : this.isQuanX() ? (this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, {hints: !1})), $task.fetch(t).then(t => {
-                const {statusCode: s, statusCode: i, headers: r, body: o} = t;
-                e(null, {status: s, statusCode: i, headers: r, body: o}, o)
+            })) : this.isQuanX() ? (this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => {
+                const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                e(null, { status: s, statusCode: i, headers: r, body: o }, o)
             }, t => e(t))) : this.isNode() && (this.initGotEnv(t), this.got(t).on("redirect", (t, e) => {
                 try {
                     if (t.headers["set-cookie"]) {
@@ -1006,29 +1032,29 @@ function Env(t, e) {
                     this.logErr(t)
                 }
             }).then(t => {
-                const {statusCode: s, statusCode: i, headers: r, body: o} = t;
-                e(null, {status: s, statusCode: i, headers: r, body: o}, o)
+                const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                e(null, { status: s, statusCode: i, headers: r, body: o }, o)
             }, t => {
-                const {message: s, response: i} = t;
+                const { message: s, response: i } = t;
                 e(s, i, i && i.body)
             }))
         }
 
         post(t, e = (() => {
         })) {
-            if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {"X-Surge-Skip-Scripting": !1})), $httpClient.post(t, (t, s, i) => {
+            if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.post(t, (t, s, i) => {
                 !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i)
-            }); else if (this.isQuanX()) t.method = "POST", this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, {hints: !1})), $task.fetch(t).then(t => {
-                const {statusCode: s, statusCode: i, headers: r, body: o} = t;
-                e(null, {status: s, statusCode: i, headers: r, body: o}, o)
+            }); else if (this.isQuanX()) t.method = "POST", this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => {
+                const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                e(null, { status: s, statusCode: i, headers: r, body: o }, o)
             }, t => e(t)); else if (this.isNode()) {
                 this.initGotEnv(t);
-                const {url: s, ...i} = t;
+                const { url: s, ...i } = t;
                 this.got.post(s, i).then(t => {
-                    const {statusCode: s, statusCode: i, headers: r, body: o} = t;
-                    e(null, {status: s, statusCode: i, headers: r, body: o}, o)
+                    const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                    e(null, { status: s, statusCode: i, headers: r, body: o }, o)
                 }, t => {
-                    const {message: s, response: i} = t;
+                    const { message: s, response: i } = t;
                     e(s, i, i && i.body)
                 })
             }
@@ -1053,19 +1079,19 @@ function Env(t, e) {
         msg(e = t, s = "", i = "", r) {
             const o = t => {
                 if (!t) return t;
-                if ("string" == typeof t) return this.isLoon() ? t : this.isQuanX() ? {"open-url": t} : this.isSurge() ? {url: t} : void 0;
+                if ("string" == typeof t) return this.isLoon() ? t : this.isQuanX() ? { "open-url": t } : this.isSurge() ? { url: t } : void 0;
                 if ("object" == typeof t) {
                     if (this.isLoon()) {
                         let e = t.openUrl || t.url || t["open-url"], s = t.mediaUrl || t["media-url"];
-                        return {openUrl: e, mediaUrl: s}
+                        return { openUrl: e, mediaUrl: s }
                     }
                     if (this.isQuanX()) {
                         let e = t["open-url"] || t.url || t.openUrl, s = t["media-url"] || t.mediaUrl;
-                        return {"open-url": e, "media-url": s}
+                        return { "open-url": e, "media-url": s }
                     }
                     if (this.isSurge()) {
                         let e = t.url || t.openUrl || t["open-url"];
-                        return {url: e}
+                        return { url: e }
                     }
                 }
             };
