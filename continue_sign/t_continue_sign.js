@@ -398,7 +398,7 @@ async function dealReturn(type, data) {
                             $.dayNum = info.dayNum
                             // 不跑只有积分或者优惠券的签到
                             if (info.gift != null && (info.gift.giftType == 9 || info.gift.giftType == 1 || info.gift.giftName.indexOf('积分') != -1 || info.gift.giftName.indexOf("优惠券") != -1)) {
-                                $.signFlag = false
+                                continue;
                             } else {
                                 $.signFlag = true
                             }
