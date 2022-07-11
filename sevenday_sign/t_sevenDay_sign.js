@@ -334,7 +334,7 @@ async function dealReturn(type, data) {
                                 $.giftInfoId.push(giftCondition.giftInfoId)
                                 $.giftName.push(giftCondition.gift == null ? `空气` : giftCondition.gift.giftName)
                                 if (giftCondition.gift != null && ((giftCondition.gift.giftType == 9 || giftCondition.gift.giftType == 1 || giftCondition.gift.giftName.indexOf('积分') != -1 || giftCondition.gift.giftName.indexOf("优惠券") != -1))) {
-                                    $.signFlag = false
+                                    continue;
                                 } else {
                                     $.signFlag = true
                                 }
