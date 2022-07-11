@@ -78,6 +78,9 @@ if (isGetCookie) {
                 continue;
             }
             await jrzd();
+            if (!$.toactivity) {
+                break;
+            }
             if ($.retry == true) {
                 console.log(`重跑该账号`)
                 await jrzd();
