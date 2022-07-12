@@ -19,7 +19,9 @@ $.message = ""
 $.helpTimes = -1
 $.hasHelpedTimes = 0
 $.restartNo = 1
+// 助力前4个人
 $.helpNum = 4;
+$.helpFlags = [0, 0, 0, 0]
 $.friendUuidId = 0
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -46,9 +48,6 @@ if ($.isNode()) {
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
-            if ($.index > $.helpNum + 5) {
-                break
-            }
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -59,20 +58,42 @@ if ($.isNode()) {
                 continue
             }
             await jdmodule(false);
+            if ($.helpFlags[$.helpNum - 1] != -1) {
+                for (let idx in $.friendUuids) {
+                    cookie = cookiesArr[idx];
+                    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                    $.frendIdx = idx
+                    console.log(`账号${$.UserName}被助力了${$.helpFlags[idx]}次`)
+                    if ($.helpFlags[idx] == $.maxGroup) {
+                        $.friendUuids.splice(idx, 1)
+                        cookie = cookiesArr[idx];
+                        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                        console.log(`\n【京东账号${idx + 1}】${$.nickName || $.UserName}开始拆红包\n`)
+                        $.index = i + 1;
+                        $.isLogin = true;
+                        $.nickName = '';
+                        await jdmodule(true);
+                        $.helpFlags[idx] = -1
+                    }
+                }
+            } else {
+                console.log(`所有账号都助力完成，退出！`)
+                break
+            }
         }
     }
-    console.log("-----------开始拆红包------------")
-    for (let i = 0; i < $.helpNum; i++) {
-        if (cookiesArr[i]) {
-            cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-            $.index = i + 1;
-            $.isLogin = true;
-            $.nickName = '';
-            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            await jdmodule(true);
-        }
-    }
+
+    // for (let i = 0; i < $.helpNum; i++) {
+    //     if (cookiesArr[i]) {
+    //         cookie = cookiesArr[i];
+    //         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+    //         $.index = i + 1;
+    //         $.isLogin = true;
+    //         $.nickName = '';
+    //         console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+    //         await jdmodule(true);
+    //     }
+    // }
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -110,6 +131,8 @@ async function jdmodule(retry) {
 
     await takePostRequest("accessLog")
 
+    await getActivityInfo();
+
     await takePostRequest("getUserInfo")
 
     if ($.index == 1) {
@@ -126,36 +149,24 @@ async function jdmodule(retry) {
             await takePostRequest("getSendUUid")
             console.log("当前助力池")
             console.log(JSON.stringify($.friendUuids))
-        } else {
-            for (let friendUuid of $.friendUuids) {
-                $.friendUuid = friendUuid
-                console.log(`开始助力 ${$.friendUuid}`)
-                await takePostRequest("addShareOpen")
+        }
+        if ($.index != 1) {
+            for (let idx in $.friendUuids) {
+                if (idx < $.helpTime) {
+                    if ($.helpFlags[idx] == -1) {
+                        console.log(`账号${idx + 1}已满助力`)
+                    } else {
+                        $.frendIdx = idx
+                        $.friendUuid = $.friendUuids[idx]
+                        console.log(`开始助力 ${$.friendUuid}`)
+                        await takePostRequest("addShareOpen")
+                    }
+
+                }
             }
         }
     } else {
         await takePostRequest("addDrawRecord")
-    }
-}
-
-//运行
-async function run() {
-    try {
-        $.productIds = []
-        if ($.addCarts < $.jsNum) {
-            for (let pro of $.productVos) {
-                console.log("开始加购商品:" + pro.title)
-                if (pro.seq < $.jsNum) {
-                    $.productIds.push(pro.skuId)
-                    continue
-                }
-            }
-            await takePostRequest("quickAddSku")
-        }
-
-
-    } catch (e) {
-        console.log(e);
     }
 }
 
@@ -366,7 +377,7 @@ async function dealReturn(type, data) {
             case 'getInviterByUUid':
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
-                        console.log(JSON.stringify(res.data))
+                        // console.log(JSON.stringify(res.data))
                         let data = res.data
                         $.inviterImgUrl = data.imageUrl
                     } else if (res.errorMessage) {
@@ -437,6 +448,7 @@ async function dealReturn(type, data) {
                 if (typeof res == 'object') {
                     if (res.ok && res.ok === true) {
                         console.log(`京东账号${$.UserName}成功助力 ${$.friendUuid}`)
+                        $.helpFlags[$.frendIdx]++
                     } else {
                         console.log(res.errorMessage)
                     }
@@ -446,7 +458,7 @@ async function dealReturn(type, data) {
             case 'drawContent':
                 break;
             default:
-                console.log(`${type}-> ${data}`);
+            // console.log(`${type}-> ${data}`);
         }
         if (typeof res == 'object') {
             if (res.errorMessage) {
@@ -498,6 +510,60 @@ function getCK() {
         })
     })
 }
+
+function getActivityInfo() {
+    return new Promise(resolve => {
+        let get = {
+            url: `http://${$.domain}/wxHbShareActivity/getHbShare?activityId=${$.activityId}&venderId=${$.venderId}&pin=${$.enPin}`,
+            // followRedirect: false,
+            headers: {
+                "Host": `${$.domain}`,
+                "User-Agent": $.UA,
+                "Refer": `${$.activityUrl}&sid=&un_area=13_1007_4909_59742`,
+                "Accept": "application/json",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "zh-cn",
+                "Connection": "keep-alive",
+                "Cookie": `${lz_jdpin_token_cookie && lz_jdpin_token_cookie || ''}${$.Pin && "AUTH_C_USER=" + $.Pin + ";" || ""}${activityCookie}`,
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            timeout: 30000
+        }
+        // console.log(JSON.stringify(get))
+        $.get(get, async (err, resp, data) => {
+            try {
+                if (err) {
+                    if (resp && typeof resp.statusCode != 'undefined') {
+                        if (resp.statusCode == 493) {
+                            console.log('此ip已被限制，请过10分钟后再执行脚本\n')
+                            $.outFlag = true
+                        }
+                    }
+                    console.log(`${$.toStr(err)}`)
+                    console.log(`${$.name} cookie API请求失败，请检查网路重试`)
+                } else {
+                    let jsonData = JSON.parse(data)
+                    // console.log(JSON.stringify(jsonData))
+                    // 开团需要的人数
+                    $.maxGroup = jsonData.data.hbShareActivity.maxGroup
+                    // 助力次数
+                    $.helpTime = jsonData.data.hbShareActivity.helpNum
+                    // 每日开包次数
+                    $.canMaxPrizeDay = jsonData.data.hbShareActivity.canMaxPrizeDay
+                    // 最多开包次数
+                    $.canMaxPrize = jsonData.data.hbShareActivity.canMaxPrize
+                    setActivityCookie(resp)
+                    console.log(`每个团需要${$.maxGroup}人，每人可助力${$.helpTime}次，每日可开${$.canMaxPrizeDay}次红包`)
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
 function timeToTimestamp(time) {
     let timestamp = Date.parse(new Date(time).toString());
     //timestamp = timestamp / 1000; //时间戳为13位需除1000，时间戳为13位的话不需除1000
