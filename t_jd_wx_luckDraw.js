@@ -66,8 +66,8 @@ if ($.isNode()) {
             if ($.stop) {
                 break
             }
-            if ($.index % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-            if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+            // if ($.index % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
+            // if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
         }
     }
 
@@ -152,18 +152,15 @@ async function jdmodule() {
     $.break = false
     for (let m = 0; $.canDrawTimes--; m++) {
         if (!$.break) {
-            if ($.domain.indexOf('cjhy') != -1) {
+
+            if ($.drawType == 0) {
                 console.log(`积分抽奖`)
                 await takePostRequest('cjstart')
             } else {
-                if ($.drawType == 0) {
-                    console.log(`积分抽奖`)
-                    await takePostRequest('cjstart')
-                } else {
-                    console.log(`普通抽奖`)
-                    await takePostRequest('start')
-                }
+                console.log(`普通抽奖`)
+                await takePostRequest('start')
             }
+
             await $.wait(parseInt(Math.random() * 1000 + 500, 10));
             if (Number($.canDrawTimes) <= 0 || m >= 5) {
                 break
