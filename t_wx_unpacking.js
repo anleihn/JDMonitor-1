@@ -8,8 +8,8 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
-$.activityUrl = process.env.T_WX_UNPACKING_URL ? process.env.T_WX_UNPACKING_URL : "";
-$.activityId = getQueryString($.activityUrl, 'activityId')
+$.activityId = process.env.jd_wxUnPackingActivity_activityId ? process.env.jd_wxUnPackingActivity_activityId : "";
+$.activityUrl = `https://lzkjdz-isv.isvjcloud.com/wxUnPackingActivity/activity/activity?activityId=${$.activityId}`
 $.Token = "";
 $.openCard = false
 $.exportActivityIds = ""
@@ -82,8 +82,6 @@ if ($.isNode()) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             await jdmodule(true);
         }
-        if (i + 1 % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-        if (i + 1 % 4 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
     }
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     await jdmodule();
