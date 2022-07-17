@@ -12,14 +12,11 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
 let authorCodeList = [];
-let ownCookieNum = 1;
+let ownCookieNum = 5;
 let isGetAuthorCodeList = true
 let activityId = ''
 let activityShopId = ''
-
-if (process.env.OWN_COOKIE_NUM && process.env.OWN_COOKIE_NUM != 4) {
-    ownCookieNum = process.env.OWN_COOKIE_NUM;
-}
+let helpArray = [0, 0, 0, 0, 0]
 if (process.env.jd_fxyl_activityId && process.env.jd_fxyl_activityId != "") {
     activityId = process.env.jd_fxyl_activityId;
 }
@@ -48,41 +45,45 @@ if ($.isNode()) {
         console.log('设置了有效的SHARE_ACTIVITY_ID再来跑！！！');
         return;
     }
-    isGetAuthorCodeList = true;
-    for (let i = 0; i < ownCookieNum; i++) {
-        if (cookiesArr[i]) {
-            cookie = cookiesArr[i]
-            originCookie = cookiesArr[i]
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-            $.index = i + 1;
-            $.isLogin = true;
-            $.nickName = '';
-            await checkCookie();
-            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            if (!$.isLogin) {
-                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-                // if ($.isNode()) {
-                //     await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                // }
-                continue
-            }
+    // isGetAuthorCodeList = true;
+    // for (let i = 0; i < ownCookieNum; i++) {
+    //     if (cookiesArr[i]) {
+    //         cookie = cookiesArr[i]
+    //         originCookie = cookiesArr[i]
+    //         $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+    //         $.index = i + 1;
+    //         $.isLogin = true;
+    //         $.nickName = '';
+    //         await checkCookie();
+    //         console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+    //         if (!$.isLogin) {
+    //             $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+    //             // if ($.isNode()) {
+    //             //     await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+    //             // }
+    //             continue
+    //         }
 
-            $.bean = 0;
-            $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
-            $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-            $.authorCode = authorCodeList[random(0, authorCodeList.length)]
-            $.authorNum = `${random(1000000, 9999999)}`
-            $.activityId = activityId
-            $.activityShopId = ''
-            $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/${$.authorNum}?activityId=${$.activityId}&friendUuid=${encodeURIComponent($.authorCode)}&shareuserid4minipg=null&shopid=${$.activityShopId}`
-            await share();
-            activityShopId = $.venderId;
-        }
-    }
-    isGetAuthorCodeList = false;
-    console.log('需要助力助力码')
-    console.log(authorCodeList)
+    //         $.bean = 0;
+    //         $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
+    //         $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+    //         $.authorCode = authorCodeList[random(0, authorCodeList.length)]
+    //         $.authorNum = `${random(1000000, 9999999)}`
+    //         $.activityId = activityId
+    //         $.activityShopId = ''
+    //         $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/${$.authorNum}?activityId=${$.activityId}&friendUuid=${encodeURIComponent($.authorCode)}&shareuserid4minipg=null&shopid=${$.activityShopId}`
+    //         await share();
+    //         activityShopId = $.venderId;
+    //     }
+    // }
+    // isGetAuthorCodeList = false;
+    // console.log('需要助力助力码')
+    // console.log(authorCodeList)
     for (let i = 0; i < cookiesArr.length; i++) {
+        isGetAuthorCodeList = false;
+        if (i < ownCookieNum) {
+            isGetAuthorCodeList = true;
+        }
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
             originCookie = cookiesArr[i]
@@ -110,35 +111,79 @@ if ($.isNode()) {
             $.activityShopId = activityShopId
             // $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/${$.authorNum}?activityId=${$.activityId}&friendUuid=${encodeURIComponent($.authorCode)}&shareuserid4minipg=null&shopid=${$.activityShopId}`
             $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/${$.activityId}?activityId=${$.activityId}&adsource=tg_xuanFuTuBiao`
-            for (let i in authorCodeList) {
-                $.authorCode = authorCodeList[i]
-                console.log('去助力: ' + $.authorCode)
-
+            if (i < ownCookieNum) {
                 await share();
-                if ($.errorMessage === '活动太火爆，还是去买买买吧') {
-                    break
-                }
-                await $.wait(2000)
+                console.log('助力池')
+                console.log(authorCodeList)
             }
+            for (let idx in authorCodeList) {
+                if (idx != i) {
+                    if (helpArray[idx] == -1) {
+                        let num0 = Number(idx) + 1
+                        console.log(`账号${num0}已助力完成`)
+                    } else {
+                        $.authorCode = authorCodeList[idx]
+                        isGetAuthorCodeList = false;
+                        console.log('去助力: ' + $.authorCode)
+                        await share();
+                        if ($.errorMessage === '活动太火爆，还是去买买买吧') {
+                            break
+                        }
+
+                        helpArray[idx]++
+                        let num1 = Number(idx) + 1
+                        console.log(`账号${num1}被助力了${helpArray[idx]}次`)
+                        if (helpArray[idx] == $.needHelpTimes) {
+                            isGetAuthorCodeList = false;
+                            cookie = cookiesArr[idx]
+                            originCookie = cookiesArr[idx]
+                            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+                            $.isLogin = true;
+                            $.nickName = '';
+                            await checkCookie();
+                            console.log(`\n*开始【京东账号】${$.nickName || $.UserName} 领取*\n`);
+                            $.authorCode = authorCodeList[idx]
+                            $.activityId = activityId
+                            $.activityShopId = activityShopId
+                            await getPrize();
+                            await $.wait(2000)
+                            helpArray[idx] = -1
+                        }
+                        await $.wait(2000)
+                    }
+
+                }
+
+            }
+        }
+        if (helpArray[ownCookieNum - 1] == -1) {
+            console.log(`所有账号都助力完成，退出！`)
+            break;
         }
         await $.wait(2000)
     }
+    isGetAuthorCodeList = false;
     for (let i = 0; i < ownCookieNum; i++) {
-        if (cookiesArr[i]) {
-            cookie = cookiesArr[i]
-            originCookie = cookiesArr[i]
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-            $.isLogin = true;
-            $.nickName = '';
-            await checkCookie();
-            console.log(`\n*开始【京东账号】${$.nickName || $.UserName} 领取*\n`);
-            $.authorCode = authorCodeList[0]
-            $.activityId = activityId
-            $.activityShopId = activityShopId
-            await getPrize();
-            await $.wait(2000)
+        if (helpArray[i] != -1) {
+            if (cookiesArr[i]) {
+                cookie = cookiesArr[i]
+                originCookie = cookiesArr[i]
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+                $.isLogin = true;
+                $.nickName = '';
+                await checkCookie();
+                console.log(`\n*开始【京东账号】${$.nickName || $.UserName} 领取*\n`);
+                $.authorCode = authorCodeList[0]
+                $.activityId = activityId
+                $.activityShopId = activityShopId
+                await getPrize();
+                await $.wait(2000)
+            }
         }
+
     }
+
+
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -215,6 +260,14 @@ function task(function_id, body, isCommon = 0) {
                                     }
                                     console.log(data.data.myUuid);
                                     $.drawContentVOs = data.data.drawContentVOs
+                                    if ($.index == 1) {
+                                        for (let drawContentVo of $.drawContentVOs) {
+                                            $.needHelpTimes = drawContentVo.shareTimes
+                                            $.prizeInfo = drawContentVo.name
+                                            console.log(`分享${$.needHelpTimes}人，可获得${$.prizeInfo}`)
+                                        }
+                                        $.helpCookieNum = $.needHelpTimes
+                                    }
                                     break;
                                 case 'getPrize':
                                     console.log(data.data.name);
