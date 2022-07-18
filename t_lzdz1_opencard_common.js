@@ -73,9 +73,6 @@ let lz_cookie={}
     return;
   }
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}`)
-  let s = Math.floor((Math.random()*10))
-  let n = 0
-  if(s >= 1 && s<= 6) n = Math.floor((Math.random()*shareUuidArr.length))
   $.shareUuid = ""
 
   for (let i = 0; i < cookiesArr.length; i++) {
