@@ -17,6 +17,7 @@ let isGetAuthorCodeList = true
 let activityId = ''
 let activityShopId = ''
 let helpArray = [0, 0, 0, 0, 0]
+$.message = ""
 if (process.env.jd_fxyl_activityId && process.env.jd_fxyl_activityId != "") {
     activityId = process.env.jd_fxyl_activityId;
 }
@@ -149,7 +150,6 @@ if ($.isNode()) {
                             await $.wait(2000)
                             helpArray[idx] = -1
                         }
-                        await $.wait(2000)
                     }
 
                 }
@@ -160,7 +160,6 @@ if ($.isNode()) {
             console.log(`所有账号都助力完成，退出！`)
             break;
         }
-        await $.wait(2000)
     }
     isGetAuthorCodeList = false;
     for (let i = 0; i < ownCookieNum; i++) {
@@ -177,10 +176,12 @@ if ($.isNode()) {
                 $.activityId = activityId
                 $.activityShopId = activityShopId
                 await getPrize();
-                await $.wait(2000)
             }
         }
 
+    }
+    if ($.message != '') {
+        await notify.sendNotify("分享有礼", `${$.message}\n跳转链接\n${$.activityUrl}`)
     }
 
 
@@ -202,7 +203,6 @@ async function share() {
     if ($.token) {
         await getMyPing();
         if ($.secretPin) {
-            await $.wait(2000)
             await task('common/accessLogWithAD', `venderId=${$.activityShopId}&code=25&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=null`, 1);
             await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&friendUuid=${encodeURIComponent($.authorCode)}`)
         } else {
@@ -271,6 +271,9 @@ function task(function_id, body, isCommon = 0) {
                                     break;
                                 case 'getPrize':
                                     console.log(data.data.name);
+                                    if (data.data.name) {
+                                        $.message += `${$.UserName} ${data.data.name}\n`
+                                    }
                                     break;
                             }
                         } else {
