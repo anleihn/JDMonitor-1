@@ -34,6 +34,13 @@ var moment = require('moment');
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
+$.addressArray = [
+    "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
+    "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
+    "山东省,青岛市,崂山区,泉岭路8号中商国际大厦,15265297926,266100,370212, 巩大豆",
+    "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
+    "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
+]
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -49,6 +56,7 @@ if ($.isNode()) {
         return;
     }
     today = moment(Date.now()).format('YYYY-MM-DD')
+    today2 = moment(Date.now()).format('YYYYMMDD')
     if ($.conSignIndex == "") {
         dayFlag = today
         $.idx = 0
@@ -98,7 +106,7 @@ if ($.isNode()) {
                 break
             }
             console.log('店铺签到完成，请等待...')
-            await $.wait(parseInt(Math.random() * 20000 + 2000, 10))
+            await $.wait(parseInt(Math.random() * 10000 + 2000, 10))
         }
         if ($.stop) {
             console.log(`脚本被强制停止！`)
@@ -179,6 +187,35 @@ async function jdmodule() {
     // }
 
     await takePostRequest("signUp")
+
+    await takePostRequest("getGiftRecords")
+
+    if ($.records.length > 0) {
+        for (let record of $.records) {
+            $.needWriteAddress = record.needWriteAddress || 'n'
+            if ($.needWriteAddress == 'y') {
+                $.shiwuName = record.giftName
+                console.log("实物奖励:" + $.shiwuName)
+                $.giftDate = record.giftDate
+                $.generateId = record.id
+                if (today2 == $.giftDate) {
+                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                    console.log("邮寄地址：" + $.fullAddress)
+                    let fullAddressArray = $.fullAddress.split(",")
+                    $.province = fullAddressArray[0]
+                    $.city = fullAddressArray[1]
+                    $.county = fullAddressArray[2]
+                    $.address = fullAddressArray[3]
+                    $.phone = fullAddressArray[4]
+                    $.postalCode = fullAddressArray[5]
+                    $.areaCode = fullAddressArray[6]
+                    $.postalName = fullAddressArray[7]
+                    await takePostRequest(`saveAddress`)
+                }
+            }
+
+        }
+    }
 }
 
 //运行
@@ -254,6 +291,14 @@ async function takePostRequest(type) {
             url = `https://${$.domain}/assembleConfig/getOpenStatus`;
             // url = `${domain}/dingzhi/dz/openCard/saveTask`;
             body = `activityId=${$.activityId}`
+            break;
+        case 'getGiftRecords':
+            url = `https://${$.domain}/sign/wx/getGiftRecords`
+            body = `venderId=${$.venderId}&pin=${$.enPin}&actId=${$.activityId}`
+            break;
+        case 'saveAddress':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${$.enPin}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
             break;
         default:
             console.log(`错误${type}`);
@@ -337,7 +382,7 @@ async function dealReturn(type, data) {
             case 'getMyPing':
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
-                        console.log("MyPin" + res.data.secretPin)
+                        // console.log("MyPin" + res.data.secretPin)
                         if (res.data && typeof res.data.secretPin != 'undefined') $.Pin = res.data.secretPin
                         if (res.data && typeof res.data.nickname != 'undefined') $.nickname = res.data.nickname
                     } else if (res.errorMessage) {
@@ -352,7 +397,7 @@ async function dealReturn(type, data) {
             case 'getSignInfo':
                 if (typeof res == 'object') {
                     if (res.isOk && res.isOk === true) {
-                        console.log(JSON.stringify(res))
+                        // console.log(JSON.stringify(res))
                         $.totalSignNum = res.signRecord.totalSignNum
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
@@ -401,7 +446,7 @@ async function dealReturn(type, data) {
                     } else {
                         console.log(`签到失败 ${res.msg}`)
                         $.message += `京东账号${$.UserName} 签到失败：${res.msg}，总签到天数 ${$.totalSignNum}\n`
-                        if (res.msg.indexOf(`已结束`) != -1) {
+                        if (res.msg.indexOf(`已结束`) != -1 || res.msg.indexOf(`店铺会员`) != -1) {
                             return
                         }
                         if ($.exportResult.indexOf($.activityId) == -1) {
@@ -457,7 +502,31 @@ async function dealReturn(type, data) {
                     }
                 }
                 break;
-            case 'followShop':
+            case 'getGiftRecords':
+                if (typeof res == 'object') {
+                    if (res.isOk && res.isOk === true) {
+                        $.records = res.records
+                        // console.log(JSON.stringify($.records))
+                    } else if (res.errorMessage) {
+                        console.log(`${type} ${res.errorMessage || ''}`)
+                    } else {
+                        console.log(`${type} ${data}`)
+                    }
+                } else {
+                    console.log(`${type} ${data}`)
+                }
+                break;
+            case 'saveAddress':
+                console.log(JSON.stringify(res))
+                if (typeof res == 'object') {
+                    if (res.result && res.result === true) {
+                        console.log(`地址填写成功！`)
+                        $.message += `获得实物奖励，地址为${$.fullAddress}\n`
+                    } else {
+                        console.log(`${type} ${data}`)
+                    }
+                }
+                break;
             case 'addShareOpen':
                 if (typeof res == 'object') {
                     if (res.ok && res.ok === true) {
