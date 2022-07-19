@@ -21,6 +21,13 @@ $.index = 1
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
+$.addressArray = [
+    "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
+    "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
+    "山东省,青岛市,崂山区,泉岭路8号中商国际大厦,15265297926,266100,370212, 巩大豆"
+    // "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
+    // "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
+]
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -48,6 +55,7 @@ if ($.isNode()) {
             console.log(`活动ID：${$.activityId}已过加购时间！`)
         }
         if (actStartTime <= curtimestamp && (curtimestamp - actStartTime) / 60 / 1000 <= 50) {
+            // if (actStartTime <= curtimestamp) {
             $.activityUrl = $.ativityUrlPrefix + $.activityId
             console.log(`跳转链接：${$.activityUrl}`)
             $.message = ""
@@ -55,6 +63,7 @@ if ($.isNode()) {
                 if (cookiesArr[i]) {
                     cookie = cookiesArr[i];
                     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                    console.log(`\n******开始【京东账号】${$.nickName || $.UserName}*********\n`);
                     await jdmodule(true);
                     $.index++
                     if ($.index % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
@@ -90,9 +99,9 @@ async function jdmodule(retry) {
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
 
     await getCK();
-    console.log("lzToken=" + activityCookie)
+    // console.log("lzToken=" + activityCookie)
     await takePostRequest("isvObfuscator");
-    console.log('Token:' + $.Token)
+    // console.log('Token:' + $.Token)
     if ($.Token == '') {
         $.putMsg(`获取Token失败`);
         return
@@ -125,19 +134,28 @@ async function jdmodule(retry) {
 //运行
 async function run() {
     try {
-        // $.productIds = []
-        // if ($.addCarts < $.jsNum) {
-        //     for (let pro of $.productVos) {
-        //         console.log("开始加购商品:" + pro.title)
-        //         if (pro.seq < $.jsNum) {
-        //             $.productIds.push(pro.skuId)
-        //             continue
-        //         }
-        //     }
-        //     await takePostRequest("quickAddSku")
         console.log("---查看中奖结果---")
         await takePostRequest("drawResult");
-
+        drawInfo = $.prizeInfo.drawInfo
+        needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
+        if (needWriteAddress == 'y') {
+            $.shiwuName = drawInfo.name
+            $.generateId = $.prizeInfo.addressId || '0'
+            if ($.generateId != '0') {
+                $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                console.log("邮寄地址：" + $.fullAddress)
+                let fullAddressArray = $.fullAddress.split(",")
+                $.province = fullAddressArray[0]
+                $.city = fullAddressArray[1]
+                $.county = fullAddressArray[2]
+                $.address = fullAddressArray[3]
+                $.phone = fullAddressArray[4]
+                $.postalCode = fullAddressArray[5]
+                $.areaCode = fullAddressArray[6]
+                $.postalName = fullAddressArray[7]
+                await takePostRequest(`saveAddress`)
+            }
+        }
         //}
 
 
@@ -229,33 +247,9 @@ async function takePostRequest(type) {
             url = `https://${domain}/wxCartKoi/cartkoi/drawResult`;
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&uuid=${$.uuid}`
             break;
-        case '邀请':
-        case '助力':
-            if (type == '助力') {
-                url = `${domain}/dingzhi/linkgame/assist`;
-            } else {
-                url = `${domain}/dingzhi/linkgame/assist/status`;
-            }
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&shareUuid=${$.shareUuid}`
-            break;
-        case 'viewVideo':
-        case 'visitSku':
-        case 'toShop':
-        case 'addSku':
-            url = `https://${$.domain}/drawCenter/doTask`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&taskId=${$.task.taskId}&param=${$.pro.skuId}`
-            break;
-        case 'getDrawRecordHasCoupon':
-            url = `${domain}/dingzhi/linkgame/draw/record`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
-            break;
-        case 'getShareRecord':
-            url = `${domain}/dingzhi/linkgame/help/list`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
-            break;
-        case '抽奖':
-            url = `https://${$.domain}/drawCenter/draw/luckyDraw`;;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
+        case 'saveAddress':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
             break;
         default:
             console.log(`错误${type}`);
@@ -277,7 +271,7 @@ async function takePostRequest(type) {
                     console.log(`${$.toStr(err, err)}`)
                     console.log(`${type} API请求失败，请检查网路重试`)
                 } else {
-                    console.log(data);
+                    // console.log(data);
                     dealReturn(type, data);
                 }
             } catch (e) {
@@ -316,7 +310,7 @@ async function dealReturn(type, data) {
                         console.log(data)
                     }
                 } else {
-                    console.log(data)
+                    // console.log(data)
                 }
                 break;
             case 'getSimpleActInfoVo':
@@ -463,6 +457,7 @@ async function dealReturn(type, data) {
                             if (res.data.message == '中奖') {
                                 $.message += `京东账号${$.UserName}获得${res.data.drawName}\n`
                                 console.log(`恭喜中奖~获得${res.data.drawName}`)
+                                $.prizeInfo = res.data
                             }
                             else {
                                 console.log(`恭喜获得了空气- -`)
@@ -471,130 +466,16 @@ async function dealReturn(type, data) {
                     }
                 }
                 break;
-            case 'viewVideo':
-            case 'visitSku':
-            case 'toShop':
-            case 'addSku':
-            case 'sign':
-            case 'browseGoods':
-            case '抽奖':
+            case 'saveAddress':
+                console.log(JSON.stringify(res))
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
-                        if (typeof res.data == 'object') {
-                            let msg = ''
-                            let title = '抽奖'
-                            if (res.data.addBeanNum) {
-                                msg = `${res.data.addBeanNum}京豆`
-                            }
-                            if (res.data.addPoint) {
-                                msg += ` ${res.data.addPoint}游戏机会`
-                            }
-                            if (type == 'followShop') {
-                                title = '关注'
-                                if (res.data.beanNumMember && res.data.assistSendStatus) {
-                                    msg += ` 额外获得:${res.data.beanNumMember}京豆`
-                                }
-                            } else if (type == 'addSku' || type == 'addCart') {
-                                title = '加购'
-                            } else if (type == 'viewVideo') {
-                                title = '热门文章'
-                            } else if (type == 'toShop') {
-                                title = '浏览店铺'
-                            } else if (type == 'visitSku' || type == 'browseGoods') {
-                                title = '浏览商品'
-                            } else if (type == 'sign') {
-                                title = '签到'
-                            } else {
-                                let drawData = typeof res.data.drawOk === 'object' && res.data.drawOk || res.data
-                                msg = drawData.drawOk == true && drawData.name || ''
-                            }
-                            if (title == "抽奖" && msg && msg.indexOf('京豆') == -1) {
-                                if ($.isNode()) await notify.sendNotify(`${$.name}`, `【京东账号${$.index}】${$.nickName || $.UserName}\n${title}成功,获得 ${msg}\n活动地址: https://3.cn/-106MEjSh`);
-                            }
-                            if (!msg) {
-                                msg = '空气💨'
-                            }
-                            console.log(`${title}获得:${msg || data}`)
-                        } else {
-                            console.log(`${type} ${data}`)
-                        }
-                    } else if (res.errorMessage) {
-                        $.runFalag = false;
-                        console.log(`${type} ${res.errorMessage || ''}`)
+                        console.log(`地址填写成功！`)
+                        $.message += `获得实物奖励，地址填写成功：${$.fullAddress}\n`
                     } else {
                         console.log(`${type} ${data}`)
                     }
-                } else {
-                    console.log(`${type} ${data}`)
                 }
-                break;
-            case 'getDrawRecordHasCoupon':
-                if (typeof res == 'object') {
-                    if (res.result && res.result === true) {
-                        console.log(`我的奖品：`)
-                        let num = 0
-                        let value = 0
-                        let dayShareTime = 0
-                        for (let i in res.data.recordList) {
-                            let item = res.data.recordList[i]
-                            if (item.infoName == '20京豆' && item.drawStatus == 0) {
-                                num++
-                                value = item.infoName.replace('京豆', '')
-                                dayShareTime = dayShareTime < item.createTime ? item.createTime : dayShareTime;
-                            } else {
-                                console.log(`${item.infoType != 10 && item.value && item.value + ':' || ''}${item.infoName}`)
-                            }
-                        }
-                        if (dayShareTime > 0) console.log("最新邀请奖励时间:" + $.time("yyyy-MM-dd HH:mm:ss", dayShareTime))
-                        if (num > 0) console.log(`邀请好友(${num}):${num * parseInt(value, 10) || 30}京豆`)
-                    } else if (res.errorMessage) {
-                        console.log(`${type} ${res.errorMessage || ''}`)
-                    } else {
-                        console.log(`${type} ${data}`)
-                    }
-                } else {
-                    console.log(`${type} ${data}`)
-                }
-                break;
-            case 'getShareRecord':
-                if (typeof res == 'object') {
-                    if (res.result && res.result === true && res.data) {
-                        $.ShareCount = res.data.shareList.length
-                        $.log(`=========== 你邀请了:${$.ShareCount}个\n由于接口数据只有30个 故邀请大于30个的需要自行判断\n`)
-                    } else if (res.errorMessage) {
-                        console.log(`${type} ${res.errorMessage || ''}`)
-                    } else {
-                        console.log(`${type} ${data}`)
-                    }
-                } else {
-                    console.log(`${type} ${data}`)
-                }
-                break;
-            case '邀请':
-            case '助力':
-                // console.log(data)
-                if (typeof res == 'object') {
-                    if (res.data.status == 200) {
-                        if (type == '助力') {
-                            console.log('助力成功')
-                        } else {
-                            $.yaoqing = true
-                        }
-                    } else if (res.data.status == 105) {
-                        console.log('已经助力过')
-                    } else if (res.data.status == 104) {
-                        console.log('已经助力其他人')
-                    } else if (res.data.status == 101) {
-                        // console.log('已经助力过')
-                    } else {
-                        console.log(data)
-                    }
-                } else {
-                    console.log(`${type} ${data}`)
-                }
-
-            case 'accessLogWithAD':
-            case 'drawContent':
                 break;
             default:
                 console.log(`${type}-> ${data}`);
@@ -711,7 +592,7 @@ function setActivityCookie(resp) {
         }
     }
     if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && !$.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE}`
-    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN}`   
+    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN}`
     if (lz_jdpin_token) lz_jdpin_token_cookie = lz_jdpin_token
     // console.log(activityCookie)
 }
