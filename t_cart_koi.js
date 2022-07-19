@@ -84,11 +84,18 @@ if ($.isNode()) {
                     $.helpTimes = $.otherHelpTime
                     console.log(`上一个账号已助力完成，接下来都会助力${$.friendUuid}`)
                 }
-                if ($.index % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-                if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+                if (i + 1 % 8 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
+                if (i + 1 % 8 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
             }
         }
-        for (let i = 0; i < cookiesArr.length; i++) {
+        let retryNum = 0
+        if ($.otherHelpTime = 0) {
+            retryNum = cookiesArr.length
+        } else {
+            etryNum = Math.ceil(cookiesArr.length / $.otherHelpTime)
+        }
+        console.log(`--------需要加购的账号数量为${retryNum}个-------`)
+        for (let i = 0; i < retryNum; i++) {
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
                 await jdmodule(true);
@@ -475,7 +482,7 @@ async function dealReturn(type, data) {
                             console.log(`每个账号需要助力的次数为${$.otherHelpTime}次即可达到开奖要求！`)
                             $.friendUuid = $.friendUuids[0]
                             console.log(`接下来都会助力${$.friendUuid}`)
-                            $.helpTimes = $.otherHelpTime
+                            $.helpTimes = $.headHelpTimes
                         }
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
