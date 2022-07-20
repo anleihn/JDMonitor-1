@@ -136,29 +136,28 @@ async function run() {
     try {
         console.log("---查看中奖结果---")
         await takePostRequest("drawResult");
-        drawInfo = $.prizeInfo.drawInfo
-        needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
-        if (needWriteAddress == 'y') {
-            $.shiwuName = drawInfo.name
-            $.generateId = $.prizeInfo.addressId || '0'
-            if ($.generateId != '0') {
-                $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
-                console.log("邮寄地址：" + $.fullAddress)
-                let fullAddressArray = $.fullAddress.split(",")
-                $.province = fullAddressArray[0]
-                $.city = fullAddressArray[1]
-                $.county = fullAddressArray[2]
-                $.address = fullAddressArray[3]
-                $.phone = fullAddressArray[4]
-                $.postalCode = fullAddressArray[5]
-                $.areaCode = fullAddressArray[6]
-                $.postalName = fullAddressArray[7]
-                await takePostRequest(`saveAddress`)
+        if ($.prizeInfo.drawInfo) {
+            drawInfo = $.prizeInfo.drawInfo
+            needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
+            if (needWriteAddress == 'y') {
+                $.shiwuName = drawInfo.name
+                $.generateId = $.prizeInfo.addressId || '0'
+                if ($.generateId != '0') {
+                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                    console.log("邮寄地址：" + $.fullAddress)
+                    let fullAddressArray = $.fullAddress.split(",")
+                    $.province = fullAddressArray[0]
+                    $.city = fullAddressArray[1]
+                    $.county = fullAddressArray[2]
+                    $.address = fullAddressArray[3]
+                    $.phone = fullAddressArray[4]
+                    $.postalCode = fullAddressArray[5]
+                    $.areaCode = fullAddressArray[6]
+                    $.postalName = fullAddressArray[7]
+                    await takePostRequest(`saveAddress`)
+                }
             }
         }
-        //}
-
-
     } catch (e) {
         console.log(e);
     }
