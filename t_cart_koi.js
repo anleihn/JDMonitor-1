@@ -88,11 +88,9 @@ if ($.isNode()) {
                 if (i + 1 % 8 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
             }
         }
-        let retryNum = 0
-        if ($.otherHelpTime = 0) {
-            retryNum = cookiesArr.length
-        } else {
-            etryNum = Math.ceil(cookiesArr.length / $.otherHelpTime)
+        let retryNum = cookiesArr.length
+        if ($.otherHelpTime != 0) {
+            retryNum = Math.ceil(cookiesArr.length / $.otherHelpTime)
         }
         console.log(`--------需要加购的账号数量为${retryNum}个-------`)
         for (let i = 0; i < retryNum; i++) {
