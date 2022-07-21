@@ -34,7 +34,7 @@ let activityCookie =''
     });
     return;
   }
-  $.activityId = process.env.jd_category_activityId ? process.env.jd_category_activityId : "";
+  $.activityId = process.env.jd_categoryUnion_activityId ? process.env.jd_categoryUnion_activityId : "";
   $.shareUuid = ""
   $.venderIds = "688693"
   console.log(`入口:\nhttps://lzdz-isv.isvjcloud.com/categoryUnion/activity?activityId=${$.activityId}&tplId=0003&friendid=${$.shareUuid}`)
