@@ -21,6 +21,7 @@ $.friendUuid = ""
 $.friendUuids = []
 $.message = ""
 $.helpTimes = -1
+$.needRetry = false
 $.hasHelpedTimes = 0
 $.LZ_AES_PIN = ""
 $.restartNo = 1
@@ -76,7 +77,26 @@ if ($.isNode()) {
                     }
                     continue
                 }
+                $.needRetry = false
+
                 await jdmodule(false);
+                if ($.needRetry) {
+                    console.log(`----第一次重跑----`)
+                    await jdmodule(false);
+                }
+                if ($.needRetry) {
+                    console.log(`----第二次重跑----`)
+                    await jdmodule(false);
+                }
+                if ($.needRetry) {
+                    console.log(`----第三次重跑----`)
+                    await jdmodule(false);
+                } 
+                if ($.needRetry) {
+                    console.log(`获取用户信息失败，跳过！`)
+                    continue
+                } 
+
                 if ($.helpTimes != 0 && $.helpTimes == $.hasHelpedTimes) {
                     $.friendUuidId++
                     $.friendUuid = $.friendUuids[$.friendUuidId]
@@ -133,6 +153,8 @@ function showMsg() {
 
 
 async function jdmodule(retry) {
+    activityCookie = '';
+    $.Token = ''
     $.domain = $.activityUrl.match(/https?:\/\/([^/]+)/) && $.activityUrl.match(
         /https?:\/\/([^/]+)/)[1] || ''
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
@@ -140,11 +162,18 @@ async function jdmodule(retry) {
     await getCK();
     console.log("lzToken=" + activityCookie)
     await takePostRequest("isvObfuscator");
-    console.log('Token:' + $.Token)
-    if ($.Token == '') {
-        $.putMsg(`获取Token失败`);
+    if (activityCookie == '') {
+        console.log(`获取LzToken失败`)
+        $.needRetry = true
         return
     }
+    console.log('Token:' + $.Token)
+    if ($.Token == '') {
+        console.log(`获取Token失败`);
+        $.needRetry = true
+        return
+    }
+    $.needRetry = false
 
     await takePostRequest("getSimpleActInfoVo");
 
