@@ -91,11 +91,11 @@ if ($.isNode()) {
                 if ($.needRetry) {
                     console.log(`----第三次重跑----`)
                     await jdmodule(false);
-                } 
+                }
                 if ($.needRetry) {
                     console.log(`获取用户信息失败，跳过！`)
                     continue
-                } 
+                }
 
                 if ($.helpTimes != 0 && $.helpTimes == $.hasHelpedTimes) {
                     $.friendUuidId++
@@ -116,6 +116,11 @@ if ($.isNode()) {
         for (let i = 0; i < retryNum; i++) {
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                $.index = i + 1;
+                $.isLogin = true;
+                $.nickName = '';
+                console.log(`\n******${$.nickName || $.UserName} 开始加购*********\n`);
                 await jdmodule(true);
                 $.message += `被助力账号${i + 1}本次加购${$.hasAddCartSize}/${$.drawCondition}/${$.totals}件商品\n`
             }
@@ -160,26 +165,31 @@ async function jdmodule(retry) {
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
 
     await getCK();
-    console.log("lzToken=" + activityCookie)
+    // console.log("lzToken=" + activityCookie)
     await takePostRequest("isvObfuscator");
     if (activityCookie == '') {
         console.log(`获取LzToken失败`)
         $.needRetry = true
         return
     }
-    console.log('Token:' + $.Token)
+    // console.log('Token:' + $.Token)
     if ($.Token == '') {
         console.log(`获取Token失败`);
         $.needRetry = true
         return
     }
-    $.needRetry = false
 
     await takePostRequest("getSimpleActInfoVo");
 
     await takePostRequest("getMyPing");
 
     await takePostRequest("accessLogWithAD")
+
+    if ($.needRetry) {
+        return
+    }
+
+    $.needRetry = false
 
     if ($.index != 1 && !retry) {
         // $.message += `京东账号 ${$.UserName} 已成功助力\n`
@@ -443,6 +453,7 @@ async function dealReturn(type, data) {
                     if (res.result && res.result === true) {
                         if (typeof res.data.shopId != 'undefined') $.shopId = res.data.shopId
                         if (typeof res.data.venderId != 'undefined') $.venderId = res.data.venderId
+                        $.needRetry = false
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
                     } else {
@@ -458,6 +469,7 @@ async function dealReturn(type, data) {
                         console.log("MyPin" + res.data.secretPin)
                         if (res.data && typeof res.data.secretPin != 'undefined') $.Pin = res.data.secretPin
                         if (res.data && typeof res.data.nickname != 'undefined') $.nickname = res.data.nickname
+                        $.needRetry = false
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
                     } else {
@@ -465,6 +477,7 @@ async function dealReturn(type, data) {
                     }
                 } else {
                     console.log(`${type} ${data}`)
+                    $.needRetry = true
                 }
                 break;
             case 'getUserInfo':
@@ -505,8 +518,8 @@ async function dealReturn(type, data) {
                         if ($.index == 1) {
                             $.headHelpTimes = $.totals - $.jsNum
                             console.log(`车头账号需要助力的次数为${$.headHelpTimes}次`)
-                            $.otherHelpTime = $.drawCondition - $.jsNum <= 0 ? $.headHelpTimes : $.drawCondition - $.jsNum
-                            console.log(`每个账号需要助力的次数为${$.otherHelpTime}次即可达到开奖要求！`)
+                            $.otherHelpTime = $.drawCondition - $.jsNum < 0 ? $.headHelpTimes : $.drawCondition - $.jsNum
+                            console.log(`其他账号需要助力的次数为${$.otherHelpTime}次即可达到开奖要求！`)
                             $.friendUuid = $.friendUuids[0]
                             console.log(`接下来都会助力${$.friendUuid}`)
                             $.helpTimes = $.headHelpTimes
