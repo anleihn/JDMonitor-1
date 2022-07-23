@@ -17,6 +17,7 @@ let isGetAuthorCodeList = true
 let activityId = ''
 let activityShopId = ''
 let helpArray = [0, 0, 0, 0, 0]
+$.needHelpTimeArray = []
 $.message = ""
 if (process.env.jd_fxyl_activityId && process.env.jd_fxyl_activityId != "") {
     activityId = process.env.jd_fxyl_activityId;
@@ -117,7 +118,8 @@ if ($.isNode()) {
                 console.log('助力池')
                 console.log(authorCodeList)
             }
-            for (let idx in authorCodeList) {
+
+            for (let idx = 0; idx < Math.min(ownCookieNum, authorCodeList.length); idx++) {
                 if (idx != i) {
                     if (helpArray[idx] == -1) {
                         let num0 = Number(idx) + 1
@@ -130,30 +132,40 @@ if ($.isNode()) {
                         if ($.errorMessage === '活动太火爆，还是去买买买吧') {
                             break
                         }
-
                         helpArray[idx]++
                         let num1 = Number(idx) + 1
                         console.log(`账号${num1}被助力了${helpArray[idx]}次`)
-                        if (helpArray[idx] == $.needHelpTimes) {
-                            isGetAuthorCodeList = false;
-                            cookie = cookiesArr[idx]
-                            originCookie = cookiesArr[idx]
-                            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-                            $.isLogin = true;
-                            $.nickName = '';
-                            await checkCookie();
-                            console.log(`\n*开始【京东账号】${$.nickName || $.UserName} 领取*\n`);
-                            $.authorCode = authorCodeList[idx]
-                            $.activityId = activityId
-                            $.activityShopId = activityShopId
-                            await getPrize();
-                            await $.wait(2000)
+                    }
+                }
+            }
+            await $.wait(2000)
+            for (let idx = 0; idx < Math.min(ownCookieNum, authorCodeList.length); idx++) {
+                for (let helpIdx in $.needHelpTimeArray) {
+                    if (helpArray[idx] == $.needHelpTimeArray[helpIdx]) {
+                        isGetAuthorCodeList = false;
+                        cookie = cookiesArr[idx]
+                        originCookie = cookiesArr[idx]
+                        $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+                        $.isLogin = true;
+                        $.nickName = '';
+                        await checkCookie();
+                        console.log(`\n*开始【京东账号】${$.nickName || $.UserName} 领取*\n`);
+                        $.authorCode = authorCodeList[idx]
+                        $.activityId = activityId
+                        $.activityShopId = activityShopId
+                        console.log(`领取第${Number(helpIdx) + 1}个分享奖励`)
+                        await getPrize(helpIdx);
+                        if ($.needHelpTimeArray[helpIdx] == $.needHelpTimes) {
+                            console.log(`分享奖励已全部领取完毕`)
                             helpArray[idx] = -1
                         }
+                        await $.wait(2000)
                     }
-
                 }
-
+            }
+            if ($.index % 5 == 0) {
+                console.log('-----------休息10s------------')
+                await $.wait(10000)
             }
         }
         if (helpArray[ownCookieNum - 1] == -1) {
@@ -213,8 +225,7 @@ async function share() {
     }
 }
 
-async function getPrize() {
-    $.log('那就开始吧。')
+async function getPrize(idx = -1) {
     $.token = null;
     $.secretPin = null;
     $.openCardActivityId = null
@@ -225,9 +236,14 @@ async function getPrize() {
         await getMyPing();
         if ($.secretPin) {
             await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&friendUuid=${encodeURIComponent($.authorCode)}`)
-            for (let d in $.drawContentVOs) {
-                await task('getPrize', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&drawInfoId=${$.drawContentVOs[d]['drawInfoId']}`)
+            if (idx == -1) {
+                for (let d in $.drawContentVOs) {
+                    await task('getPrize', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&drawInfoId=${$.drawContentVOs[d]['drawInfoId']}`)
+                }
+            } else {
+                await task('getPrize', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&drawInfoId=${$.drawContentVOs[idx]['drawInfoId']}`)
             }
+
         } else {
             $.log("没有成功获取到用户信息")
         }
@@ -262,11 +278,14 @@ function task(function_id, body, isCommon = 0) {
                                     $.drawContentVOs = data.data.drawContentVOs
                                     if ($.index == 1) {
                                         for (let drawContentVo of $.drawContentVOs) {
-                                            $.needHelpTimes = drawContentVo.shareTimes
+                                            $.needHelpTimes1 = drawContentVo.shareTimes
                                             $.prizeInfo = drawContentVo.name
-                                            console.log(`分享${$.needHelpTimes}人，可获得${$.prizeInfo}`)
+                                            console.log(`分享${$.needHelpTimes1}人，可获得${$.prizeInfo}`)
+                                            if ($.needHelpTimes1 <= 10) {
+                                                $.needHelpTimeArray.push($.needHelpTimes1)
+                                                $.needHelpTimes = $.needHelpTimes1
+                                            }
                                         }
-                                        $.helpCookieNum = $.needHelpTimes
                                     }
                                     break;
                                 case 'getPrize':
