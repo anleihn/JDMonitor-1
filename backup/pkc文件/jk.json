@@ -1,0 +1,257 @@
+{
+    "说明": "此配置支持自定义填写监控变量，频道id需要加在diybotset.json配置文件的myzdjr_chatId中，变量就填这里",
+ 
+    "/注释cmdName/": "cmdName: 执行命令，青龙默认task，一般不需要修改，修改需重启机器人生效。",
+ 
+    "/注释isNow/": "isNow: 是否开启随机延时执行脚本，true=开启，false=关闭，修改需重启机器人生效。",
+ 
+    "/注释isOpen/": "isOpen: 是否开启监控该变量，true=开启，false=关闭，修改需重启机器人生效",
+  
+    "/注释name/": "name: 脚本名称备注或自定义名字，不重要。修改需重启机器人生效",
+  
+    "/注释envName/": "envName: 监控的变量名称，必要。如同一个脚本有多个变量只需要填其中一个即可，修改需重启机器人生效",
+  
+    "/注释scriptPath/": "scriptPath: 变量应对的脚本路径，必要。相对路径默认执行/ql/scripts/下面脚本，可填绝对路径。修改需重启机器人生效",
+ 
+   "cmdName": "task",
+ 
+   "isNow": true,
+ 
+   "jk":[
+       {
+           "isOpen": true,
+           "name": "电脑配件",
+           "envName": "computer_activityId",
+           "scriptPath": "/ql/scripts/KingRan_KR_main/jd_computer.js"
+        },
+        {
+           "isOpen": true,
+           "name": "通用开卡",
+           "envName": "jd_opencard_activityId",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_lzdz1_opencard_common.js"
+        },
+        {
+           "isOpen": true,
+           "name": "JoinCommon通用开卡",
+           "envName": "jd_jCommon_opencard_activityId",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_lzdz1_opencard_joinCommon.js"
+        },
+        {
+           "isOpen": true,
+           "name": "三参数通用开卡",
+           "envName": "jd_opencard_three_params",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_lzdz1_opencard_threeParams.js"
+        },
+        {
+           "isOpen": true,
+           "name": "bdCommon通用开卡",
+           "envName": "jd_opencard_bdCommon",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_lzdz1_opencard_bdCommon.js"
+        },
+        {
+           "isOpen": true,
+           "name": "读秒拼手速通用活动",
+           "envName": "jd_wxSecond_activityId",
+           "scriptPath": "/ql/scripts/KingRan_KR_main/jd_wxSecond.js"
+        },
+		{
+           "isOpen": true,
+           "name": "抢红包",
+           "envName": "T_HB_SHARE_URL",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_wx_hbShare.js"
+        },
+        {
+           "isOpen": true,
+           "name": "品类联合",
+           "envName": "jd_categoryUnion_activityId",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/jd_category_activity.js"
+        },
+		{
+           "isOpen": true,
+           "name": "积分兑换京豆",
+           "envName": "T_POINT_EXCHANGE_URL",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_point_exchange.js"
+        },
+		{
+           "isOpen": true,
+           "name": "生日礼包",
+           "envName": "T_WX_GIFTS_ACTIVITY_ID",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_wx_gifts.js"
+        },
+        {
+           "isOpen": true,
+           "name": "LZ刮刮乐抽奖通用活动",
+           "envName": "jd_drawCenter_activityId",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_wx_center_draw.js"
+        },
+		{
+           "isOpen": true,
+           "name": "关注店铺有礼",
+           "envName": "jd_wxShopFollowActivity_activityId",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/t_follow_shop.js"
+        },
+		{
+           "isOpen": true,
+           "name": "邀请赢大礼",
+           "envName": "yhyactivityId",
+		   "envName": "yhyauthorCode",
+           "scriptPath": "/ql/scripts/tttccz_JDMonitor/jd_yqydl.py"
+        },
+        {
+           "isOpen": true,
+           "name": "JOY通用开卡活动",
+           "envName": "JD_JOYOPEN",
+           "scriptPath": "/ql/scripts/KingRan_KR_main/jd_joyopen.js"
+        },
+        {
+           "isOpen": true,
+           "name": "joy抽奖机通用",
+           "envName": "JD_Lottery",
+           "scriptPath": "/ql/scripts/KingRan_KR_main/jd_lottery.js"
+        },
+        {
+           "isOpen": true,
+           "name": "M收藏有礼",
+           "envName": "M_FAV_SHOP_ARGV",
+           "scriptPath": "/ql/scripts/jd_scyl.js"
+        },
+        {
+           "isOpen": true,
+           "name": "半点京豆雨",
+           "envName": "jd_redrain_half_url",
+           "scriptPath": "/ql/scripts/jd_redrain_half.js"
+        },
+        {
+           "isOpen": true,
+           "name": "整点京豆雨",
+           "envName": "jd_redrain_activityId",
+           "envName": "jd_redrain_url",
+           "scriptPath": "/ql/scripts/jd_redrain.js"
+        },
+        {
+           "isOpen": true,
+           "name": "店铺签到",
+           "envName": "DPQDTK",
+           "scriptPath": "/ql/scripts/KingRan_KR_main/jd_dpqd.js"
+        },
+        {
+            "isOpen": true,
+            "name": "jdjoy_open通用ID任务",
+            "envName": "comm_activityIDList",
+            "envName": "comm_endTimeList",
+            "envName": "comm_tasknameList",
+            "scriptPath": "/ql/scripts/KingRan_KR_main/jd_joyjd_open.js"
+         },
+        {
+            "isOpen": true,
+            "name": "盲盒任务抽京豆",
+            "envName": "jd_mhurlList",
+            "scriptPath": "/ql/scripts/KingRan_KR_main/jd_mhtask.js"
+         },
+        {
+            "isOpen": true,
+            "name": "女装盲盒抽京豆",
+            "envName": "jd_nzmhurl",
+            "scriptPath": "/ql/scripts/jd_nzmh.js"
+        },
+        {
+            "isOpen": true,
+            "name": "许愿池抽奖机",
+            "envName":"wish_appIdArrList",
+            "envName":"wish_appNameArrList",
+            "scriptPath":"/ql/scripts/KingRan_KR_main/jd_wish.js"
+        },
+        {
+            "isOpen": false,
+            "name": "KR加购任务",
+            "envName":"jd_lzaddCart_activityId",
+            "scriptPath":"/ql/scripts/KingRan_KR_main/jd_lzaddCart.js"
+        },
+        {
+            "isOpen": true,
+            "name": "加购任务",
+            "envName":"M_WX_ADD_CART_URL",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/t_jd_wx_addCart.js"
+        },
+        {
+            "isOpen": true,
+            "name": "幸运抽奖",
+            "envName":"M_WX_LUCK_DRAW_URL",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/t_jd_wx_luckDraw.js"
+        },
+		{
+            "isOpen": true,
+            "name": "粉丝互动",
+            "envName":"jd_wxFansInterActionActivity_activityId",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/t_fans_inter.js"
+        },
+        {
+            "isOpen": true,
+            "name": "豆豆通用任务",
+            "envName":"WXGAME_ACT_ID",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/jd_game.js"
+        },
+        {
+            "isOpen": true,
+            "name": "cj组队瓜分",
+            "envName":"jd_cjhy_activityId",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/jd_cjzdgf.js"
+        },
+		{
+            "isOpen": true,
+            "name": "完善信息有礼",
+            "envName":"T_WX_COMPLETE_INFO_ACTIVITY_URL",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/t_wx_completeInfo.js"
+        },
+        {
+            "isOpen": true,
+            "name": "lz组队瓜分",
+            "envName":"jd_zdjr_activityId",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/jd_zdjr.js"
+        },
+        {
+            "isOpen": true,
+            "name": "M集卡抽奖",
+            "envName":"jd_wxCollectCard_activityId",
+            "scriptPath":"/ql/scripts/KingRan_KR_main/jd_wxCollectCard.js"
+        },
+		{
+            "isOpen": true,
+            "name": "让福袋飞",
+            "envName":"jd_wxUnPackingActivity_activityId",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/t_wx_unpacking.js"
+        },
+        {
+            "isOpen": true,
+            "name": "LZ分享有礼",
+            "envName":"jd_fxyl_activityId",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/m_jd_share.js"
+        },
+        {
+            "isOpen": true,
+            "name": "微定制",
+            "envName":"jd_wdz_activityId",
+            "scriptPath":"/ql/scripts/KingRan_KR_main/jd_team60.js"
+        },
+        {
+            "isOpen": true,
+            "name": "PKC关注有礼-特效",
+            "envName":"PKC_TXGZYL",
+            "scriptPath":"/ql/scripts/tttccz_JDMonitor/jd_pk_follow_tx.js"
+        },
+        {
+            "isOpen": true,
+            "name": "大牌联合通用开卡",
+            "envName":"DPLHTY1",
+            "scriptPath":"/ql/scripts/KingRan_KR_main/jd_opencardDPLHTY.js"
+        },
+        {
+            "isOpen": true,
+            "name": "入会开卡领取礼包",
+            "envName":"OPENCARD_BEAN",
+            "scriptPath":"/ql/scripts/KingRan_KR_main/jd_OpenCard_Force.js"
+        }
+ 
+   ]
+    
+}
