@@ -205,11 +205,13 @@ async function jdmodule() {
                     }
                     if ($.exchangeError.indexOf(`火爆`) != -1) {
                         console.log(`活动火爆，重新兑换失败！`)
+                        
                     }
                 }
             }
         }
     }
+    $.exchangeError = ''
 
 }
 
