@@ -61,7 +61,7 @@ if ($.isNode()) {
                 $.exportActivityIds = $.exportActivityIds == '' ? `${actInfo}` : `${$.exportActivityIds}&${actInfo}`
             }
         }
-        for (let i = 0; i < cookiesArr; i++) {
+        for (let i = 0; i < cookiesArr.length; i++) {
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -101,7 +101,12 @@ if ($.isNode()) {
                     $.friendUuidId++
                     $.friendUuid = $.friendUuids[$.friendUuidId]
                     $.hasHelpedTimes = 0
-                    $.helpTimes = $.otherHelpTime
+                    if ($.otherHelpTime != 0) {
+                        $.helpTimes = $.otherHelpTime
+                    } else {
+                        $.helpTimes = $.headHelpTimes
+                    }
+
                     console.log(`上一个账号已助力完成，接下来都会助力${$.friendUuid}`)
                 }
                 if (i + 1 % 8 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
@@ -165,7 +170,7 @@ async function jdmodule(retry) {
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
 
     await getCK();
-    // console.log("lzToken=" + activityCookie)
+    console.log("lzToken=" + activityCookie)
     await takePostRequest("isvObfuscator");
     if (activityCookie == '') {
         console.log(`获取LzToken失败`)
