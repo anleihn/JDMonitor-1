@@ -46,6 +46,9 @@ if ($.isNode()) {
         return;
     }
     // 限制10个账号
+    if ($.activityUrl.indexOf("isvjd") != -1) {
+        $.activityUrl = $.activityUrl.replace("isvjd", "isvjcloud")
+    }
     for (let i = 0; i < 10; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
