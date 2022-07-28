@@ -106,6 +106,7 @@ async function member() {
   $.secretPin = null;
   $.openCardActivityId = null;
   $.addScore = 1
+  $.hasOpenAll = false
   lz_cookie = {};
   await getFirstLZCK();
   await getToken();
@@ -113,7 +114,6 @@ async function member() {
   if ($.token) {
     await getMyPing();
     if ($.secretPin) {
-      console.log("去助力 -> " + $.authorCode);
       // console.log(cookie)
       await task("common/accessLogWithAD", `venderId=${$.activityShopId}&code=99&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=`, 1);
       // await task("wxActionCommon/getUserInfo", `pin=${encodeURIComponent($.secretPin)}`, 1);
@@ -121,6 +121,13 @@ async function member() {
         await task("joinCommon/activityContent", `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&pinImg=&nick=${encodeURIComponent($.pin)}&cjyxPin=&cjhyPin=&shareUuid=${encodeURIComponent($.authorCode)}`, 0, 1);
       } else {
         await task("joinCommon/activityContent", `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&pinImg=&nick=${encodeURIComponent($.pin)}&cjyxPin=&cjhyPin=&shareUuid=${encodeURIComponent($.authorCode)}`);
+      }
+      console.log("去助力 -> " + $.authorCode);
+      // await task("joinCommon/assist/status", `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&uuid=${$.actorUuid}&shareUuid=${$.authorCode}`);
+      await task("joinCommon/assist", `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&uuid=${$.actorUuid}&shareUuid=${$.authorCode}`);
+      if ($.hasOpenAll) {
+          console.log(`已全部开卡，并完成助力`)
+          return
       }
       $.log("关注店铺");
       await task("joinCommon/doTask", `activityId=${$.activityId}&uuid=${$.actorUuid}&pin=${encodeURIComponent($.secretPin)}&taskType=20&taskValue=`);
@@ -241,9 +248,11 @@ function task(function_id, body, isCommon = 0, own = 0) {
                   break;
                 case "joinCommon/assist/status":
                   $.log(JSON.stringify(data));
+                  
                   break;
                 case "joinCommon/assist":
                   $.log(JSON.stringify(data));
+                  $.hasOpenAll = data.data.openCardInfo.openAll
                   break;
                 case "opencard/help/list":
                   $.log(JSON.stringify(data));
