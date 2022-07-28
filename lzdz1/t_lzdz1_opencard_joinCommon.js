@@ -8,6 +8,7 @@ const notify = $.isNode() ? require("./sendNotify") : "";
 let cookiesArr = [], cookie = "", message = "";
 let ownCode = null;
 let authorCodeList = [];
+$.authorCode = "";
 $.activityId = process.env.jd_jCommon_opencard_activityId ? process.env.jd_jCommon_opencard_activityId : "";
 $.openCardPin = process.env.openCardPin ? process.env.openCardPin : ""
 if ($.isNode()) {
@@ -73,8 +74,7 @@ if ($.isNode()) {
       $.bean = 0;
       $.ADID = getUUID("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", 1);
       $.UUID = getUUID("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-      // $.authorCode = authorCodeList[random(0, authorCodeList.length)];
-      $.authorCode = ""
+      // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
       $.authorNum = `${random(1000000, 9999999)}`;
       $.randomCode = random(1000000, 9999999);
       $.activityShopId = "1000004065";
@@ -198,6 +198,7 @@ function task(function_id, body, isCommon = 0, own = 0) {
                     if ($.index === 1) {
                       ownCode = data.data.actorInfo["uuid"];
                       console.log(ownCode);
+                      $.authorCode = ownCode
                     }
                     $.actorUuid = data.data.actorInfo["uuid"];
                   } else {
