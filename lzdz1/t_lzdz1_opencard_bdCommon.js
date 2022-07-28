@@ -56,7 +56,7 @@ $.openCardPin = process.env.openCardPin ? process.env.openCardPin : ""
   console.log(`入口:\n${$.activityUrl}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
-    $.activityUrl = `https://lzdz-isv.isvjcloud.com/dingzhi/bd/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`
+    
     cookie = cookiesArr[i];
     if (cookie) {
       if ($.openCardPin != "") {
@@ -74,6 +74,7 @@ $.openCardPin = process.env.openCardPin ? process.env.openCardPin : ""
   }
 
   for (let i = 0; i < cookiesArr.length; i++) {
+    $.activityUrl = `https://lzdz-isv.isvjcloud.com/dingzhi/bd/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`
     cookie = cookiesArr[i];
     if (cookie) {
       originCookie = cookie
