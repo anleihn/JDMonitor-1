@@ -7,6 +7,7 @@ const $ = new Env('购物车锦鲤');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+var moment = require('moment');
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 $.activityUrlPrefix = 'https://lzkjdz-isv.isvjcloud.com/wxCartKoi/cartkoi/activity?activityId='
 $.activityId = process.env.jd_wxCartKoi_activityId ? process.env.jd_wxCartKoi_activityId : "";
@@ -47,7 +48,49 @@ if ($.isNode()) {
     }
     let curtimestamp = Date.parse(new Date());
     if ($.activityIds.indexOf($.activityId) != -1) {
-        console.log("ID已存在，退出")
+        stop = false
+        console.log("ID已存在，尝试开奖")
+        for (let i = 0; i < cookiesArr.length; i++) {
+            if (cookiesArr[i]) {
+                cookie = cookiesArr[i];
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                $.index = i + 1;
+                $.isLogin = true;
+                $.nickName = '';
+                console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+                if (!$.isLogin) {
+                    $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+
+                    if ($.isNode()) {
+                        await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+                    }
+                    continue
+                }
+                $.needRetry = false
+
+                await jdmodule2();
+                if ($.needRetry) {
+                    console.log(`----第一次重跑----`)
+                    await jdmodule2();
+                }
+                if ($.needRetry) {
+                    console.log(`----第二次重跑----`)
+                    await jdmodule2();
+                }
+                if ($.needRetry) {
+                    console.log(`----第三次重跑----`)
+                    await jdmodule2();
+                }
+                if ($.needRetry) {
+                    console.log(`获取用户信息失败，跳过！`)
+                    continue
+                }
+                if (stop) {
+                    break
+                }
+            }
+        }
+        await notify.sendNotify(`购物车锦鲤：${$.activityName}`, `${$.message}开奖时间：${$.drawTime}\n跳转链接: ${$.activityUrl}\n`);
     } else {
         for (let actInfo of $.activityIds.split("&")) {
             console.log(actInfo)
@@ -208,7 +251,7 @@ async function jdmodule(retry) {
     await takePostRequest("activityContent")
 
     if ($.isGameEnd) {
-        $.putMsg(`活动已结束`)
+        console.log(`活动已结束`)
         stop = true;
         return;
     }
@@ -234,6 +277,78 @@ async function jdmodule(retry) {
     }
 }
 
+async function jdmodule2() {
+    activityCookie = '';
+    $.Token = ''
+    $.domain = $.activityUrl.match(/https?:\/\/([^/]+)/) && $.activityUrl.match(
+        /https?:\/\/([^/]+)/)[1] || ''
+    $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
+
+    await getCK();
+    console.log("lzToken=" + activityCookie)
+    await takePostRequest("isvObfuscator");
+    if (activityCookie == '') {
+        console.log(`获取LzToken失败`)
+        $.needRetry = true
+        return
+    }
+    // console.log('Token:' + $.Token)
+    if ($.Token == '') {
+        console.log(`获取Token失败`);
+        $.needRetry = true
+        return
+    }
+
+    await takePostRequest("getSimpleActInfoVo");
+
+    await takePostRequest("getMyPing");
+
+    await takePostRequest("accessLogWithAD")
+
+    if ($.needRetry) {
+        return
+    }
+
+    $.needRetry = false
+
+    await takePostRequest("getUserInfo")
+
+    await takePostRequest("activityContent")
+
+    if ($.isGameEnd) {
+        console.log(`活动已结束`)
+        stop = true;
+        return;
+    }
+    if ($.needFollow && !$.hasFollow) {
+        console.log(`关注店铺`)
+        await takePostRequest("followShop")
+    }
+
+    let curtimestamp = Date.parse(new Date());
+    let prizeTime = timeToTimestamp($.drawTime) - curtimestamp
+    if (prizeTime > 0) {
+        if (prizeTime > 1000 * 60 * 10) {
+            $.message += `购物车锦鲤开奖时间为${$.drawTime}`
+            stop = true
+            return
+        } else {
+            await $.wait(prizeTime)
+            curtimestamp = Date.parse(new Date());
+            prizeTime = timeToTimestamp($.drawTime) - curtimestamp
+            if (prizeTime > 0) {
+                await $.wait(prizeTime)
+                curtimestamp = Date.parse(new Date());
+                prizeTime = timeToTimestamp($.drawTime) - curtimestamp
+            }
+        }
+
+    }
+
+    // 开始获取奖励
+    await getPrize()
+}
+
 //运行
 async function run() {
     try {
@@ -251,6 +366,37 @@ async function run() {
         }
 
 
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function getPrize() {
+    try {
+        console.log("---查看中奖结果---")
+        await takePostRequest("drawResult");
+        drawInfo = $.prizeInfo.drawInfo || null
+        if (drawInfo != null) {
+            needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
+            if (needWriteAddress == 'y') {
+                $.shiwuName = drawInfo.name
+                $.generateId = $.prizeInfo.addressId || '0'
+                if ($.generateId != '0') {
+                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                    console.log("邮寄地址：" + $.fullAddress)
+                    let fullAddressArray = $.fullAddress.split(",")
+                    $.province = fullAddressArray[0]
+                    $.city = fullAddressArray[1]
+                    $.county = fullAddressArray[2]
+                    $.address = fullAddressArray[3]
+                    $.phone = fullAddressArray[4]
+                    $.postalCode = fullAddressArray[5]
+                    $.areaCode = fullAddressArray[6]
+                    $.postalName = fullAddressArray[7]
+                    await takePostRequest(`saveAddress`)
+                }
+            }
+        }
     } catch (e) {
         console.log(e);
     }
@@ -344,9 +490,10 @@ async function takePostRequest(type) {
             }
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&shareUuid=${$.shareUuid}`
             break;
-        case 'viewVideo':
-        case 'visitSku':
-        case 'toShop':
+        case 'drawResult':
+            url = `https://${domain}/wxCartKoi/cartkoi/drawResult`;
+            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&uuid=${$.uuid}`
+            break;
         case 'addSku':
             url = `https://${$.domain}/drawCenter/doTask`;
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&taskId=${$.task.taskId}&param=${$.pro.skuId}`
@@ -527,7 +674,7 @@ async function dealReturn(type, data) {
                         if ($.index == 1) {
                             $.headHelpTimes = $.totals - $.jsNum
                             console.log(`车头账号需要助力的次数为${$.headHelpTimes}次`)
-                            $.otherHelpTime = $.drawCondition - $.jsNum < 0 ? $.headHelpTimes : $.drawCondition - $.jsNum
+                            $.otherHelpTime = $.drawCondition - $.jsNum < 0 ? 0 : $.drawCondition - $.jsNum
                             console.log(`其他账号需要助力的次数为${$.otherHelpTime}次即可达到开奖要求！`)
                             $.friendUuid = $.friendUuids[0]
                             console.log(`接下来都会助力${$.friendUuid}`)
@@ -580,6 +727,23 @@ async function dealReturn(type, data) {
                     }
                 } else {
                     console.log(`${type} ${data}`)
+                }
+                break;
+            case 'drawResult':
+                if (typeof res == 'object') {
+                    if (res.result && res.result === true) {
+                        // console.log(JSON.stringify(res))
+                        if (typeof res.data == 'object') {
+                            if (res.data.message == '中奖') {
+                                $.message += `京东账号${$.UserName}获得${res.data.drawName}\n`
+                                console.log(`恭喜中奖~获得${res.data.drawName}`)
+                                $.prizeInfo = res.data
+                            }
+                            else {
+                                console.log(`恭喜获得了空气- -`)
+                            }
+                        }
+                    }
                 }
                 break;
             case 'getProduct':
