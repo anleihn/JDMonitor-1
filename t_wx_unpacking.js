@@ -61,30 +61,47 @@ if ($.isNode()) {
             }
             await jdmodule(false);
             if ($.helpTimes != 0 && $.helpTimes == $.hasHelpedTimes) {
+                console.log(`第${Number($.friendUuidId) + 1}已助力完成，开始拆包`)
+                cookie = cookiesArr[$.friendUuidId];
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                $.index = i + 1;
+                $.isLogin = true;
+                $.nickName = '';
+                console.log(`\n******开始【京东账号】${$.nickName || $.UserName} 获取奖励*********\n`);
+                if (!$.isLogin) {
+                    $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+
+                    if ($.isNode()) {
+                        await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+                    }
+                    continue
+                }
+                await jdmodule(true);
                 $.friendUuidId++
                 $.friendUuid = $.friendUuids[$.friendUuidId]
                 $.hasHelpedTimes = 0
                 console.log(`上一个账号已助力完成，接下来都会助力${$.friendUuid}`)
+
             }
-            if ($.index % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-            if ($.index % 4 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+            if ($.index % 8 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
+            if ($.index % 8 == 0) await $.wait(parseInt(Math.random() * 5000 + 10000, 10))
         }
     }
-    let restartTime = cookiesArr.length
-    if ($.helpTimes != 0) {
-        restartTime = Math.ceil(cookiesArr.length / $.helpTimes)
-    }
-    $.message += `------拆包奖励-------\n`
-    console.log(`重新跑前${restartTime}个号`)
-    for (let i = 0; i < restartTime; i++) {
-        if (cookiesArr[i]) {
-            cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-            await jdmodule(true);
-        }
-    }
-    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-    await jdmodule();
+    // let restartTime = cookiesArr.length
+    // if ($.helpTimes != 0) {
+    //     restartTime = Math.ceil(cookiesArr.length / $.helpTimes)
+    // }
+    // $.message += `------拆包奖励-------\n`
+    // console.log(`重新跑前${restartTime}个号`)
+    // for (let i = 0; i < restartTime; i++) {
+    //     if (cookiesArr[i]) {
+    //         cookie = cookiesArr[i];
+    //         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+    //         await jdmodule(true);
+    //     }
+    // }
+    // $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+    // await jdmodule();
     if ($.isNode()) {
         if ($.message != '') {
             await notify.sendNotify("福袋拆包", `${$.message}\n跳转链接\n${$.activityUrl}`)
@@ -107,16 +124,22 @@ function showMsg() {
 
 
 async function jdmodule(retry) {
+    activityCookie = ''
+    $.Token = ''
     $.domain = $.activityUrl.match(/https?:\/\/([^/]+)/) && $.activityUrl.match(
         /https?:\/\/([^/]+)/)[1] || ''
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
 
     await getCK();
-    console.log("lzToken=" + activityCookie)
+    // console.log("lzToken=" + activityCookie)
+    if (activityCookie == '') {
+        console.log(`获取LzToken失败`);
+        return
+    }
     await takePostRequest("isvObfuscator");
-    console.log('Token:' + $.Token)
+    // console.log('Token:' + $.Token)
     if ($.Token == '') {
-        $.putMsg(`获取Token失败`);
+        console.log(`获取Token失败`);
         return
     }
 
@@ -144,17 +167,13 @@ async function jdmodule(retry) {
     // await takePostRequest("getMyFriendInfo")
 
     if (!retry) {
-        console.log("开始助力拆包")
+        console.log("助力拆包")
         await takePostRequest("unPacking")
     }
 
     if (retry) {
-        console.log("获取拆包奖励")
+        console.log("获取奖励")
         await takePostRequest("hasPrize")
-        if ($.hasDrawPrize) {
-            $.message += `京东账号${$.UserName} 获得 ${$.prise}\n`
-        }
-
     }
 }
 
@@ -431,7 +450,7 @@ async function dealReturn(type, data) {
                         if (res.errorMessage.indexOf("成功") != -1) {
                             console.log(JSON.stringify(res))
                             $.hasHelpedTimes++
-                            $.message += `京东账号${$.UserName} ${res.errorMessage}\n`
+                            $.message += `京东账号${$.UserName} 助力成功！\n`
                             $.prise = res.data.name
                         }
                     } else {
@@ -457,12 +476,10 @@ async function dealReturn(type, data) {
                 break;
             case 'hasPrize':
                 if (typeof res == 'object') {
-                    if (res.ok && res.ok === true) {
-                        $.uuid = res.data.uuid
-                        if ($.index == 1) {
-                            $.friendUuid = $.uuid
-                            console.log(`接下来都会助力${$.friendUuid}}`)
-                        }
+                    console.log(`hasPrize-->` + JSON.stringify(res))
+                    if (res.result && res.result == true) {
+                        // priseName = res.data.name
+                        $.message += `京东账号${$.UserName} 获得 ${$.prise}\n`
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
                     } else {
@@ -723,7 +740,7 @@ function setActivityCookie(resp) {
         }
     }
     if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && !$.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE}`
-    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN}`   
+    if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE && $.LZ_AES_PIN) activityCookie = `${LZ_TOKEN_KEY} ${LZ_TOKEN_VALUE} ${$.LZ_AES_PIN}`
     if (lz_jdpin_token) lz_jdpin_token_cookie = lz_jdpin_token
     // console.log(activityCookie)
 }
