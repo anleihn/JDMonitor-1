@@ -90,7 +90,7 @@ async function jdmodule() {
     await takePostRequest("isvObfuscator");
     console.log('Token:' + $.Token)
     if ($.Token == '') {
-        $.putMsg(`获取Token失败`);
+        console.log(`获取Token失败`);
         return
     }
 

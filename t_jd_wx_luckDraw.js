@@ -25,12 +25,20 @@ $.LZ_AES_PIN = ""
 $.stop = false
 $.canDrawTimes = 0
 $.drawConsume = -1
+var moment = require('moment')
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
+$.addressArray = [
+    "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
+    "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
+    "山东省,青岛市,崂山区,泉岭路8号中商国际大厦,15265297926,266100,370212, 巩大豆",
+    "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
+    "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
+]
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -172,6 +180,44 @@ async function jdmodule() {
 
     }
 
+    await takePostRequest("getDrawRecord")
+
+    if ($.record.length > 0) {
+        today = moment(Date.now()).format('YYYY-MM-DD')
+        for (let record of $.record) {
+            needWriteAddress = record.needWriteAddress || 'n'
+            if (needWriteAddress == 'y') {
+                $.giftDate = record.drawTime
+                if (today == $.giftDate) {
+                    $.shiwuName = record.name
+                    if ($.shiwuName.indexOf('京豆') == -1 && $.shiwuName.indexOf('积分') == -1 && $.shiwuName.indexOf('优惠券') == -1) {
+                        console.log("实物奖励:" + $.shiwuName)
+                        $.generateId = record.addressId || ''
+
+                        $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                        console.log("邮寄地址：" + $.fullAddress)
+                        let fullAddressArray = $.fullAddress.split(",")
+                        $.province = fullAddressArray[0]
+                        $.city = fullAddressArray[1]
+                        $.county = fullAddressArray[2]
+                        $.address = fullAddressArray[3]
+                        $.phone = fullAddressArray[4]
+                        $.postalCode = fullAddressArray[5]
+                        $.areaCode = fullAddressArray[6]
+                        $.postalName = fullAddressArray[7]
+                        if ($.generateId == '') {
+                            await takePostRequest(`saveAddress`)
+                        } else {
+                            await takePostRequest(`saveAddressWithGenerateId`)
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
 }
 
 //运行
@@ -267,6 +313,19 @@ async function takePostRequest(type) {
             url = `https://${$.domain}/wxActionCommon/followShop`;
             // url = `${domain}/dingzhi/dz/openCard/saveTask`;
             body = `activityId=${$.activityId}&buyerNick=${$.enPin}&userId=${$.venderId}&activityType=${$.activityType}`
+            break;
+        case 'getDrawRecord':
+            url = `https://${$.domain}/wxDrawActivity/getDrawRecord`;
+            // url = `${domain}/dingzhi/dz/openCard/saveTask`;
+            body = `activityId=${$.activityId}&pin=${$.enPin}`
+            break;
+        case 'saveAddress':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${$.enPin}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
+            break;
+        case 'saveAddressWithGenerateId':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${$.enPin}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
             break;
         default:
             console.log(`错误${type}`);
@@ -499,6 +558,14 @@ async function dealReturn(type, data) {
                     }
                 }
                 break;
+            case 'getDrawRecord':
+                if (typeof res == 'object') {
+                    $.record = []
+                    if (res.result && res.result === true) {
+                        $.record = res.data
+                    }
+                }
+                break;
             case 'addShareOpen':
                 if (typeof res == 'object') {
                     if (res.ok && res.ok === true) {
@@ -588,6 +655,18 @@ async function dealReturn(type, data) {
                     }
                 } else {
                     console.log(`${type} ${data}`)
+                }
+                break;
+            case 'saveAddress':
+            case 'saveAddressWithGenerateId':
+                console.log(JSON.stringify(res))
+                if (typeof res == 'object') {
+                    if (res.result && res.result === true) {
+                        console.log(`地址填写成功！`)
+                        $.message += `获得实物奖励，地址为${$.fullAddress}\n`
+                    } else {
+                        console.log(`${type} ${data}`)
+                    }
                 }
                 break;
             case '邀请':

@@ -59,7 +59,7 @@ let cookies = []
             cookiesArr.splice(i, 1)
         } else {
             let ckidx = Math.ceil(Math.random() * cookiesArr.length)
-        
+
             cookie = cookiesArr[ckidx];
             cookiesArr.splice(ckidx, 1)
         }
@@ -157,9 +157,52 @@ async function run() {
 
         await takePostRequest("signDetail")
 
-        if ($.totalSignNum == 10 || $.totalSignNum == 20 || $.totalSignNum == 30) {
-            $.today = formatDate()
+        console.log(`签到明细--->`)
+        console.log(JSON.parse($.signData))
+
+        for (sign of $.signData) {
+            signDay = sign.signData
+            if (signDay >= '20220721' && signDay <= '20220730') {
+                if (sign.status == 0) {
+                    console.log(`日期${signDay}未签到，需要补签，去补签...`)
+                    $.signOtherDay = signDay
+                    await takePostRequest("signOtherDay")
+                }
+            }
+        }
+
+        $.today = formatDate()
+        if ($.today == '20220730') {
+
             await takePostRequest("startDraw")
+            await takePostRequest("getDrawRecordHasCoupon")
+            if ($.record.length > 0) {
+                for (let record of $.record) {
+                    if ('20220730' == record.date) {
+                        $.shiwuName = record.name
+                        $.generateId = record.addressId || ''
+                        if ($.shiwuName.indexOf('京豆') == -1 && $.shiwuName.indexOf('积分') == -1 && $.shiwuName.indexOf('优惠券') == -1) {
+                            $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                            console.log("邮寄地址：" + $.fullAddress)
+                            let fullAddressArray = $.fullAddress.split(",")
+                            $.province = fullAddressArray[0]
+                            $.city = fullAddressArray[1]
+                            $.county = fullAddressArray[2]
+                            $.address = fullAddressArray[3]
+                            $.phone = fullAddressArray[4]
+                            $.postalCode = fullAddressArray[5]
+                            $.areaCode = fullAddressArray[6]
+                            $.postalName = fullAddressArray[7]
+                            if ($.generateId == '') {
+                                await takePostRequest(`saveAddress`)
+                            } else {
+                                await takePostRequest(`saveAddressWithGenerateId`)
+                            }
+
+                        }
+                    }
+                }
+            }
         }
 
         $.allMessage += `京东账号【${$.nickName || $.UserName}】签到天数为${$.totalSignNum}\n`
@@ -210,6 +253,10 @@ async function takePostRequest(type) {
             url = `${domain}/dingzhi/mengniu/punchclock/signDetail`;
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
             break;
+        case 'signOtherDay':
+            url = `${domain}/dingzhi/mengniu/punchclock/signOtherDay`;
+            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&taskType=${$.taskType}&taskValue=${$.taskValue}&day=${$.signOtherDay}`
+            break;
         case 'signTask':
             url = `${domain}/dingzhi/mengniu/punchclock/signTask`;
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
@@ -217,6 +264,18 @@ async function takePostRequest(type) {
         case 'startDraw':
             url = `${domain}/dingzhi/mengniu/punchclock/startDraw`;
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&change=${$.today}`
+            break;
+        case 'getDrawRecordHasCoupon':
+            url = `${domain}/dingzhi/taskact/common/getDrawRecordHasCoupon`;
+            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
+            break;
+        case 'saveAddress':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
+            break;
+        case 'saveAddressWithGenerateId':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
             break;
         default:
             console.log(`错误${type}`);
@@ -344,11 +403,12 @@ async function dealReturn(type, data) {
                 break;
             case 'signDetail':
                 if (typeof res == 'object') {
+                    $.signData = []
                     if (res.result && res.result === true) {
-                        signData = res.data.signData
+                        $.signData = res.data.signData
                         $.totalSignNum = 0
-                        for (let sign of signData) {
-                            if (sign.isSign == 1) {
+                        for (let sign of $.signData) {
+                            if (sign.isSign == 1 || sign.isSign == 2) {
                                 $.totalSignNum++
                             }
                         }
@@ -358,6 +418,22 @@ async function dealReturn(type, data) {
                     } else {
                         console.log(`${type} ${data}`)
                     }
+
+                } else {
+                    console.log(`${type} ${data}`)
+                }
+                break;
+            case 'signOtherDay':
+                if (typeof res == 'object') {
+                    $.signData = []
+                    if (res.result && res.result == true) {
+                        console.log(`${$.signOtherDay}日，补签成功`)
+                    } else if (res.errorMessage) {
+                        console.log(`${type} ${res.errorMessage || ''}`)
+                    } else {
+                        console.log(`${type} ${data}`)
+                    }
+
                 } else {
                     console.log(`${type} ${data}`)
                 }
@@ -417,9 +493,34 @@ async function dealReturn(type, data) {
                 } else {
                     console.log(`${type} ${res}`)
                 }
-
+                break
+            case 'getDrawRecordHasCoupon':
+                // console.log(data)
+                if (typeof res == 'object') {
+                    if (res.result == true) {
+                        $.record = res.data;
+                    } else {
+                        $.record = []
+                        console.log(res.errorMessage)
+                    }
+                } else {
+                    console.log(`${type} ${res}`)
+                }
+                break
             case 'accessLogWithAD':
             case 'drawContent':
+                break;
+            case 'saveAddressWithGenerateId':
+            case 'saveAddress':
+                console.log(JSON.stringify(res))
+                if (typeof res == 'object') {
+                    if (res.result && res.result == true) {
+                        console.log(`地址填写成功！`)
+                        $.message += `获得实物奖励，地址填写成功：${$.fullAddress}\n`
+                    } else {
+                        console.log(`${type} ${data}`)
+                    }
+                }
                 break;
             default:
                 console.log(`${type}-> ${data}`);

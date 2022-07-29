@@ -103,7 +103,7 @@ async function jdmodule(retry) {
     await takePostRequest("isvObfuscator");
     // console.log('Token:' + $.Token)
     if ($.Token == '') {
-        $.putMsg(`获取Token失败`);
+        console.log(`获取Token失败`);
         return
     }
 
@@ -118,7 +118,7 @@ async function jdmodule(retry) {
     await takePostRequest("activityContent")
 
     if ($.isGameEnd) {
-        $.putMsg(`活动已结束`)
+        console.log(`活动已结束`)
         stop = true;
         return;
     }
@@ -136,36 +136,33 @@ async function run() {
     try {
         console.log("---查看中奖结果---")
         await takePostRequest("drawResult");
-        console.log(JSON.stringify($.prizeInfo.drawInfo))
-        // if ($.prizeInfo.drawInfo) {
-        drawInfo = $.prizeInfo.drawInfo
-        needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
-        if (needWriteAddress == 'y') {
-            $.shiwuName = drawInfo.name
-            $.generateId = $.prizeInfo.addressId || ''
-            // if ($.generateId != '0') {
-            if ($.shiwuName.indexOf('京豆') == -1 && $.shiwuName.indexOf('积分') == -1 && $.shiwuName.indexOf('优惠券') == -1) {
-                $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
-                console.log("邮寄地址：" + $.fullAddress)
-                let fullAddressArray = $.fullAddress.split(",")
-                $.province = fullAddressArray[0]
-                $.city = fullAddressArray[1]
-                $.county = fullAddressArray[2]
-                $.address = fullAddressArray[3]
-                $.phone = fullAddressArray[4]
-                $.postalCode = fullAddressArray[5]
-                $.areaCode = fullAddressArray[6]
-                $.postalName = fullAddressArray[7]
-                if ($.generateId == '') {
-                    await takePostRequest(`saveAddress`)
-                } else {
-                    await takePostRequest(`saveAddressWithGenerateId`)
-                }
+        if ($.prizeInfo != '') {
+            needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
+            if (needWriteAddress == 'y') {
+                drawInfo = $.prizeInfo.drawInfo
+                $.shiwuName = drawInfo.name
+                $.generateId = $.prizeInfo.addressId || ''
+                if ($.shiwuName.indexOf('京豆') == -1 && $.shiwuName.indexOf('积分') == -1 && $.shiwuName.indexOf('优惠券') == -1) {
+                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                    console.log("邮寄地址：" + $.fullAddress)
+                    let fullAddressArray = $.fullAddress.split(",")
+                    $.province = fullAddressArray[0]
+                    $.city = fullAddressArray[1]
+                    $.county = fullAddressArray[2]
+                    $.address = fullAddressArray[3]
+                    $.phone = fullAddressArray[4]
+                    $.postalCode = fullAddressArray[5]
+                    $.areaCode = fullAddressArray[6]
+                    $.postalName = fullAddressArray[7]
+                    if ($.generateId == '') {
+                        await takePostRequest(`saveAddress`)
+                    } else {
+                        await takePostRequest(`saveAddressWithGenerateId`)
+                    }
 
+                }
             }
         }
-        // }
-        // }
     } catch (e) {
         console.log(e);
     }
@@ -462,6 +459,7 @@ async function dealReturn(type, data) {
                 break;
             case 'drawResult':
                 if (typeof res == 'object') {
+                    $.prizeInfo = ''
                     if (res.result && res.result === true) {
                         console.log(JSON.stringify(res))
                         if (typeof res.data == 'object') {
