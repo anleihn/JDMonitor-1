@@ -43,7 +43,15 @@ $.shareUuid = ""
 $.shareUuids = []
 $.helpTimes = 0
 $.shareIndex = 0
+$.taskTypeAndValue = ['12_1', '12_2', '12_3', '14_1000014803', '14_10806248', '18_0', '23_0', '21_0']
 let cookies = []
+$.addressArray = [
+    "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
+    "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
+    "山东省,青岛市,崂山区,泉岭路8号中商国际大厦,15265297926,266100,370212, 巩大豆",
+    "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
+    "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
+]
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
@@ -157,19 +165,42 @@ async function run() {
 
         await takePostRequest("signDetail")
 
-        console.log(`签到明细--->`)
-        console.log(JSON.parse($.signData))
-
+        // console.log(`签到明细--->`)
+        // console.log(JSON.stringify($.signData))
+        $.taskValueIdx = 0
         for (sign of $.signData) {
-            signDay = sign.signData
-            if (signDay >= '20220721' && signDay <= '20220730') {
-                if (sign.status == 0) {
+            if ($.taskValueIdx >= $.taskTypeAndValue.length) {
+                console.log(`本日补签次数已用完`)
+                break
+            }
+            signDay = sign.signDate
+            if (signDay >= '20220721' && signDay < '20220730') {
+                if (sign.signState == 0) {
+                    $.signSuccess = false
                     console.log(`日期${signDay}未签到，需要补签，去补签...`)
                     $.signOtherDay = signDay
+                    taskTypeAndValue = $.taskTypeAndValue[$.taskValueIdx]
+                    $.taskType = taskTypeAndValue.split("_")[0]
+                    $.taskValue = taskTypeAndValue.split("_")[1]
                     await takePostRequest("signOtherDay")
+                    while (!$.signSuccess) {
+                        $.taskValueIdx++
+                        if ($.taskValueIdx == $.taskTypeAndValue.length) {
+                            break
+                        }
+                        taskTypeAndValue = $.taskTypeAndValue[$.taskValueIdx]
+                        $.taskType = taskTypeAndValue.split("_")[0]
+                        $.taskValue = taskTypeAndValue.split("_")[1]
+                        await takePostRequest("signOtherDay")
+                        if ($.signSuccess) {
+                            break
+                        }
+                    }
                 }
             }
         }
+
+        await takePostRequest("signDetail")
 
         $.today = formatDate()
         if ($.today == '20220730') {
@@ -428,8 +459,7 @@ async function dealReturn(type, data) {
                     $.signData = []
                     if (res.result && res.result == true) {
                         console.log(`${$.signOtherDay}日，补签成功`)
-                    } else if (res.errorMessage) {
-                        console.log(`${type} ${res.errorMessage || ''}`)
+                        $.signSuccess = true
                     } else {
                         console.log(`${type} ${data}`)
                     }
