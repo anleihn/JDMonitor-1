@@ -32,6 +32,13 @@ $.joinErrorTimes = 0
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
+$.addressArray = [
+    "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
+    "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
+    "山东省,青岛市,崂山区,泉岭路8号中商国际大厦,15265297926,266100,370212, 巩大豆"
+    // "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
+    // "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
+]
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -252,29 +259,7 @@ async function jdmodule2() {
 }
 
 //运行
-async function run() {
-    try {
-        $.productIds = []
-        if ($.addCarts < $.jsNum) {
-            for (let pro of $.productVos) {
-                console.log("开始加购商品:" + pro.title)
-                if (pro.seq < $.jsNum) {
-                    $.productIds.push(pro.skuId)
-                    continue
-                }
-            }
-            await takePostRequest("quickAddSku")
-            await $.wait(parseInt(Math.random() * 5000 + 2000, 10))
-        }
-
-
-    } catch (e) {
-        console.log(e);
-    }
-}
-
-//运行
-async function run() {
+async function getPrize() {
     try {
         console.log("---查看中奖结果---")
         await takePostRequest("drawResult");
