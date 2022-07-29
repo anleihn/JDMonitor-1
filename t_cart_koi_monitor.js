@@ -273,32 +273,41 @@ async function run() {
     }
 }
 
-async function getPrize() {
+//运行
+async function run() {
     try {
         console.log("---查看中奖结果---")
         await takePostRequest("drawResult");
-        drawInfo = $.prizeInfo.drawInfo || null
-        if (drawInfo != null) {
-            needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
-            if (needWriteAddress == 'y') {
-                $.shiwuName = drawInfo.name
-                $.generateId = $.prizeInfo.addressId || '0'
-                if ($.generateId != '0') {
-                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
-                    console.log("邮寄地址：" + $.fullAddress)
-                    let fullAddressArray = $.fullAddress.split(",")
-                    $.province = fullAddressArray[0]
-                    $.city = fullAddressArray[1]
-                    $.county = fullAddressArray[2]
-                    $.address = fullAddressArray[3]
-                    $.phone = fullAddressArray[4]
-                    $.postalCode = fullAddressArray[5]
-                    $.areaCode = fullAddressArray[6]
-                    $.postalName = fullAddressArray[7]
+        console.log(JSON.stringify($.prizeInfo.drawInfo))
+        // if ($.prizeInfo.drawInfo) {
+        drawInfo = $.prizeInfo.drawInfo
+        needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
+        if (needWriteAddress == 'y') {
+            $.shiwuName = drawInfo.name
+            $.generateId = $.prizeInfo.addressId || ''
+            // if ($.generateId != '0') {
+            if ($.shiwuName.indexOf('京豆') === -1 && $.shiwuName.indexOf('积分') == -1 && $.shiwuName.indexOf('优惠券') == -1) {
+                $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                console.log("邮寄地址：" + $.fullAddress)
+                let fullAddressArray = $.fullAddress.split(",")
+                $.province = fullAddressArray[0]
+                $.city = fullAddressArray[1]
+                $.county = fullAddressArray[2]
+                $.address = fullAddressArray[3]
+                $.phone = fullAddressArray[4]
+                $.postalCode = fullAddressArray[5]
+                $.areaCode = fullAddressArray[6]
+                $.postalName = fullAddressArray[7]
+                if ($.generateId == '') {
                     await takePostRequest(`saveAddress`)
+                } else {
+                    await takePostRequest(`saveAddressWithGenerateId`)
                 }
+
             }
         }
+        // }
+        // }
     } catch (e) {
         console.log(e);
     }
@@ -411,6 +420,14 @@ async function takePostRequest(type) {
         case '抽奖':
             url = `https://${$.domain}/drawCenter/draw/luckyDraw`;;
             body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
+            break;
+        case 'saveAddress':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
+            break;
+        case 'saveAddressWithGenerateId':
+            url = `https://${$.domain}/wxAddress/save`
+            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
             break;
         default:
             console.log(`错误${type}`);
@@ -727,6 +744,18 @@ async function dealReturn(type, data) {
                     }
                 } else {
                     console.log(`${type} ${data}`)
+                }
+                break;
+            case 'saveAddressWithGenerateId':
+            case 'saveAddress':
+                console.log(JSON.stringify(res))
+                if (typeof res == 'object') {
+                    if (res.result && res.result === true) {
+                        console.log(`地址填写成功！`)
+                        $.message += `获得实物奖励，地址填写成功：${$.fullAddress}\n`
+                    } else {
+                        console.log(`${type} ${data}`)
+                    }
                 }
                 break;
             case 'getDrawRecordHasCoupon':
