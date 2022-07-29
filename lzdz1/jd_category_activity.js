@@ -167,8 +167,7 @@ async function run() {
     $.runFalag = true
     let count = parseInt($.score / 1)
     console.log(`抽奖次数为:${count}`)
-    //for (m = 1; count--; m++) {
-    for (m = 1; 0; m++) {
+    /*for (m = 1; count--; m++) {
       console.log(`第${m}次抽奖`)
       await takePostRequest('luckyDraw');
       if ($.runFalag == false) break
@@ -178,7 +177,7 @@ async function run() {
         break
       }
       await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
-    }
+    }*/
     await takePostRequest('getDrawRecordHasCoupon');
     if ($.outFlag) {
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
