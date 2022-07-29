@@ -167,7 +167,8 @@ async function run() {
     $.runFalag = true
     let count = parseInt($.score / 1)
     console.log(`抽奖次数为:${count}`)
-    for (m = 1; count--; m++) {
+    //for (m = 1; count--; m++) {
+    for (m = 1; 0; m++) {
       console.log(`第${m}次抽奖`)
       await takePostRequest('luckyDraw');
       if ($.runFalag == false) break
