@@ -24,7 +24,10 @@ $.drawType = 0
 $.LZ_AES_PIN = ""
 $.stop = false
 $.canDrawTimes = 0
+// 只跑前10个账号
+$.runNum = 10
 $.drawConsume = -1
+$.randomArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 var moment = require('moment')
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
@@ -57,29 +60,34 @@ if ($.isNode()) {
     if ($.activityUrl.indexOf("isvjd") != -1) {
         $.activityUrl = $.activityUrl.replace("isvjd", "isvjcloud")
     }
-    for (let i = 0; i < 10; i++) {
-        if (cookiesArr[i]) {
-            cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-            $.index = i + 1;
-            $.isLogin = true;
-            $.nickName = '';
-            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            if (!$.isLogin) {
-                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+    $.runCookie = cookiesArr.splice(0, $.runNum)
 
-                if ($.isNode()) {
-                    await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                }
-                continue
+    for (let i = 0; i < $.runNum; i++) {
+        let ckidx = Math.ceil(Math.random() * ($.runCookie.length -1))
+        cookie = $.runCookie[ckidx];
+        $.runCookie.splice(ckidx, 1)
+        // console.log(`ck：` + $.runCookie)
+        // console.log(`ck长度：` + $.runCookie.length)
+        // console.log("当前索引：" + ckidx)
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+        $.index = i + 1;
+        $.isLogin = true;
+        $.nickName = '';
+        console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+        if (!$.isLogin) {
+            $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+
+            if ($.isNode()) {
+                await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
             }
-            await jdmodule();
-            if ($.stop) {
-                break
-            }
-            // if ($.index % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-            // if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+            continue
         }
+        await jdmodule();
+        if ($.stop) {
+            break
+        }
+        // if ($.index % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
+        // if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
     }
 
     if ($.message != '' && !$.stop) {
