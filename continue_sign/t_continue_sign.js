@@ -52,7 +52,7 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    if ($.activityIds.indexOf($.activityId) != -1) {
+    if ($.activityIds.indexOf($.rawId) != -1) {
         console.log(`签到ID已存在，退出`)
     } else {
         if ($.rawId.indexOf("cj") != -1) {
@@ -91,14 +91,15 @@ if ($.isNode()) {
                 if ($.index % 2 == 0) await $.wait(parseInt(Math.random() * 50000 + 2000, 10))
             }
         }
-    }
-    if ($.isNode()) {
-        await notify.sendNotify("连续签到变量", `export T_CON_SIGN_IDS=\"${result}\"`)
-        if ($.message != '') {
-            await notify.sendNotify("连续签到", `${$.shopName}\n${$.message}\n奖励内容\n${$.priseMsg}\n跳转链接\n${$.activityUrl}`)
+        if ($.isNode()) {
+            await notify.sendNotify("连续签到变量", `export T_CON_SIGN_IDS=\"${result}\"`)
+            if ($.message != '') {
+                await notify.sendNotify("连续签到", `${$.shopName}\n${$.message}\n奖励内容\n${$.priseMsg}\n跳转链接\n${$.activityUrl}`)
 
+            }
         }
     }
+
 
 })()
     .catch((e) => {

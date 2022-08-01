@@ -59,16 +59,19 @@ if ($.isNode()) {
             $.activityUrl = $.ativityUrlPrefix + $.activityId
             console.log(`跳转链接：${$.activityUrl}`)
             $.message = ""
-            for (let i = 0; i < cookiesArr.length; i++) {
-                if (cookiesArr[i]) {
-                    cookie = cookiesArr[i];
-                    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-                    console.log(`\n******开始【京东账号】${$.nickName || $.UserName}*********\n`);
-                    await jdmodule(true);
-                    $.index++
-                    if ($.index % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-                    if ($.index % 4 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
-                }
+            $.runNum = cookiesArr.length
+            $.runCookie = cookiesArr.splice(0, $.runNum)
+            for (let i = 0; i < $.runNum; i++) {
+                let ckidx = Math.floor(Math.random() * $.runCookie.length)
+                cookie = $.runCookie[ckidx];
+                $.runCookie.splice(ckidx, 1)
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                console.log(`\n******开始【京东账号】${$.nickName || $.UserName}*********\n`);
+                await jdmodule(true);
+                $.index++
+                if ($.index % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
+                if ($.index % 4 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+
             }
             if ($.isNode) {
                 if ($.message != '') {

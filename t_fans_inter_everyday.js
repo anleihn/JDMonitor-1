@@ -11,6 +11,8 @@ $.activityIds = process.env.T_FANS_INTER_ACTIVITY_IDS ? process.env.T_FANS_INTER
 let cookiesArr = [], message = '';
 $.exportParam = ""
 $.LZ_AES_PIN = ""
+var moment = require("moment")
+$.fansIndex = process.env.FANS_INDEX ? process.env.FANS_INDEX : "";
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -36,6 +38,24 @@ let activityList = []
     }
     activityList = getRandomArrayElements(activityList, activityList.length);
     $.helpFalg = true;
+    today = moment(Date.now()).format('YYYY-MM-DD')
+    if ($.fansIndex == "") {
+        dayFlag = today
+        $.idx = 0
+    } else {
+        dayFlag = $.fansIndex.split("_")[0]
+        if (dayFlag != today) {
+            dayFlag = today
+            $.idx = 0
+        } else {
+            $.idx = Number($.fansIndex.split("_")[1])
+        }
+    }
+    if (dayFlag == today && $.idx >= cookiesArr.length) {
+        console.log(`已全部运行完毕`)
+        return
+    }
+    $.nextIdx = $.idx + 1
     for (let _0x2e674b = 0; _0x2e674b < activityList.length; _0x2e674b++) {
         let _0x38a02d = activityList[_0x2e674b].id;
         let _0x58a1ac = Date.now();
@@ -51,6 +71,7 @@ let activityList = []
             console.log('\n活动ID：' + _0x38a02d + ',已过期');
         }
     }
+    await notify.sendNotify(`粉丝互动索引 export FANS_INDEX="${today}_${$.nextIdx}"`);
 })().catch(_0xce13bb => {
     $.log('', '❌ ' + $.name + ', 失败! 原因: ' + _0xce13bb + '!', '');
 }).finally(() => {
@@ -63,19 +84,20 @@ async function main(_0x3f7ec5) {
     _0x3f7ec5.runFlag = true;
     if (_0x3f7ec5.helpFalg) {
         doInfo();
-    } for (let _0x42703b = 0; _0x42703b < _0x3f7ec5.cookiesArr.length && (_0x42703b < RUNCK) && _0x3f7ec5.activityId && _0x3f7ec5.runFlag; _0x42703b++) {
-        _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[_0x42703b];
-        _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
-        _0x3f7ec5.index = (_0x42703b + 1);
-        console.log('\n********开始【京东账号' + _0x3f7ec5.index + '】' + _0x3f7ec5.UserName + '********\n');
-        try {
-            await runMain(_0x3f7ec5);
-        } catch (_0x404e8e) { }
-        await _0x3f7ec5.wait(3000);
-    } if (message) {
+    }
+    
+    _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[$.idx];
+    _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
+    console.log('\n********开始【京东账号】' + _0x3f7ec5.UserName + '********\n');
+    try {
+        await runMain(_0x3f7ec5);
+    } catch (_0x404e8e) { }
+    await _0x3f7ec5.wait(3000);
+    if (message) {
         await notify.sendNotify('粉丝互动ID：' + _0x3f7ec5.activityId, message + `跳转链接：${$.activityUrl}`);
     }
-}
+} 
+
 async function doInfo() {
     $.helpFalg = false;
     for (let _0x32dca4 = 0; _0x32dca4 < cookiesArr.length; _0x32dca4++) {
@@ -237,9 +259,6 @@ async function runMain(_0x40ebb9) {
         }
 
     }
-    if (_0x3f7ec5.index == 1) {
-    $.exportParam += $.exportParam == "" ? `${activityList[_0x2e674b].id};${activityList[_0x2e674b].endTime}` : `&${activityList[_0x2e674b].id};${activityList[_0x2e674b].endTime}`
-}
 
 }
 async function luckDraw(_0x13737e) {

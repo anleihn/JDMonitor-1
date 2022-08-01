@@ -60,10 +60,10 @@ if ($.isNode()) {
     if ($.activityUrl.indexOf("isvjd") != -1) {
         $.activityUrl = $.activityUrl.replace("isvjd", "isvjcloud")
     }
+    $.runNum = 10
     $.runCookie = cookiesArr.splice(0, $.runNum)
-
     for (let i = 0; i < $.runNum; i++) {
-        let ckidx = Math.ceil(Math.random() * ($.runCookie.length -1))
+        let ckidx = Math.floor(Math.random() * $.runCookie.length)
         cookie = $.runCookie[ckidx];
         $.runCookie.splice(ckidx, 1)
         // console.log(`ck：` + $.runCookie)

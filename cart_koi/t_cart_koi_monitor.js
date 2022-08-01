@@ -56,45 +56,48 @@ if ($.isNode()) {
     if ($.activityIds.indexOf($.activityId) != -1) {
         stop = false
         console.log("ID已存在，尝试开奖")
-        for (let i = 0; i < cookiesArr.length; i++) {
-            if (cookiesArr[i]) {
-                cookie = cookiesArr[i];
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-                $.index = i + 1;
-                $.isLogin = true;
-                $.nickName = '';
-                console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-                if (!$.isLogin) {
-                    $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+        $.runNum = cookiesArr.length
+        $.runCookie = cookiesArr.splice(0, $.runNum)
+        for (let i = 0; i < $.runNum; i++) {
+            let ckidx = Math.floor(Math.random() * $.runCookie.length)
+            cookie = $.runCookie[ckidx];
+            $.runCookie.splice(ckidx, 1)
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            $.isLogin = true;
+            $.nickName = '';
+            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+            if (!$.isLogin) {
+                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
 
-                    if ($.isNode()) {
-                        await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                    }
-                    continue
+                if ($.isNode()) {
+                    await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
                 }
-                $.needRetry = false
-
-                await jdmodule2();
-                if ($.needRetry) {
-                    console.log(`----第一次重跑----`)
-                    await jdmodule2();
-                }
-                if ($.needRetry) {
-                    console.log(`----第二次重跑----`)
-                    await jdmodule2();
-                }
-                if ($.needRetry) {
-                    console.log(`----第三次重跑----`)
-                    await jdmodule2();
-                }
-                if ($.needRetry) {
-                    console.log(`获取用户信息失败，跳过！`)
-                    continue
-                }
-                if (stop) {
-                    break
-                }
+                continue
             }
+            $.needRetry = false
+
+            await jdmodule2();
+            if ($.needRetry) {
+                console.log(`----第一次重跑----`)
+                await jdmodule2();
+            }
+            if ($.needRetry) {
+                console.log(`----第二次重跑----`)
+                await jdmodule2();
+            }
+            if ($.needRetry) {
+                console.log(`----第三次重跑----`)
+                await jdmodule2();
+            }
+            if ($.needRetry) {
+                console.log(`获取用户信息失败，跳过！`)
+                continue
+            }
+            if (stop) {
+                break
+            }
+
         }
         await notify.sendNotify(`购物车锦鲤：${$.activityName}`, `${$.message}开奖时间：${$.drawTime}\n跳转链接: ${$.activityUrl}\n`);
     }
