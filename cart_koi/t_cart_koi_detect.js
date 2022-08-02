@@ -69,8 +69,8 @@ if ($.isNode()) {
                 console.log(`\n******开始【京东账号】${$.nickName || $.UserName}*********\n`);
                 await jdmodule(true);
                 $.index++
-                if ($.index % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-                if ($.index % 4 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+                console.log(`休息一下别被403了`)
+                await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
 
             }
             if ($.isNode) {

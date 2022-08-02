@@ -81,10 +81,9 @@ if ($.isNode()) {
                 $.friendUuid = $.friendUuids[$.friendUuidId]
                 $.hasHelpedTimes = 0
                 console.log(`上一个账号已助力完成，接下来都会助力${$.friendUuid}`)
-
+                console.log(`休息一下别被403了`)
+                await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
             }
-            if ($.index % 8 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-            if ($.index % 8 == 0) await $.wait(parseInt(Math.random() * 5000 + 10000, 10))
         }
     }
     // let restartTime = cookiesArr.length

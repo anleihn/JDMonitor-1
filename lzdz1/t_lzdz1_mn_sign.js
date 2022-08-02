@@ -35,7 +35,7 @@ $.hotFlag = false
 $.outFlag = false
 $.activityEnd = false
 $.shopId = ""
-$.activityUrl = "https://lzdz1-isv.isvjcloud.com/dingzhi/mengniu/punchclock/activity/2728778?activityId=dz16484057944a4baeb1cf4ecccc30"
+$.activityUrl = "https://lzdz1-isv.isvjcloud.com/m/1000014803/dzce66f9c639e44137985cb144de56/?shareUuid=e938799d53fc4a6c8f43c2717607e769"
 $.activityId = "dz16484057944a4baeb1cf4ecccc30"
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
@@ -59,7 +59,7 @@ $.addressArray = [
         });
         return;
     }
-    console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/mengniu/punchclock/activity/2728778?activityId=dz16484057944a4baeb1cf4ecccc30`)
+    console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/m/1000014803/dzce66f9c639e44137985cb144de56/?shareUuid=e938799d53fc4a6c8f43c2717607e769`)
     let rawLen = cookiesArr.length
     for (let i = 0; i < rawLen; i++) {
         if (i == 0) {
@@ -116,12 +116,12 @@ async function run() {
         $.Token = ''
         $.Pin = ''
         let flag = false
-        await takePostRequest('isvObfuscator');
-        // console.log(`Token---> ${$.Token}`)
-        if ($.Token == '') {
-            console.log('获取[token]失败！')
-            return
-        }
+        // await takePostRequest('isvObfuscator');
+        // // console.log(`Token---> ${$.Token}`)
+        // if ($.Token == '') {
+        //     console.log('获取[token]失败！')
+        //     return
+        // }
         await getCk()
         if (activityCookie == '') {
             console.log(`获取cookie失败`); return;
@@ -579,7 +579,7 @@ function getPostRequest(url, body, method = "POST") {
         "X-Requested-With": "XMLHttpRequest"
     }
     if (url.indexOf('https://lzdz1-isv.isvjcloud.com') > -1) {
-        headers["Referer"] = `${$.activityUrl}&shareUuid=${$.shareUuid}`
+        headers["Referer"] = `${$.activityUrl}`
         headers["Cookie"] = `${lz_jdpin_token_cookie && lz_jdpin_token_cookie || ''}${$.Pin && "AUTH_C_USER=" + $.Pin + ";" || ""}${activityCookie}`
     }
     // console.log(headers)
@@ -599,7 +599,7 @@ function getPostRequestJson(url, body, method = "POST") {
         "X-Requested-With": "XMLHttpRequest"
     }
     if (url.indexOf('https://lzdz1-isv.isvjcloud.com') > -1) {
-        headers["Referer"] = `${$.activityUrl}&shareUuid=${$.shareUuid}`
+        headers["Referer"] = `${$.activityUrl}`
         headers["Cookie"] = `${lz_jdpin_token_cookie && lz_jdpin_token_cookie || ''}${$.Pin && "AUTH_C_USER=" + $.Pin + ";" || ""}${activityCookie}`
     }
     // console.log(headers)
@@ -610,10 +610,13 @@ function getPostRequestJson(url, body, method = "POST") {
 function getCk() {
     return new Promise(resolve => {
         let get = {
-            url: `https://lzdz1-isv.isvjcloud.com/zst/collectCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`,
-            followRedirect: false,
+            url: `https://lzdz1-isv.isvjcloud.com/wxCommonInfo/token`,
             headers: {
                 "User-Agent": $.UA,
+                "Refer": `${$.activityUrl}`,
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "application/json",
+                "Accept-Encoding": "gzip, deflate, br"
             },
             timeout: 30000
         }
@@ -634,8 +637,8 @@ function getCk() {
                         $.activityEnd = true
                         console.log('活动已结束')
                     }
-                    $.venderId = data.split("id=\"userId\" value=")[1].split("\"")[1]
-                    console.log(`VenderId--> ${$.venderId}`)
+                    // $.venderId = data.split("id=\"userId\" value=")[1].split("\"")[1]
+                    // console.log(`VenderId--> ${$.venderId}`)
                     setActivityCookie(resp)
                 }
             } catch (e) {

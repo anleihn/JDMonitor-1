@@ -138,7 +138,8 @@ if ($.isNode()) {
                     }
                 }
             }
-            await $.wait(2000)
+            console.log(`休息一下别被403了`)
+            await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
             for (let idx = 0; idx < Math.min(ownCookieNum, authorCodeList.length); idx++) {
                 for (let helpIdx in $.needHelpTimeArray) {
                     if (helpArray[idx] == $.needHelpTimeArray[helpIdx]) {
@@ -159,13 +160,10 @@ if ($.isNode()) {
                             console.log(`分享奖励已全部领取完毕`)
                             helpArray[idx] = -1
                         }
-                        await $.wait(2000)
+                        console.log(`休息一下别被403了`)
+                        await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
                     }
                 }
-            }
-            if ($.index % 5 == 0) {
-                console.log('-----------休息10s------------')
-                await $.wait(10000)
             }
         }
         if (helpArray[ownCookieNum - 1] == -1) {
@@ -190,6 +188,8 @@ if ($.isNode()) {
                 await getPrize();
             }
         }
+        console.log(`休息一下别被403了`)
+        await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
 
     }
     if ($.message != '') {

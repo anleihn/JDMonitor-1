@@ -35,10 +35,10 @@ $.hotFlag = false
 $.outFlag = false
 $.activityEnd = false
 $.shopId = ""
-$.activityId = "9d022955db3948729270608e32d34ebc"
+$.activityId = "168f879faeac4ceea2cf7da3e6ae7047"
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
-$.shareUuid = "9e99ed20663d43cebce1387d6ddf59b3"
+$.shareUuid = "59e554dd02694682ade8fc8c23800c3f"
 $.shareUuids = []
 $.helpTimes = 0
 $.shareIndex = 0
@@ -72,6 +72,12 @@ let cookies = []
             // }
             if (i == 0 && !$.actorUuid) break
             if ($.outFlag || $.activityEnd) break
+            console.log(`休息一下别被403了`)
+            await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+            if ($.index % 3 == 0) {
+                console.log(`额外休息1分钟`)
+                await $.wait(parseInt(Math.random() * 5000 + 60000, 10))
+            }
         }
     }
     if ($.outFlag) {
@@ -219,8 +225,6 @@ async function run() {
             }
         }
         $.allMessage += "\n"
-        if ($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
-        if ($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 60000, 10))
 
     } catch (e) {
         console.log(e)

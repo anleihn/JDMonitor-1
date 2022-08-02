@@ -63,8 +63,8 @@ if ($.isNode()) {
             if ($.stop) {
                 break;
             }
-            if ($.index % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-            if ($.index % 4 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+            console.log(`休息一下别被403了`)
+            await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
         }
     }
     if ($.isNode()) {
@@ -304,7 +304,7 @@ async function dealReturn(type, data) {
             case 'activityContent':
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
-                       // console.log(JSON.stringify(res.data))
+                        // console.log(JSON.stringify(res.data))
                         let data = res.data
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)

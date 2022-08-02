@@ -88,6 +88,8 @@ if ($.isNode()) {
                 if (stop) {
                     break
                 }
+                console.log(`休息一下别被403了`)
+                await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
             }
         }
         await notify.sendNotify(`购物车锦鲤：${$.activityName}`, `${$.message}开奖时间：${$.drawTime}\n跳转链接: ${$.activityUrl}\n`);
@@ -152,8 +154,8 @@ if ($.isNode()) {
 
                     console.log(`上一个账号已助力完成，接下来都会助力${$.friendUuid}`)
                 }
-                if (i + 1 % 8 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-                if (i + 1 % 8 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+                console.log(`休息一下别被403了`)
+                await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
             }
         }
         let retryNum = cookiesArr.length
@@ -172,8 +174,8 @@ if ($.isNode()) {
                 await jdmodule(true);
                 $.message += `被助力账号${i + 1}本次加购${$.hasAddCartSize}/${$.drawCondition}/${$.totals}件商品\n`
             }
-            if (i + 1 % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-            if (i + 1 % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
+            console.log(`休息一下别被403了`)
+            await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
         }
         let st = timeToTimestamp($.drawTime)
         let temp = `${$.activityId};${st}`

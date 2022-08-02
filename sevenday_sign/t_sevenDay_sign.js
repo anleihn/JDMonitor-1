@@ -79,13 +79,13 @@ if ($.isNode()) {
                 if ($.index == 1) {
                     result = $.activityIds == null || $.activityIds == "" ? $.rawId : $.activityIds + `&${$.rawId}`
                 }
-                if ($.index % 2 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-                if ($.index % 2 == 0) await $.wait(parseInt(Math.random() * 50000 + 2000, 10))
+                console.log(`休息一下别被403了`)
+                await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
             }
         }
     }
     if ($.isNode()) {
-        
+
         await notify.sendNotify("7日签到变量", `export T_SEVENDAY_SIGN_IDS=\"${result}\"`)
         if ($.message != '') {
             await notify.sendNotify("7日签到", `${$.shopName}\n${$.message}\n奖励内容\n${$.priseMsg}\n跳转链接\n${$.activityUrl}`)
@@ -230,7 +230,7 @@ async function takePostRequest(type) {
     return new Promise(async resolve => {
         $.post(myRequest, (err, resp, data) => {
             try {
-//                 console.log(type + "--->>> cookie")
+                //                 console.log(type + "--->>> cookie")
                 setActivityCookie(resp)
                 if (err) {
                     if (resp && typeof resp.statusCode != 'undefined') {

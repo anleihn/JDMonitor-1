@@ -72,8 +72,8 @@ if ($.isNode()) {
                 continue
             }
             await jdmodule();
-            console.log('休息一下，别被黑ip了\n可持续发展')
-            await sleep(parseInt(Math.random() * 10 * 1000))
+            console.log(`休息一下别被403了`)
+            await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
         }
     }
     if ($.isNode()) {
