@@ -91,22 +91,22 @@ if ($.isNode()) {
                 await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号 ${$.UserName}\n请重新登录获取cookie`);
             }
         }
-        for (let id of $.activityIds.split("&")) {
-            $.rawId = id
-            if (id.indexOf(`cj`) != -1) {
-                $.activityUrl = $.cjprefixUrl + id.split("_")[1]
-                $.activityId = id.split("_")[1]
+        for (let idIdx in $.activityIds.split("&")) {
+            $.rawId = $.activityIds.split("&")[idIdx]
+            if ($.rawId.indexOf(`cj`) != -1) {
+                $.activityUrl = $.cjprefixUrl + $.rawId.split("_")[1]
+                $.activityId = $.rawId.split("_")[1]
             } else {
-                $.activityUrl = $.prefixUrl + id
-                $.activityId = id
+                $.activityUrl = $.prefixUrl + $.rawId
+                $.activityId = $.rawId
             }
             console.log(`跳转链接：\n${$.activityUrl}`)
-            await jdmodule();
+            await jdmodule(idIdx);
             if ($.stop) {
                 break
             }
             console.log('店铺签到完成，请等待...')
-            await $.wait(parseInt(Math.random() * 10000 + 2000, 10))
+            await $.wait(parseInt(Math.random() * 1000 + 1000, 10))
         }
         if ($.stop) {
             console.log(`脚本被强制停止！`)
@@ -134,7 +134,7 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function jdmodule() {
+async function jdmodule(idIdx) {
     $.priseMsg = ""
     $.domain = $.activityUrl.match(/https?:\/\/([^/]+)/) && $.activityUrl.match(
         /https?:\/\/([^/]+)/)[1] || ''
@@ -148,7 +148,6 @@ async function jdmodule() {
         $.putMsg(`获取Token失败`);
         return
     }
-
     if ($.stop) {
         return
     }
@@ -158,6 +157,7 @@ async function jdmodule() {
     // await takePostRequest("getOpenStatus");
 
     await takePostRequest("getMyPing");
+
 
     if ($.domain.indexOf('cjhy') != -1) {
         $.enPin = encodeURIComponent(encodeURIComponent($.Pin))
@@ -432,28 +432,60 @@ async function dealReturn(type, data) {
                         if (signResult != null && signResult.giftName) {
                             giftName = signResult.giftName
                             console.log(`签到成功，获得${giftName}`)
-                            $.message += `${$.shopName} 签到成功，获得 ${giftName}，总签到天数 ${$.totalSignNum + 1}\n`
-                            $.message += `${$.priseMsg}`
-                            $.message += `跳转链接: ${$.activityUrl}\n`
-
+                            $.message += `${$.shopName} 成功，天数 ${$.totalSignNum + 1}\n`
+                            for (let dayNum of $.dayNums) {
+                                if (Number(dayNum) - ($.totalSignNum + 1) == 1) {
+                                    $.message += `还有1天获得京豆/实物奖励！\n`
+                                    $.message += `跳转链接: ${$.activityUrl}\n`
+                                }
+                            }
+                            // $.message += `${$.priseMsg}`
 
                         } else {
                             console.log(`签到成功，签了个寂寞...`)
-                            $.message += `${$.shopName} 签到成功，签了个寂寞...，总签到天数 ${$.totalSignNum + 1}\n`
-                            $.message += `${$.priseMsg}`
+                            $.message += `${$.shopName} 成功，天数 ${$.totalSignNum + 1}\n`
+                            for (let dayNum of $.dayNums) {
+                                if (Number(dayNum) - ($.totalSignNum + 1) == 1) {
+                                    $.message += `还有1天获得京豆/实物奖励！\n`
+                                    $.message += `跳转链接: ${$.activityUrl}\n`
+                                }
+                            }
+                            // $.message += `${$.priseMsg}`
                             $.message += `跳转链接: ${$.activityUrl}\n`
                         }
                         if ($.exportResult.indexOf($.activityId) == -1) {
-                            $.exportResult += $.exportResult == "" ? $.rawId : `&${$.rawId}`
+                            for (let dayNum of $.dayNums) {
+                                if (Number(dayNum) - ($.totalSignNum + 1) == 1) {
+                                    console.log(`还剩1天就能获得奖励，放在前面`)
+                                    $.exportResult = $.exportResult == "" ? $.rawId : `${$.rawId}&${$.exportResult}`
+                                } else {
+                                    if ($.exportResult.indexOf($.activityId) == -1) {
+                                        $.exportResult += $.exportResult == "" ? $.rawId : `&${$.rawId}`
+                                    }
+                                }
+
+                            }
                         }
                     } else {
                         console.log(`签到失败 ${res.msg}`)
                         $.message += `京东账号${$.UserName} 签到失败：${res.msg}，总签到天数 ${$.totalSignNum}\n`
-                        if (res.msg.indexOf(`已结束`) != -1 || res.msg.indexOf(`店铺会员`) != -1) {
+                        if (res.msg.indexOf(`结束`) != -1 || res.msg.indexOf(`店铺会员`) != -1) {
                             return
                         }
                         if ($.exportResult.indexOf($.activityId) == -1) {
-                            $.exportResult += $.exportResult == "" ? $.rawId : `&${$.rawId}`
+                            for (let dayNum of $.dayNums) {
+                                if (Number(dayNum) - $.totalSignNum == 1) {
+                                    console.log(`还剩1天就能获得奖励，放在前面`)
+                                    $.message += `还有1天获得京豆/实物奖励！\n`
+                                    $.message += `跳转链接: ${$.activityUrl}\n`
+                                    $.exportResult = $.exportResult == "" ? $.rawId : `${$.rawId}&${$.exportResult}`
+                                } else {
+                                    if ($.exportResult.indexOf($.activityId) == -1) {
+                                        $.exportResult += $.exportResult == "" ? $.rawId : `&${$.rawId}`
+                                    }
+                                }
+
+                            }
                         }
                     }
                 } else {
@@ -465,6 +497,7 @@ async function dealReturn(type, data) {
                     if (res.isOk && res.isOk === true) {
                         act = res.act
                         giftConditions = act.wxSignActivityGiftBean.giftConditions
+                        $.dayNums = []
                         for (let info of giftConditions) {
                             $.dayNum = info.dayNum
                             // 不跑只有积分或者优惠券的签到
@@ -473,7 +506,9 @@ async function dealReturn(type, data) {
                             }
                             console.log(`签到${$.dayNum}天，可获得${info.gift.giftName}`)
                             $.priseMsg += `签到${$.dayNum}天，可获得${info.gift.giftName}\n`
-
+                            if (info.gift.giftName.indexOf(`积分`) == -1 && info.gift.giftName.indexOf(`优惠券`) == -1) {
+                                $.dayNums.push($.dayNum)
+                            }
                         }
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
