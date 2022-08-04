@@ -200,7 +200,7 @@ async function jdmodule(idIdx) {
                 $.giftDate = record.giftDate
                 $.generateId = record.id
                 if (today2 == $.giftDate) {
-                    addressIdx = Math.floor(Math.random() * ($.addressArray.length - 1))
+                    addressIdx = Math.floor(Math.random() * $.addressArray.length)
                     if (addressIdx >= $.addressArray.length) {
                         addressIdx = $.addressArray - 1
                     }
