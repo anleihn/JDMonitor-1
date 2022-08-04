@@ -451,7 +451,7 @@ async function dealReturn(type, data) {
                                 }
                             }
                             // $.message += `${$.priseMsg}`
-                            $.message += `跳转链接: ${$.activityUrl}\n`
+                            // $.message += `跳转链接: ${$.activityUrl}\n`
                         }
                         if ($.exportResult.indexOf($.activityId) == -1) {
                             for (let dayNum of $.dayNums) {
