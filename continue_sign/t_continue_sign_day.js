@@ -200,7 +200,14 @@ async function jdmodule(idIdx) {
                 $.giftDate = record.giftDate
                 $.generateId = record.id
                 if (today2 == $.giftDate) {
-                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
+                    addressIdx = Math.floor(Math.random() * ($.addressArray.length - 1))
+                    if (addressIdx >= $.addressArray.length) {
+                        addressIdx = $.addressArray - 1
+                    }
+                    if (addressIdx < 0) {
+                        addressIdx = 0
+                    }
+                    $.fullAddress = $.addressArray[addressIdx]
                     console.log("邮寄地址：" + $.fullAddress)
                     let fullAddressArray = $.fullAddress.split(",")
                     $.province = fullAddressArray[0]
