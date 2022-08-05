@@ -1,7 +1,7 @@
 /*
 [task_local]
 # 生成token至redis
-cron: /1 * * * *
+cron: 0-59/2 * * * *
 t_wx_genToken.js, tag=生成无限城token, enabled=true
  */
 const $ = new Env('生成无限城token');
@@ -99,8 +99,8 @@ const redisClient = redis.createClient({
             } else {
                 console.log(`Token缓存设置失败！`)
             }
-            // 10分钟后过期
-            await redisClient.expire($.key, 600)
+            // 12.5分钟后过期
+            await redisClient.expire($.key, 750)
             $.hasRun++
             if ($.hasRun == $.runNum) {
                 console.log(`本次已获取${$.runNum}次Token，程序退出`)
