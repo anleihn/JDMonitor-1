@@ -83,8 +83,8 @@ if ($.isNode()) {
             if ($.stop) {
                 break;
             }
-            console.log(`休息一下别被403了`)
-            await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
+//             console.log(`休息一下别被403了`)
+//             await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
         }
     }
     if ($.isNode()) {
