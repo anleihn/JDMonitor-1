@@ -1,0 +1,79 @@
+docker run -dit \
+-v $PWD/ql-redis/config:/ql/config \
+-v $PWD/ql-redis/log:/ql/log \
+-v $PWD/ql-redis/db:/ql/db \
+-v $PWD/ql-redis/repo:/ql/repo \
+-v $PWD/ql-redis/raw:/ql/raw \
+-v $PWD/ql-redis/scripts:/ql/scripts \
+-v $PWD/ql-redis/jbot:/ql/jbot \
+-v $PWD/ql-redis/ninja:/ql/ninja \
+-p 39001:5700 \
+-p 39002:5701 \
+--name qinglong-redis \
+--hostname ql-redis \
+--restart unless-stopped \
+--privileged \
+whyour/qinglong:2.11.3
+
+
+安装gcc及依赖
+gcc automake autoconf libtool make
+apk add --update --no-cache g++ gcc libxslt-dev python3-dev openssl-dev
+
+
+fatal error: jemalloc/jemalloc.h: No such file or directory
+make distclean && make
+
+fatal error: linux/version.h: No such file or directory
+apk add linux-headers
+
+安装redis
+wget http://download.redis.io/releases/redis-4.0.2.tar.gz
+tar xzf redis-4.0.2.tar.gz
+cd redis-4.0.2
+make
+make install
+
+
+redis的关键代码
+
+const redis = require('redis')
+
+!(async () => {
+    const redisClient = redis.createClient({
+        url: 'redis://127.0.0.1:6379' 
+        /* 
+        * redis://[[username][:password]@][host][:port][/db-number]
+        * 写密码redis://:123456@127.0.0.1:6379/0 
+        * 写用户redis://uername@127.0.0.1:6379/0  
+        * 或者不写密码 redis://127.0.0.1:6379/0
+        * 或者不写db_number redis://:127.0.0.1:6379
+        * */
+    });
+
+    redisClient.on('ready', () => {
+        console.log('redis is ready...')
+    })
+
+    redisClient.on('error', err => {
+        console.log(err)
+    
+    })
+
+    await redisClient.connect()
+    /* 增 改*/
+    const status = await redisClient.set('key1', '123') // 设置值
+    console.log(status )
+
+    /* 查 */
+    const value = await redisClient.get('key1') // 得到value 没有则为null
+    console.log(value )
+
+    /* 删 */
+    const num = await redisClient.del('key') // 0 没有key关键字 // 1删除成功
+    console.log(num )
+
+    await redisClient.quit()   // 关闭
+})()
+    .catch((e) => $.logErr(e))
+    .finally(() => $.done())

@@ -18,6 +18,12 @@ $.LZ_AES_PIN = ""
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 $.exportActivityIds = "";
+const redis = require('redis');
+let TokenKey = "TOKEN_KEY:"
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+});
+
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -33,6 +39,17 @@ let activityList = [
     { 'id': $.activityId, 'endTime': 20539321760000 },//
 ];
 !(async () => {
+    redisClient.on('ready', () => {
+        console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+        console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+
     let curtimestamp = Date.parse(new Date());
     for (let actInfo of $.activityIds.split("&")) {
         if (actInfo.indexOf(";") != -1) {
@@ -73,7 +90,10 @@ let activityList = [
     $.log('', '❌ ' + $.name + ', 失败! 原因: ' + _0xce13bb + '!', '');
 }).finally(() => {
     $.done();
+    redisClient.quit()
+    console.log('redis关闭成功')
 });
+
 async function main(_0x3f7ec5) {
     _0x3f7ec5.cookiesArr = cookiesArr;
     message = '';
@@ -85,13 +105,12 @@ async function main(_0x3f7ec5) {
         _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[_0x42703b];
         $.cookie = _0x3f7ec5.cookie
         _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
+        $.key = TokenKey + _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
         _0x3f7ec5.index = (_0x42703b + 1);
         console.log('\n********开始【京东账号' + _0x3f7ec5.index + '】' + _0x3f7ec5.UserName + '********\n');
         try {
             await runMain(_0x3f7ec5);
         } catch (_0x404e8e) { }
-        console.log(`休息一下别被403了`)
-        await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
     } if (message) {
         await notify.sendNotify('粉丝互动ID：' + _0x3f7ec5.activityId, message);
     }
@@ -154,11 +173,17 @@ async function runMain(_0x40ebb9) {
     _0x40ebb9.attrTouXiang = 'https://img10.360buyimg.com/imgzone/jfs/t1/7020/27/13511/6142/5c5138d8E4df2e764/5a1216a3a5043c5d.png';
     console.log('活动地址：' + _0x40ebb9.thisActivityUrl);
     _0x40ebb9.body = 'body=%7B%22url%22%3A%22https%3A%2F%2Flzkjdz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&clientVersion=9.2.2&build=89568&client=android&uuid=b4d0d21978ef8579305f30d52065ffedcc573c2d&st=1643784769190&sign=d6ab868c42dcc3d04c2b95b2aea9014c&sv=111';
-    _0x40ebb9.token = await getToken(_0x40ebb9);
-    if (!_0x40ebb9.token) {
-        console.log('获取token失败');
-        return;
+    // _0x40ebb9.token = await getToken(_0x40ebb9);
+    // if (!_0x40ebb9.token) {
+    //     console.log('获取token失败');
+    //     return;
+    // }
+    _0x40ebb9.token = await redisClient.get($.key)
+    if (_0x40ebb9.token == '' || _0x40ebb9.token == null) {
+        console.log(`未找到缓存的Token退出`)
+        return
     }
+
     await getHtml(_0x40ebb9);
     if (!_0x40ebb9.LZ_TOKEN_KEY || !_0x40ebb9.LZ_TOKEN_VALUE) {
         console.log('初始化失败1');

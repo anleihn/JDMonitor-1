@@ -38,7 +38,24 @@ $.LZ_AES_PIN = ""
 $.countBean = {};
 let isGetbody = typeof $request !== 'undefined';
 
+const redis = require('redis');
+let TokenKey = "TOKEN_KEY:"
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+});
+
 !(async () => {
+    redisClient.on('ready', () => {
+        console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+        console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+
     if (isGetbody) {
         // Telegram 为监控准备，抓body自动发到tg监控bot设置变量
         TG_BOT_TOKEN = ($.getdata('TG_BOT_TOKEN') || '');
@@ -62,6 +79,7 @@ let isGetbody = typeof $request !== 'undefined';
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
                 $.index = i + 1;
                 $.isLogin = true;
                 $.nickName = '';
@@ -77,7 +95,13 @@ let isGetbody = typeof $request !== 'undefined';
                     continue
                 }
                 activityId = $.activityIdArr[b];
-                await isvObfuscator(sleeptime);
+                // await isvObfuscator(sleeptime);
+                token = await redisClient.get($.key)
+                if (token == '' || token == null) {
+                    console.log(`未找到缓存的Token退出`)
+                    return
+                }
+
                 await activity(sleeptime);
                 await activityContent(sleeptime);
                 if (label === 4) {
@@ -115,6 +139,8 @@ let isGetbody = typeof $request !== 'undefined';
     })
     .finally(() => {
         $.done();
+        redisClient.quit()
+        console.log('redis关闭成功')
     });
 
 
@@ -380,7 +406,7 @@ async function getMyPing(timeout = 500) {
                     if (err) {
                         $.log(`${JSON.stringify(err)}`);
                     } else {
-                        let setcookies = resp.headers['set-cookie'] || resp.headers['Set-Cookie'] 
+                        let setcookies = resp.headers['set-cookie'] || resp.headers['Set-Cookie']
                         // console.log(JSON.stringify(setcookies))
                         if (setcookies) {
                             let setcookie = setcookies

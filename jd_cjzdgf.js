@@ -47,7 +47,24 @@ if (isGetCookie) {
     GetCookie();
     $.done();
 }
+const redis = require('redis');
+let TokenKey = "TOKEN_KEY:"
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+});
+
 !(async () => {
+    redisClient.on('ready', () => {
+        console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+        console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+
     console.log('\n【如果显示：奖品与您擦肩而过了哟，可能是 此活动黑了！ 】\n【如果显示：Response code 493 ，可能是 变量不正确！ 】\n【还是显示：Response code 493 ，那么 此容器IP黑了！ 】\n');
     if (!activityId) {
         $.msg($.name, '', '活动id不存在');
@@ -66,6 +83,7 @@ if (isGetCookie) {
         if (cookiesArr[_0x11ec65]) {
             cookie = cookiesArr[_0x11ec65];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+            $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
             $.index = _0x11ec65 + 1;
             $.isLogin = true;
             $.nickName = '';
@@ -93,6 +111,8 @@ if (isGetCookie) {
     $.log('', ' ' + $.name + ', 失败! 原因: ' + _0x4eace8 + '!', '');
 }).finally(() => {
     $.done();
+    redisClient.quit()
+    console.log('redis关闭成功')
 });
 
 async function jrzd() {
@@ -105,6 +125,7 @@ async function jrzd() {
     $.hisPin = '';
     $.card = [];
     $.saveTeam = false;
+    $.Token = ""
     await getCk();
     // await getToken();
     // if($.Token==''){
@@ -116,7 +137,12 @@ async function jrzd() {
     await getshopInfo();
     await $.wait(1000);
     if ($.sid && $.userId) {
-        await getToken();
+        // await getToken();
+        $.Token = await redisClient.get($.key)
+        if ($.Token == '' || $.Token == null) {
+            console.log(`未找到缓存的Token退出`)
+            return
+        }
         if ($.Token) await getPin();
         console.log('pin:' + $.Pin);
         await $.wait(1000);
@@ -559,7 +585,7 @@ function saveTeam(_0xd519d7 = 0) {
     return new Promise(_0x270eca => {
         let _0x1a0f79 = encodeURIComponent(encodeURIComponent($.Pin));
         if (_0xd519d7 == 1) _0x1a0f79 = encodeURIComponent(encodeURIComponent($.Pin));
-        let _0x44652e = 'activityId=' + activityId + '&pin=' + _0x1a0f79 + '&pinImg=' + encodeURIComponent(encodeURIComponent($.attrTouXiang))+'&venderId='+$.userId;
+        let _0x44652e = 'activityId=' + activityId + '&pin=' + _0x1a0f79 + '&pinImg=' + encodeURIComponent(encodeURIComponent($.attrTouXiang)) + '&venderId=' + $.userId;
         $.post(taskPostUrl('/wxTeam/saveCaptain', _0x44652e), async (_0x767d7b, _0x17080e, _0x1070a3) => {
             try {
                 if (_0x767d7b) {
@@ -618,7 +644,7 @@ function joinTeam(_0x5a3500 = 0) {
     return new Promise(_0x40dede => {
         let _0x5d51ce = encodeURIComponent(encodeURIComponent($.Pin));
         if (_0x5a3500 == 1) _0x5d51ce = encodeURIComponent(encodeURIComponent($.Pin));
-        let _0x14deba = 'activityId=' + activityId + '&signUuid=' + $.signUuid + '&pin=' + _0x5d51ce + '&pinImg=' + encodeURIComponent(encodeURIComponent($.attrTouXiang)) + '&venderId='+$.userId;
+        let _0x14deba = 'activityId=' + activityId + '&signUuid=' + $.signUuid + '&pin=' + _0x5d51ce + '&pinImg=' + encodeURIComponent(encodeURIComponent($.attrTouXiang)) + '&venderId=' + $.userId;
         $.post(taskPostUrl('/wxTeam/saveMember', _0x14deba), async (_0x53be06, _0x5ed55f, _0x19a125) => {
             try {
                 if (_0x53be06) {

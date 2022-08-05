@@ -7,10 +7,10 @@ const $ = new Env('幸运抽奖');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const redis = require('redis');
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 $.activityUrl = process.env.M_WX_LUCK_DRAW_URL ? process.env.M_WX_LUCK_DRAW_URL : '';
 $.activityId = getQueryString($.activityUrl, 'activityId')
-$.Token = "";
 $.openCard = false
 $.exportActivityIds = ""
 $.friendUuid = ""
@@ -23,6 +23,7 @@ $.friendUuidId = 0
 $.drawType = 0
 $.LZ_AES_PIN = ""
 $.stop = false
+let TokenKey = "TOKEN_KEY:"
 $.canDrawTimes = 0
 // 只跑前10个账号
 $.runNum = 10
@@ -35,6 +36,16 @@ $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+    /* 
+    * redis://[[username][:password]@][host][:port][/db-number]
+    * 写密码redis://:123456@127.0.0.1:6379/0 
+    * 写用户redis://uername@127.0.0.1:6379/0  
+    * 或者不写密码 redis://127.0.0.1:6379/0
+    * 或者不写db_number redis://:127.0.0.1:6379
+    * */
+});
 $.addressArray = [
     "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
     "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
@@ -52,6 +63,16 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 !(async () => {
+    redisClient.on('ready', () => {
+        console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+        console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
@@ -60,16 +81,11 @@ if ($.isNode()) {
     if ($.activityUrl.indexOf("isvjd") != -1) {
         $.activityUrl = $.activityUrl.replace("isvjd", "isvjcloud")
     }
-    $.runNum = 10
-    $.runCookie = cookiesArr.splice(0, $.runNum)
     for (let i = 0; i < $.runNum; i++) {
-        let ckidx = Math.floor(Math.random() * $.runCookie.length)
-        cookie = $.runCookie[ckidx];
-        $.runCookie.splice(ckidx, 1)
-        // console.log(`ck：` + $.runCookie)
-        // console.log(`ck长度：` + $.runCookie.length)
-        // console.log("当前索引：" + ckidx)
+        $.Token = "";
+        cookie = cookiesArr[i]
         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+        $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
         $.index = i + 1;
         $.isLogin = true;
         $.nickName = '';
@@ -86,21 +102,20 @@ if ($.isNode()) {
         if ($.stop) {
             break
         }
-        console.log(`休息一下别被403了`)
-        await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
 
     }
-
     if ($.message != '' && !$.stop) {
         await notify.sendNotify("幸运抽奖", `${$.message}\n跳转链接\n${$.activityUrl}`)
     }
-
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
     .finally(() => {
         $.done();
+        redisClient.quit()
+        console.log('redis关闭成功')
+
     })
 
 function showMsg() {
@@ -120,13 +135,14 @@ async function jdmodule() {
 
     await getCK();
     console.log("lzToken=" + activityCookie)
-    await takePostRequest("isvObfuscator");
-    console.log('Token:' + $.Token)
-    if ($.Token == '') {
-        console.log(`获取Token失败`);
+    // await takePostRequest("isvObfuscator");
+
+    $.Token = await redisClient.get($.key)
+    if ($.Token == '' || $.Token == null) {
+        console.log(`未找到缓存的Token退出`)
         return
     }
-
+    console.log('缓存Token-->:' + $.Token)
     await takePostRequest("getSimpleActInfoVo");
 
     // await takePostRequest("getOpenStatus")

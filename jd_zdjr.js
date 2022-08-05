@@ -31,6 +31,13 @@ let activityCookie = '';
 $.signUuids = []
 $.idx = 0
 $.retry = false
+
+const redis = require('redis');
+let TokenKey = "TOKEN_KEY:"
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+});
+
 if ($.isNode()) {
     if (process.env.jd_zdjr_activityId) activityId = process.env.jd_zdjr_activityId;
     if (process.env.jd_zdjr_activityUrl) activityUrl = process.env.jd_zdjr_activityUrl;
@@ -55,6 +62,18 @@ if (isGetCookie) {
     $.done();
 }
 !(async () => {
+
+    redisClient.on('ready', () => {
+        console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+        console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+
     if (!activityId) {
         $.msg($.name, '', '活动id不存在');
         $.done();
@@ -73,6 +92,7 @@ if (isGetCookie) {
             cookie = cookiesArr[_0x30b146];
             originCookie = cookiesArr[_0x30b146];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+            $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
             $.index = (_0x30b146 + 1);
             $.isLogin = true;
             $.nickName = '';
@@ -101,8 +121,11 @@ if (isGetCookie) {
     $.log('', ' ' + $.name + ', 失败! 原因: ' + _0xb97128 + '!', '');
 }).finally(() => {
     $.done();
+    redisClient.quit()
+    console.log('redis关闭成功')
 });
 async function jrzd() {
+    $.Token = ""
     $.sid = '', $.userId = '', $.Token = '', $.Pin = '';
     $.saveTeam = false;
     await getCk();
@@ -110,7 +133,12 @@ async function jrzd() {
     await getshopInfo();
     await $.wait(1000);
     if ($.sid && $.userId) {
-        await getToken();
+        // await getToken();
+        $.Token = await redisClient.get($.key)
+        if ($.Token == '' || $.Token == null) {
+            console.log(`未找到缓存的Token退出`)
+            return
+        }
         if ($.Token) await getPin();
         if (!$.Pin) {
             console.log('获取[Pin]失败！');

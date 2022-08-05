@@ -39,6 +39,12 @@ $.addressArray = [
     // "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
     // "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
 ]
+
+const redis = require('redis');
+let TokenKey = "TOKEN_KEY:"
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+});
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -49,6 +55,18 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 !(async () => {
+
+    redisClient.on('ready', () => {
+        console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+        console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
@@ -63,6 +81,7 @@ if ($.isNode()) {
             cookie = $.runCookie[ckidx];
             $.runCookie.splice(ckidx, 1)
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
@@ -107,6 +126,8 @@ if ($.isNode()) {
     })
     .finally(() => {
         $.done();
+        redisClient.quit()
+        console.log('redis关闭成功')
     })
 
 function showMsg() {
@@ -126,16 +147,15 @@ async function jdmodule(retry) {
 
     await getCK();
     console.log("lzToken=" + activityCookie)
-    await takePostRequest("isvObfuscator");
-    if (activityCookie == '') {
-        console.log(`获取LzToken失败`)
-        $.needRetry = true
-        return
-    }
     // console.log('Token:' + $.Token)
-    if ($.Token == '') {
-        console.log(`获取Token失败`);
-        $.needRetry = true
+    // if ($.Token == '') {
+    //     console.log(`获取Token失败`);
+    //     $.needRetry = true
+    //     return
+    // }
+    $.Token = await redisClient.get($.key)
+    if ($.Token == '' || $.Token == null) {
+        console.log(`未找到缓存的Token退出`)
         return
     }
 

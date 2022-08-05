@@ -26,6 +26,11 @@ $.retryCookies = []
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
+const redis = require('redis');
+let TokenKey = "TOKEN_KEY:"
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+}); 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -36,15 +41,28 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 !(async () => {
+    redisClient.on('ready', () => {
+        console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+        console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+
     console.log(`活动链接：${$.activityUrl}`)
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
     for (let i = 0; i < cookiesArr.length; i++) {
+        $.Token = ""
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
@@ -76,6 +94,8 @@ if ($.isNode()) {
     })
     .finally(() => {
         $.done();
+        redisClient.quit()
+        console.log('redis关闭成功')
     })
 
 async function jdmodule() {
@@ -85,10 +105,16 @@ async function jdmodule() {
     $.flag = 0
     await getCK();
     console.log("lzToken=" + activityCookie)
-    await takePostRequest("isvObfuscator");
-    console.log('Token:' + $.Token)
-    if ($.Token == '') {
-        console.log(`获取Token失败`);
+    // await takePostRequest("isvObfuscator");
+    // console.log('Token:' + $.Token)
+    // if ($.Token == '') {
+    //     console.log(`获取Token失败`);
+    //     return
+    // }
+
+    $.Token = await redisClient.get($.key)
+    if ($.Token == '' || $.Token == null) {
+        console.log(`未找到缓存的Token退出`)
         return
     }
 
