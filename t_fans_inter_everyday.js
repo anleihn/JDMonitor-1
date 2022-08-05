@@ -53,24 +53,6 @@ let activityList = []
     }
     activityList = getRandomArrayElements(activityList, activityList.length);
     $.helpFalg = true;
-    today = moment(Date.now()).format('YYYY-MM-DD')
-    if ($.fansIndex == "") {
-        dayFlag = today
-        $.idx = 0
-    } else {
-        dayFlag = $.fansIndex.split("_")[0]
-        if (dayFlag != today) {
-            dayFlag = today
-            $.idx = 0
-        } else {
-            $.idx = Number($.fansIndex.split("_")[1])
-        }
-    }
-    if (dayFlag == today && $.idx >= cookiesArr.length) {
-        console.log(`已全部运行完毕`)
-        return
-    }
-    $.nextIdx = $.idx + 1
     for (let _0x2e674b = 0; _0x2e674b < activityList.length; _0x2e674b++) {
         let _0x38a02d = activityList[_0x2e674b].id;
         let _0x58a1ac = Date.now();
@@ -86,11 +68,11 @@ let activityList = []
             console.log('\n活动ID：' + _0x38a02d + ',已过期');
         }
     }
-    await notify.sendNotify(`粉丝互动索引 export FANS_INDEX="${today}_${$.nextIdx}"`);
 })().catch(_0xce13bb => {
     $.log('', '❌ ' + $.name + ', 失败! 原因: ' + _0xce13bb + '!', '');
 }).finally(() => {
     $.done();
+    redisClient.quit()
 });
 async function main(_0x3f7ec5) {
     _0x3f7ec5.cookiesArr = cookiesArr;
@@ -100,15 +82,16 @@ async function main(_0x3f7ec5) {
     if (_0x3f7ec5.helpFalg) {
         doInfo();
     }
-
-    _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[$.idx];
-    _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
-    $.key = TokenKey + _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
-    console.log('\n********开始【京东账号】' + _0x3f7ec5.UserName + '********\n');
-    try {
-        await runMain(_0x3f7ec5);
-    } catch (_0x404e8e) { }
-    await _0x3f7ec5.wait(3000);
+    for (let i = 0; i < _0x3f7ec5.cookiesArr.length; i++) {
+        _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[i];
+        _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
+        $.key = TokenKey + _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
+        console.log('\n********开始【京东账号】' + _0x3f7ec5.UserName + '********\n');
+        try {
+            await runMain(_0x3f7ec5);
+        } catch (_0x404e8e) { }
+        await _0x3f7ec5.wait(3000);
+    }
     if (message) {
         await notify.sendNotify('粉丝互动ID：' + _0x3f7ec5.activityId, message + `跳转链接：${$.activityUrl}`);
     }
