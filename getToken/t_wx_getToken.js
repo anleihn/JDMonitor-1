@@ -6,7 +6,6 @@ t_wx_genToken.js, tag=生成无限城token, enabled=true
  */
 const $ = new Env('生成无限城token');
 const notify = $.isNode() ? require('./sendNotify') : '';
-const redis = require('redis');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
@@ -15,8 +14,7 @@ $.activityId = getQueryString($.activityUrl, 'activityId')
 $.openCard = false
 $.exportActivityIds = ""
 $.message = ""
-let TokenKey = "TOKEN_KEY:"
-$.runNum = 5
+$.runNum = -1
 $.hasRun = 0
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
@@ -114,10 +112,10 @@ if ($.redisStatus) {
             // 12.5分钟后过期
             await redisClient.expire($.key, 750)
             $.hasRun++
-            // if ($.hasRun == $.runNum) {
-            //     console.log(`本次已获取${$.runNum}次Token，程序退出`)
-            //     break;
-            // }
+            if ($.runNum != -1 && $.hasRun == $.runNum) {
+                console.log(`本次已获取${$.runNum}次Token，程序退出`)
+                break;
+            }
             await $.wait(3000)
         }
     }
