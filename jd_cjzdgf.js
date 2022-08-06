@@ -47,23 +47,37 @@ if (isGetCookie) {
     GetCookie();
     $.done();
 }
-const redis = require('redis');
+
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+    console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
+    return
+}
 let TokenKey = "TOKEN_KEY:"
-const redisClient = redis.createClient({
-    url: 'redis://127.0.0.1:6379'
-});
+redisClient = null
+if ($.redisStatus) {
+    redisClient = redis.createClient({
+        url: 'redis://127.0.0.1:6379'
+    });
+} else {
+    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
+}
 
 !(async () => {
-    redisClient.on('ready', () => {
-        console.log('redis已准备就绪')
-    })
 
-    redisClient.on('error', err => {
-        console.log("redis异常：" + err)
+    if ($.redisStatus) {
+        redisClient.on('ready', () => {
+            console.log('redis已准备就绪')
+        })
 
-    })
-    await redisClient.connect()
-    console.log('redis连接成功')
+        redisClient.on('error', err => {
+            console.log("redis异常：" + err)
+
+        })
+        await redisClient.connect()
+        console.log('redis连接成功')
+    }
 
     console.log('\n【如果显示：奖品与您擦肩而过了哟，可能是 此活动黑了！ 】\n【如果显示：Response code 493 ，可能是 变量不正确！ 】\n【还是显示：Response code 493 ，那么 此容器IP黑了！ 】\n');
     if (!activityId) {
@@ -111,8 +125,10 @@ const redisClient = redis.createClient({
     $.log('', ' ' + $.name + ', 失败! 原因: ' + _0x4eace8 + '!', '');
 }).finally(() => {
     $.done();
-    redisClient.quit()
-    console.log('redis关闭成功')
+    if ($.redisStatus) {
+        redisClient.quit()
+        console.log('redis关闭成功')
+    }
 });
 
 async function jrzd() {
@@ -138,10 +154,20 @@ async function jrzd() {
     await $.wait(1000);
     if ($.sid && $.userId) {
         // await getToken();
-        $.Token = await redisClient.get($.key)
-        if ($.Token == '' || $.Token == null) {
-            console.log(`未找到缓存的Token退出`)
-            return
+        if ($.redisStatus) {
+            $.Token = await redisClient.get($.key)
+            if ($.Token == '' || $.Token == null) {
+                console.log(`未找到缓存的Token，调用Sign接口`)
+                await getSign($.domain)
+                await getToken()
+                console.log('Token-->:' + $.Token)
+            } else {
+                console.log('缓存Token-->:' + $.Token)
+            }
+        } else {
+            await getSign($.domain)
+            await getToken()
+            console.log('Token-->:' + $.Token)
         }
         if ($.Token) await getPin();
         console.log('pin:' + $.Pin);
@@ -281,9 +307,53 @@ function getCk() {
     });
 }
 
+function getSign(domain) {
+    let myRequest = getSignRequest(domain);
+    // console.log(type + '-->'+ JSON.stringify(myRequest))
+    return new Promise(async resolve => {
+        $.post(myRequest, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${$.toStr(err, err)}`)
+                    console.log(`sign API请求失败，请检查网路重试`)
+                } else {
+                    dataObj = JSON.parse(data)
+                    $.sign = dataObj.data.convertUrlNew
+                }
+            } catch (e) {
+                // console.log(data);
+                console.log(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+function getSignRequest(domain, method = "POST") {
+    let headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": cookie,
+        "User-Agent": $.UA,
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    prefixUrl = "https://" + domain
+    bodyInner = `{"url":"${prefixUrl}", "id":""}`
+    let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+    // console.log(headers)
+    // console.log(headers.Cookie)
+    let url = $.signUrl
+    return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
+}
+
+
 function getToken() {
     return new Promise(_0x490416 => {
-        let _0x12bfe2 = 'adid=7B411CD9-D62C-425B-B083-9AFC49B94228&area=16_1332_42932_43102&body=%7B%22url%22%3A%22https%3A%5C/%5C/cjhydz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&build=167541&client=apple&clientVersion=9.4.0&d_brand=apple&d_model=iPhone8%2C1&eid=eidId10b812191seBCFGmtbeTX2vXF3lbgDAVwQhSA8wKqj6OA9J4foPQm3UzRwrrLdO23B3E2wCUY/bODH01VnxiEnAUvoM6SiEnmP3IPqRuO%2By/%2BZo&isBackground=N&joycious=48&lang=zh_CN&networkType=wifi&networklibtype=JDNetworkBaseAF&openudid=2f7578cb634065f9beae94d013f172e197d62283&osVersion=13.1.2&partner=apple&rfs=0000&scope=11&screen=750%2A1334&sign=60bde51b4b7f7ff6e1bc1f473ecf3d41&st=1613720203903&sv=110&uts=0f31TVRjBStG9NoZJdXLGd939Wv4AlsWNAeL1nxafUsZqiV4NLsVElz6AjC4L7tsnZ1loeT2A8Z5/KfI/YoJAUfJzTd8kCedfnLG522ydI0p40oi8hT2p2sNZiIIRYCfjIr7IAL%2BFkLsrWdSiPZP5QLptc8Cy4Od6/cdYidClR0NwPMd58K5J9narz78y9ocGe8uTfyBIoA9aCd/X3Muxw%3D%3D&uuid=hjudwgohxzVu96krv/T6Hg%3D%3D&wifiBssid=9cf90c586c4468e00678545b16176ed2';
+        let _0x12bfe2 = $.sign
         $.post(taskUrl('?functionId=isvObfuscator', _0x12bfe2), async (_0x181dd6, _0x3bac04, _0x37bf72) => {
             try {
                 if (_0x181dd6) {

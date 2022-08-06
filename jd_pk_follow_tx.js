@@ -39,22 +39,35 @@ $.countBean = {};
 let isGetbody = typeof $request !== 'undefined';
 
 const redis = require('redis');
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+    console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
+    return
+}
 let TokenKey = "TOKEN_KEY:"
-const redisClient = redis.createClient({
-    url: 'redis://127.0.0.1:6379'
-});
+redisClient = null
+if ($.redisStatus) {
+    redisClient = redis.createClient({
+        url: 'redis://127.0.0.1:6379'
+    });
+} else {
+    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
+}
 
 !(async () => {
-    redisClient.on('ready', () => {
-        console.log('redis已准备就绪')
-    })
+    if ($.redisStatus) {
+        redisClient.on('ready', () => {
+            console.log('redis已准备就绪')
+        })
 
-    redisClient.on('error', err => {
-        console.log("redis异常：" + err)
+        redisClient.on('error', err => {
+            console.log("redis异常：" + err)
 
-    })
-    await redisClient.connect()
-    console.log('redis连接成功')
+        })
+        await redisClient.connect()
+        console.log('redis连接成功')
+    }
 
     if (isGetbody) {
         // Telegram 为监控准备，抓body自动发到tg监控bot设置变量
@@ -96,10 +109,20 @@ const redisClient = redis.createClient({
                 }
                 activityId = $.activityIdArr[b];
                 // await isvObfuscator(sleeptime);
-                token = await redisClient.get($.key)
-                if (token == '' || token == null) {
-                    console.log(`未找到缓存的Token退出`)
-                    return
+                if ($.redisStatus) {
+                    token = await redisClient.get($.key)
+                    if (token == '' || token == null) {
+                        console.log(`未找到缓存的Token，调用Sign接口`)
+                        await getSign($.domain)
+                        await isvObfuscator(sleeptime);
+                        console.log('Token-->:' + token)
+                    } else {
+                        console.log('缓存Token-->:' + token)
+                    }
+                } else {
+                    await getSign($.domain)
+                    await isvObfuscator(sleeptime);
+                    console.log('Token-->:' + token)
                 }
 
                 await activity(sleeptime);
@@ -139,8 +162,10 @@ const redisClient = redis.createClient({
     })
     .finally(() => {
         $.done();
-        redisClient.quit()
-        console.log('redis关闭成功')
+        if ($.redisStatus) {
+            redisClient.quit()
+            console.log('redis关闭成功')
+        }
     });
 
 
@@ -329,11 +354,55 @@ async function activityContent(timeout = 500) {
         }, timeout)
     })
 }
+
+function getSign(domain) {
+    let myRequest = getSignRequest(domain);
+    // console.log(type + '-->'+ JSON.stringify(myRequest))
+    return new Promise(async resolve => {
+        $.post(myRequest, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${$.toStr(err, err)}`)
+                    console.log(`sign API请求失败，请检查网路重试`)
+                } else {
+                    dataObj = JSON.parse(data)
+                    $.sign = dataObj.data.convertUrlNew
+                }
+            } catch (e) {
+                // console.log(data);
+                console.log(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+function getSignRequest(domain, method = "POST") {
+    let headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": cookie,
+        "User-Agent": $.UA,
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    prefixUrl = "https://" + domain
+    bodyInner = `{"url":"${prefixUrl}", "id":""}`
+    let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+    // console.log(headers)
+    // console.log(headers.Cookie)
+    let url = $.signUrl
+    return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
+}
+
 // 获取token
 async function isvObfuscator(timeout = 500) {
     return new Promise((resolve) => {
         setTimeout(() => {
-            body = `body=%7B%22url%22%3A%22https%3A%5C/%5C/lzkj-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&build=167874&client=apple&clientVersion=10.2.4&d_brand=apple&d_model=iPhone14%2C3&ef=1&eid=${randomString(116)}&ep=%7B%22ciphertype%22%3A5%2C%22cipher%22%3A%7B%22screen%22%3A%22CJS4DMeyDzc4%22%2C%22wifiBssid%22%3A%22${randomString(43)}%3D%22%2C%22osVersion%22%3A%22CJUkDK%3D%3D%22%2C%22area%22%3A%22${randomString(24)}%22%2C%22openudid%22%3A%22DtVwZtvvZJcmZwPtDtc5DJSmCtZvDzLsCzK2DJG2DtU1EWG5Dzc2ZK%3D%3D%22%2C%22uuid%22%3A%22${randomString(32, 'xx')}%22%7D%2C%22ts%22%3A${get_times('ss')}%2C%22hdid%22%3A%22${randomString(43)}%3D%22%2C%22version%22%3A%221.0.3%22%2C%22appname%22%3A%22com.360buy.jdmobile%22%2C%22ridx%22%3A-1%7D&ext=%7B%22prstate%22%3A%220%22%7D&isBackground=N&joycious=98&lang=zh_CN&networkType=wifi&networklibtype=JDNetworkBaseAF&partner=apple&rfs=0000&scope=10&sign=ece45b391fb4abf4e4590c7da6eeacc5&st=1649150743509&sv=101&uemps=0-0&uts=${randomString(64)}`;
+            body = $.sign
             let url = {
                 url: `https://api.m.jd.com/client.action?functionId=isvObfuscator`,
 

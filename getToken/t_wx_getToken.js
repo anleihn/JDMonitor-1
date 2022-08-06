@@ -99,7 +99,7 @@ if ($.redisStatus) {
             await takePostRequest("isvObfuscator")
             if ($.Token == '') {
                 console.log(`获取Token失败`);
-                break
+                continue
             }
             console.log(`成功获取Token->:\n` + $.Token)
             console.log(`去设置Token缓存--->`)

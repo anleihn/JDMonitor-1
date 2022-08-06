@@ -52,7 +52,39 @@ $.addressArray = [
     "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
     "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
 ]
+
+const redis = require('redis');
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+    console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
+    return
+}
+let TokenKey = "TOKEN_KEY:"
+redisClient = null
+if ($.redisStatus) {
+    redisClient = redis.createClient({
+        url: 'redis://127.0.0.1:6379'
+    });
+} else {
+    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
+}
+
 !(async () => {
+
+    if ($.redisStatus) {
+        redisClient.on('ready', () => {
+            console.log('redis已准备就绪')
+        })
+
+        redisClient.on('error', err => {
+            console.log("redis异常：" + err)
+
+        })
+        await redisClient.connect()
+        console.log('redis连接成功')
+    }
+
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
             "open-url": "https://bean.m.jd.com/"
@@ -74,6 +106,7 @@ $.addressArray = [
 
         if (cookie) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
             $.index = i + 1;
             message = ""
             $.bean = 0
@@ -82,14 +115,14 @@ $.addressArray = [
             console.log(`\n\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             await getUA()
             await run();
-            if ($.helpTimes == 3) {
-                $.helpTimes == 0
-                $.shareIndex++
-                $.shareUuid = $.shareUuids[$.shareIndex]
-                console.log(`上一个账号助力完成，接下来都会助力第${$.shareIndex + 1}个账号`)
-            }
-            if (i == 0 && !$.actorUuid) break
-            if ($.outFlag || $.activityEnd) break
+            // if ($.helpTimes == 3) {
+            //     $.helpTimes == 0
+            //     $.shareIndex++
+            //     $.shareUuid = $.shareUuids[$.shareIndex]
+            //     console.log(`上一个账号助力完成，接下来都会助力第${$.shareIndex + 1}个账号`)
+            // }
+            // if (i == 0 && !$.actorUuid) break
+            // if ($.outFlag || $.activityEnd) break
         }
     }
     if ($.outFlag) {
@@ -104,7 +137,13 @@ $.addressArray = [
     console.log($.toStr(cookies))
 })()
     .catch((e) => $.logErr(e))
-    .finally(() => $.done())
+    .finally(() => {
+        $.done();
+        if ($.redisStatus) {
+            redisClient.quit()
+            console.log('redis关闭成功')
+        }
+    })
 
 
 async function run() {
@@ -116,12 +155,21 @@ async function run() {
         $.Token = ''
         $.Pin = ''
         let flag = false
-        // await takePostRequest('isvObfuscator');
-        // // console.log(`Token---> ${$.Token}`)
-        // if ($.Token == '') {
-        //     console.log('获取[token]失败！')
-        //     return
-        // }
+        if ($.redisStatus) {
+            $.Token = await redisClient.get($.key)
+            if ($.Token == '' || $.Token == null) {
+                console.log(`未找到缓存的Token，调用Sign接口`)
+                await getSign($.domain)
+                await takePostRequest("isvObfuscator");
+                console.log('Token-->:' + $.Token)
+            } else {
+                console.log('缓存Token-->:' + $.Token)
+            }
+        } else {
+            await getSign($.domain)
+            await takePostRequest("isvObfuscator");
+            console.log('Token-->:' + $.Token)
+        }
         await getCk()
         if (activityCookie == '') {
             console.log(`获取cookie失败`); return;
@@ -243,6 +291,49 @@ async function run() {
     }
 }
 
+function getSign(domain) {
+    let myRequest = getSignRequest(domain);
+    // console.log(type + '-->'+ JSON.stringify(myRequest))
+    return new Promise(async resolve => {
+        $.post(myRequest, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${$.toStr(err, err)}`)
+                    console.log(`sign API请求失败，请检查网路重试`)
+                } else {
+                    dataObj = JSON.parse(data)
+                    $.sign = dataObj.data.convertUrlNew
+                }
+            } catch (e) {
+                // console.log(data);
+                console.log(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+function getSignRequest(domain, method = "POST") {
+    let headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": cookie,
+        "User-Agent": $.UA,
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    prefixUrl = "https://" + domain
+    bodyInner = `{"url":"${prefixUrl}", "id":""}`
+    let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+    // console.log(headers)
+    // console.log(headers.Cookie)
+    let url = $.signUrl
+    return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
+}
+
 async function takePostRequest(type) {
     if ($.outFlag) return
     let domain = 'https://lzdz1-isv.isvjcloud.com';
@@ -253,7 +344,7 @@ async function takePostRequest(type) {
     switch (type) {
         case 'isvObfuscator':
             url = `https://api.m.jd.com/client.action?functionId=isvObfuscator`;
-            body = `body=%7B%22url%22%3A%22https%3A//lzdz1-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=66e3681131700de71385967326bf41cf9fc5e163&client=apple&clientVersion=10.1.4&st=1647872191952&sv=120&sign=af51071ecb7198d560b138c8528642f1`;
+            body = $.sign
             break;
         case 'getSimpleActInfoVo':
             url = `${domain}/customer/getSimpleActInfoVo`;

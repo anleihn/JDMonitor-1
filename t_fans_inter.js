@@ -18,11 +18,24 @@ $.LZ_AES_PIN = ""
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 $.exportActivityIds = "";
+
 const redis = require('redis');
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+    console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
+    return
+}
 let TokenKey = "TOKEN_KEY:"
-const redisClient = redis.createClient({
-    url: 'redis://127.0.0.1:6379'
-});
+redisClient = null
+if ($.redisStatus) {
+    redisClient = redis.createClient({
+        url: 'redis://127.0.0.1:6379'
+    });
+} else {
+    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
+}
+
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -39,16 +52,19 @@ let activityList = [
     { 'id': $.activityId, 'endTime': 20539321760000 },//
 ];
 !(async () => {
-    redisClient.on('ready', () => {
-        console.log('redis已准备就绪')
-    })
 
-    redisClient.on('error', err => {
-        console.log("redis异常：" + err)
+    if ($.redisStatus) {
+        redisClient.on('ready', () => {
+            console.log('redis已准备就绪')
+        })
 
-    })
-    await redisClient.connect()
-    console.log('redis连接成功')
+        redisClient.on('error', err => {
+            console.log("redis异常：" + err)
+
+        })
+        await redisClient.connect()
+        console.log('redis连接成功')
+    }
 
     let curtimestamp = Date.parse(new Date());
     for (let actInfo of $.activityIds.split("&")) {
@@ -90,8 +106,10 @@ let activityList = [
     $.log('', '❌ ' + $.name + ', 失败! 原因: ' + _0xce13bb + '!', '');
 }).finally(() => {
     $.done();
-    redisClient.quit()
-    console.log('redis关闭成功')
+    if ($.redisStatus) {
+        redisClient.quit()
+        console.log('redis关闭成功')
+    }
 });
 
 async function main(_0x3f7ec5) {
@@ -105,7 +123,7 @@ async function main(_0x3f7ec5) {
         _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[_0x42703b];
         $.cookie = _0x3f7ec5.cookie
         _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
-        $.key = TokenKey + _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
+        $.key = TokenKey + _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
         _0x3f7ec5.index = (_0x42703b + 1);
         console.log('\n********开始【京东账号' + _0x3f7ec5.index + '】' + _0x3f7ec5.UserName + '********\n');
         try {
@@ -173,15 +191,26 @@ async function runMain(_0x40ebb9) {
     _0x40ebb9.attrTouXiang = 'https://img10.360buyimg.com/imgzone/jfs/t1/7020/27/13511/6142/5c5138d8E4df2e764/5a1216a3a5043c5d.png';
     console.log('活动地址：' + _0x40ebb9.thisActivityUrl);
     _0x40ebb9.body = 'body=%7B%22url%22%3A%22https%3A%2F%2Flzkjdz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&clientVersion=9.2.2&build=89568&client=android&uuid=b4d0d21978ef8579305f30d52065ffedcc573c2d&st=1643784769190&sign=d6ab868c42dcc3d04c2b95b2aea9014c&sv=111';
-    // _0x40ebb9.token = await getToken(_0x40ebb9);
+    // 
     // if (!_0x40ebb9.token) {
     //     console.log('获取token失败');
     //     return;
     // }
-    _0x40ebb9.token = await redisClient.get($.key)
-    if (_0x40ebb9.token == '' || _0x40ebb9.token == null) {
-        console.log(`未找到缓存的Token退出`)
-        return
+
+    if ($.redisStatus) {
+        _0x40ebb9.token = await redisClient.get($.key)
+        if (_0x40ebb9.token == '' || _0x40ebb9.token == null) {
+            console.log(`未找到缓存的Token，调用Sign接口`)
+            await getSign($.domain)
+            await takePostRequest("isvObfuscator");
+            console.log('Token-->:' + _0x40ebb9.token)
+        } else {
+            console.log('缓存Token-->:' + _0x40ebb9.token)
+        }
+    } else {
+        await getSign($.domain)
+        _0x40ebb9.token = await getToken(_0x40ebb9)
+        console.log('Token-->:' + _0x40ebb9.token)
     }
 
     await getHtml(_0x40ebb9);
@@ -417,8 +446,52 @@ function getUrlData(_0x3c166f, _0x3dcbe9) {
         return '';
     }
 }
+
+function getSign(domain) {
+    let myRequest = getSignRequest(domain);
+    // console.log(type + '-->'+ JSON.stringify(myRequest))
+    return new Promise(async resolve => {
+        $.post(myRequest, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${$.toStr(err, err)}`)
+                    console.log(`sign API请求失败，请检查网路重试`)
+                } else {
+                    dataObj = JSON.parse(data)
+                    $.sign = dataObj.data.convertUrlNew
+                }
+            } catch (e) {
+                // console.log(data);
+                console.log(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+function getSignRequest(domain, method = "POST") {
+    let headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": cookie,
+        "User-Agent": $.UA,
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    prefixUrl = "https://" + domain
+    bodyInner = `{"url":"${prefixUrl}", "id":""}`
+    let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+    // console.log(headers)
+    // console.log(headers.Cookie)
+    let url = $.signUrl
+    return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
+}
+
 async function getToken(_0x3c9452) {
-    let _0x575ad2 = { 'url': 'https://api.m.jd.com/client.action?functionId=isvObfuscator', 'body': _0x3c9452.body, 'headers': { 'Host': 'api.m.jd.com', 'accept': '*/*', 'user-agent': 'JD4iPhone/167490 (iPhone; iOS 14.2; Scale/3.00)', 'accept-language': 'zh-Hans-JP;q=1, en-JP;q=0.9, zh-Hant-TW;q=0.8, ja-JP;q=0.7, en-US;q=0.6', 'content-type': 'application/x-www-form-urlencoded', 'Cookie': _0x3c9452.cookie } };
+    let _0x575ad2 = { 'url': 'https://api.m.jd.com/client.action?functionId=isvObfuscator', 'body': $.sign, 'headers': { 'Host': 'api.m.jd.com', 'accept': '*/*', 'user-agent': 'JD4iPhone/167490 (iPhone; iOS 14.2; Scale/3.00)', 'accept-language': 'zh-Hans-JP;q=1, en-JP;q=0.9, zh-Hant-TW;q=0.8, ja-JP;q=0.7, en-US;q=0.6', 'content-type': 'application/x-www-form-urlencoded', 'Cookie': _0x3c9452.cookie } };
     return new Promise(_0x177e3a => {
         _0x3c9452.post(_0x575ad2, async (_0x846899, _0x5ddcd4, _0x58ed45) => {
             try {

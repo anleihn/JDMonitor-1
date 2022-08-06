@@ -39,23 +39,36 @@ if ($.isNode()) {
 }
 
 const redis = require('redis');
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+    console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
+    return
+}
 let TokenKey = "TOKEN_KEY:"
-const redisClient = redis.createClient({
-    url: 'redis://127.0.0.1:6379'
-});
+redisClient = null
+if ($.redisStatus) {
+    redisClient = redis.createClient({
+        url: 'redis://127.0.0.1:6379'
+    });
+} else {
+    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
+}
 
 !(async () => {
 
-    redisClient.on('ready', () => {
-        console.log('redis已准备就绪')
-    })
+    if ($.redisStatus) {
+        redisClient.on('ready', () => {
+            console.log('redis已准备就绪')
+        })
 
-    redisClient.on('error', err => {
-        console.log("redis异常：" + err)
+        redisClient.on('error', err => {
+            console.log("redis异常：" + err)
 
-    })
-    await redisClient.connect()
-    console.log('redis连接成功')
+        })
+        await redisClient.connect()
+        console.log('redis连接成功')
+    }
 
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -159,7 +172,7 @@ const redisClient = redis.createClient({
                 }
             }
             console.log(`休息一下别被403了`)
-            await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
+            await $.wait(parseInt(Math.random() * 5000 + 1000, 10))
             for (let idx = 0; idx < Math.min(ownCookieNum, authorCodeList.length); idx++) {
                 for (let helpIdx in $.needHelpTimeArray) {
                     if (helpArray[idx] == $.needHelpTimeArray[helpIdx]) {
@@ -182,7 +195,7 @@ const redisClient = redis.createClient({
                             helpArray[idx] = -1
                         }
                         console.log(`休息一下别被403了`)
-                        await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
+                        await $.wait(parseInt(Math.random() * 5000 + 1000, 10))
                     }
                 }
             }
@@ -211,7 +224,7 @@ const redisClient = redis.createClient({
             }
         }
         console.log(`休息一下别被403了`)
-        await $.wait(parseInt(Math.random() * 6000 + 10000, 10))
+        await $.wait(parseInt(Math.random() * 5000 + 1000, 10))
 
     }
     if ($.message != '') {
@@ -225,8 +238,10 @@ const redisClient = redis.createClient({
     })
     .finally(() => {
         $.done();
-        redisClient.quit()
-        console.log('redis关闭成功')
+        if ($.redisStatus) {
+            redisClient.quit()
+            console.log('redis关闭成功')
+        }
     })
 
 async function share() {
@@ -234,16 +249,20 @@ async function share() {
     $.secretPin = null;
     $.openCardActivityId = null
     await getFirstLZCK()
-    // await getToken();
-    // if ($.Token == '') {
-    //     console.log(`获取Token失败`);
-    //     $.needRetry = true
-    //     return
-    // }
-    $.Token = await redisClient.get($.key)
-    if ($.Token == '' || $.Token == null) {
-        console.log(`未找到缓存的Token退出`)
-        return
+    if ($.redisStatus) {
+        $.token = await redisClient.get($.key)
+        if ($.token == '' || $.token == null) {
+            console.log(`未找到缓存的Token，调用Sign接口`)
+            await getSign($.domain)
+            await getToken();
+            console.log('Token-->:' + $.token)
+        } else {
+            console.log('缓存Token-->:' + $.token)
+        }
+    } else {
+        await getSign($.domain)
+        await getToken();
+        console.log('Token-->:' + $.token)
     }
     await task('customer/getSimpleActInfoVo', `activityId=${$.activityId}`, 1)
     if ($.token) {
@@ -264,16 +283,20 @@ async function getPrize(idx = -1) {
     $.secretPin = null;
     $.openCardActivityId = null
     await getFirstLZCK()
-    // await getToken();
-    // if ($.Token == '') {
-    //     console.log(`获取Token失败`);
-    //     $.needRetry = true
-    //     return
-    // }
-    $.Token = await redisClient.get($.key)
-    if ($.Token == '' || $.Token == null) {
-        console.log(`未找到缓存的Token退出`)
-        return
+    if ($.redisStatus) {
+        $.token = await redisClient.get($.key)
+        if ($.token == '' || $.token == null) {
+            console.log(`未找到缓存的Token，调用Sign接口`)
+            await getSign($.domain)
+            await getToken();
+            console.log('Token-->:' + $.token)
+        } else {
+            console.log('缓存Token-->:' + $.token)
+        }
+    } else {
+        await getSign($.domain)
+        await getToken();
+        console.log('Token-->:' + $.token)
     }
     await task('customer/getSimpleActInfoVo', `activityId=${$.activityId}`, 1)
     if ($.token) {
@@ -478,6 +501,49 @@ function getFirstLZCK() {
         })
     })
 }
+function getSign(domain) {
+    let myRequest = getSignRequest(domain);
+    // console.log(type + '-->'+ JSON.stringify(myRequest))
+    return new Promise(async resolve => {
+        $.post(myRequest, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${$.toStr(err, err)}`)
+                    console.log(`sign API请求失败，请检查网路重试`)
+                } else {
+                    dataObj = JSON.parse(data)
+                    $.sign = dataObj.data.convertUrlNew
+                }
+            } catch (e) {
+                // console.log(data);
+                console.log(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+function getSignRequest(domain, method = "POST") {
+    let headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": cookie,
+        "User-Agent": $.UA,
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    prefixUrl = "https://" + domain
+    bodyInner = `{"url":"${prefixUrl}", "id":""}`
+    let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+    // console.log(headers)
+    // console.log(headers.Cookie)
+    let url = $.signUrl
+    return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
+}
+
 function getToken() {
     let opt = {
         url: `https://api.m.jd.com/client.action?functionId=isvObfuscator`,
@@ -491,7 +557,7 @@ function getToken() {
             'Accept-Language': 'zh-Hans-CN;q=1',
             'Accept-Encoding': 'gzip, deflate, br',
         },
-        body: `body=%7B%22url%22%3A%20%22https%3A//lzdz1-isv.isvjcloud.com%22%2C%20%22id%22%3A%20%22%22%7D&uuid=72124265217d48b7955781024d65bbc4&client=apple&clientVersion=9.4.0&st=1621796702000&sv=120&sign=14f7faa31356c74e9f4289972db4b988`
+        body: $.sign
     }
     return new Promise(resolve => {
         $.post(opt, (err, resp, data) => {
