@@ -16,7 +16,7 @@ $.openCard = false
 $.exportActivityIds = ""
 $.message = ""
 let TokenKey = "TOKEN_KEY:"
-$.runNum = -1
+$.runNum = 5
 $.hasRun = 0
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
@@ -30,16 +30,27 @@ if ($.isNode()) {
 } else {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-const redisClient = redis.createClient({
-    url: 'redis://127.0.0.1:6379'
-    /* 
-    * redis://[[username][:password]@][host][:port][/db-number]
-    * 写密码redis://:123456@127.0.0.1:6379/0 
-    * 写用户redis://uername@127.0.0.1:6379/0  
-    * 或者不写密码 redis://127.0.0.1:6379/0
-    * 或者不写db_number redis://:127.0.0.1:6379
-    * */
-});
+
+
+const redis = require('redis');
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+    console.log(`请自行搭建sign接口，并设置环境变量-->\nexport JD_SIGN_URL="你的接口地址"`)
+    return
+}
+let TokenKey = "TOKEN_KEY:"
+redisClient = null
+if ($.redisStatus) {
+    redisClient = redis.createClient({
+        url: 'redis://127.0.0.1:6379'
+    });
+} else {
+    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\nexport USE_REDIS=true`)
+    return
+}
+
+
 !(async () => {
 
     redisClient.on('ready', () => {
@@ -103,10 +114,10 @@ const redisClient = redis.createClient({
             // 12.5分钟后过期
             await redisClient.expire($.key, 750)
             $.hasRun++
-            if ($.runNum !=-1 && $.hasRun == $.runNum) {
-                console.log(`本次已获取${$.runNum}次Token，程序退出`)
-                break;
-            }
+            // if ($.hasRun == $.runNum) {
+            //     console.log(`本次已获取${$.runNum}次Token，程序退出`)
+            //     break;
+            // }
             await $.wait(3000)
         }
     }
@@ -396,7 +407,7 @@ function getSignRequest(domain, method = "POST") {
     let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
     // console.log(headers)
     // console.log(headers.Cookie)
-    let url = "http://42.193.97.124:9000/jd/sign"
+    let url = $.signUrl
     return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
 }
 
