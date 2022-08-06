@@ -32,7 +32,7 @@ const redis = require('redis');
 $.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
 $.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
 if ($.signUrl == '') {
-    console.log(`请自行搭建sign接口，并设置环境变量-->\nexport JD_SIGN_URL="你的接口地址"`)
+    console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
     return
 }
 let TokenKey = "TOKEN_KEY:"
@@ -42,7 +42,7 @@ if ($.redisStatus) {
         url: 'redis://127.0.0.1:6379'
     });
 } else {
-    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\nexport USE_REDIS=true`)
+    console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
 
 let activityCookie = ''
@@ -76,7 +76,7 @@ if ($.isNode()) {
         $.activityUrl = $.activityUrl.replace("isvjd", "isvjcloud")
     }
     console.log(`入口下拉：${$.activityUrl}`)
-    // $.runNum = 10
+    $.runNum = 10
     for (let i = 0; i < $.runNum; i++) {
         $.Token = "";
         cookie = cookiesArr[i];
