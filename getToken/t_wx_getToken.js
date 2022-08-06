@@ -16,7 +16,7 @@ $.openCard = false
 $.exportActivityIds = ""
 $.message = ""
 let TokenKey = "TOKEN_KEY:"
-$.runNum = 4
+$.runNum = -1
 $.hasRun = 0
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
@@ -86,7 +86,8 @@ const redisClient = redis.createClient({
                 /https?:\/\/([^/]+)/)[1] || ''
             $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
             await getCK();
-            await takePostRequest("isvObfuscator");
+            await getSign($.domain);
+            await takePostRequest("isvObfuscator")
             if ($.Token == '') {
                 console.log(`获取Token失败`);
                 break
@@ -102,10 +103,11 @@ const redisClient = redis.createClient({
             // 12.5分钟后过期
             await redisClient.expire($.key, 750)
             $.hasRun++
-            if ($.hasRun == $.runNum) {
+            if ($.runNum !=-1 && $.hasRun == $.runNum) {
                 console.log(`本次已获取${$.runNum}次Token，程序退出`)
                 break;
             }
+            await $.wait(3000)
         }
     }
 })()
@@ -135,22 +137,23 @@ async function takePostRequest(type) {
     switch (type) {
         case 'isvObfuscator':
             url = `https://api.m.jd.com/client.action?functionId=isvObfuscator`;
-            switch ($.domain) {
-                case 'cjhy-isv.isvjcloud.com':
-                    body = 'body=%7B%22url%22%3A%22https%3A//cjhy-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=920cd9b12a1e621d91ca2c066f6348bb5d4b586b&client=apple&clientVersion=10.1.4&st=1633916729623&sv=102&sign=9eee1d69b69daf9e66659a049ffe075b'
-                    break
-                case 'lzkj-isv.isvjcloud.com':
-                    body = 'body=%7B%22url%22%3A%22https%3A//lzkj-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=925ce6441339525429252488722251fff6b10499&client=apple&clientVersion=10.1.4&st=1633777078141&sv=111&sign=00ed6b6f929625c69f367f1a0e5ad7c7'
-                    break
-                case 'cjhydz-isv.isvjcloud.com':
-                    body = 'adid=7B411CD9-D62C-425B-B083-9AFC49B94228&area=16_1332_42932_43102&body=%7B%22url%22%3A%22https%3A%5C/%5C/cjhydz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&build=167541&client=apple&clientVersion=9.4.0&d_brand=apple&d_model=iPhone8%2C1&eid=eidId10b812191seBCFGmtbeTX2vXF3lbgDAVwQhSA8wKqj6OA9J4foPQm3UzRwrrLdO23B3E2wCUY/bODH01VnxiEnAUvoM6SiEnmP3IPqRuO%2By/%2BZo&isBackground=N&joycious=48&lang=zh_CN&networkType=wifi&networklibtype=JDNetworkBaseAF&openudid=2f7578cb634065f9beae94d013f172e197d62283&osVersion=13.1.2&partner=apple&rfs=0000&scope=11&screen=750%2A1334&sign=60bde51b4b7f7ff6e1bc1f473ecf3d41&st=1613720203903&sv=110&uts=0f31TVRjBStG9NoZJdXLGd939Wv4AlsWNAeL1nxafUsZqiV4NLsVElz6AjC4L7tsnZ1loeT2A8Z5/KfI/YoJAUfJzTd8kCedfnLG522ydI0p40oi8hT2p2sNZiIIRYCfjIr7IAL%2BFkLsrWdSiPZP5QLptc8Cy4Od6/cdYidClR0NwPMd58K5J9narz78y9ocGe8uTfyBIoA9aCd/X3Muxw%3D%3D&uuid=hjudwgohxzVu96krv/T6Hg%3D%3D&wifiBssid=9cf90c586c4468e00678545b16176ed2'
-                    break
-                case 'lzkjdz-isv.isvjcloud.com':
-                    body = 'body=%7B%22url%22%3A%22https%3A//lzkjdz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=9a79133855e4ed42e83cda6c58b51881c4519236&client=apple&clientVersion=10.1.4&st=1647263148203&sv=102&sign=53ee02a59dece3c480e3fcb067c49954'
-                    break
-                default:
-                    body = '';
-            };
+            body = $.sign
+            // switch ($.domain) {
+            //     case 'cjhy-isv.isvjcloud.com':
+            //         body = $.sign
+            //         break
+            //     case 'lzkj-isv.isvjcloud.com':
+            //         body = 'body=%7B%22url%22%3A%22https%3A//lzkj-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=925ce6441339525429252488722251fff6b10499&client=apple&clientVersion=10.1.4&st=1633777078141&sv=111&sign=00ed6b6f929625c69f367f1a0e5ad7c7'
+            //         break
+            //     case 'cjhydz-isv.isvjcloud.com':
+            //         body = 'adid=7B411CD9-D62C-425B-B083-9AFC49B94228&area=16_1332_42932_43102&body=%7B%22url%22%3A%22https%3A%5C/%5C/cjhydz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&build=167541&client=apple&clientVersion=9.4.0&d_brand=apple&d_model=iPhone8%2C1&eid=eidId10b812191seBCFGmtbeTX2vXF3lbgDAVwQhSA8wKqj6OA9J4foPQm3UzRwrrLdO23B3E2wCUY/bODH01VnxiEnAUvoM6SiEnmP3IPqRuO%2By/%2BZo&isBackground=N&joycious=48&lang=zh_CN&networkType=wifi&networklibtype=JDNetworkBaseAF&openudid=2f7578cb634065f9beae94d013f172e197d62283&osVersion=13.1.2&partner=apple&rfs=0000&scope=11&screen=750%2A1334&sign=60bde51b4b7f7ff6e1bc1f473ecf3d41&st=1613720203903&sv=110&uts=0f31TVRjBStG9NoZJdXLGd939Wv4AlsWNAeL1nxafUsZqiV4NLsVElz6AjC4L7tsnZ1loeT2A8Z5/KfI/YoJAUfJzTd8kCedfnLG522ydI0p40oi8hT2p2sNZiIIRYCfjIr7IAL%2BFkLsrWdSiPZP5QLptc8Cy4Od6/cdYidClR0NwPMd58K5J9narz78y9ocGe8uTfyBIoA9aCd/X3Muxw%3D%3D&uuid=hjudwgohxzVu96krv/T6Hg%3D%3D&wifiBssid=9cf90c586c4468e00678545b16176ed2'
+            //         break
+            //     case 'lzkjdz-isv.isvjcloud.com':
+            //         body = 'body=%7B%22url%22%3A%22https%3A//lzkjdz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=9a79133855e4ed42e83cda6c58b51881c4519236&client=apple&clientVersion=10.1.4&st=1647263148203&sv=102&sign=53ee02a59dece3c480e3fcb067c49954'
+            //         break
+            //     default:
+            //         body = '';
+            // };
             // console.log("body:" + body)
             break;
         case 'getSimpleActInfoVo':
@@ -352,6 +355,49 @@ function timeToTimestamp(time) {
     console.log(time + "的时间戳为：" + timestamp);
     return timestamp;
     //2021-11-18 22:14:24的时间戳为：1637244864707
+}
+
+function getSign(domain) {
+    let myRequest = getSignRequest(domain);
+    // console.log(type + '-->'+ JSON.stringify(myRequest))
+    return new Promise(async resolve => {
+        $.post(myRequest, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${$.toStr(err, err)}`)
+                    console.log(`sign API请求失败，请检查网路重试`)
+                } else {
+                    dataObj = JSON.parse(data)
+                    $.sign = dataObj.data.convertUrlNew
+                }
+            } catch (e) {
+                // console.log(data);
+                console.log(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+function getSignRequest(domain, method = "POST") {
+    let headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": cookie,
+        "User-Agent": $.UA,
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    prefixUrl = "https://" + domain
+    bodyInner = `{"url":"${prefixUrl}", "id":""}`
+    let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+    // console.log(headers)
+    // console.log(headers.Cookie)
+    let url = "http://42.193.97.124:9000/jd/sign"
+    return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
 }
 
 function getPostRequest(url, body, method = "POST") {
