@@ -137,7 +137,6 @@ async function jdmodule() {
 
     await getCK();
     console.log("lzToken=" + activityCookie)
-    await takePostRequest("isvObfuscator");
    // await takePostRequest("isvObfuscator");
     // console.log('Token:' + $.Token)
     // if ($.Token == '') {
