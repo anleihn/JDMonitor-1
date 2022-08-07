@@ -139,8 +139,11 @@ if ($.isNode()) {
             if ($.stop) {
                 break
             }
-            console.log('店铺签到完成，请等待...')
-            await $.wait(parseInt(Math.random() * 5000 + 1000, 10))
+            if ((idIdx + 1) % 3 == 0) {
+                waitTime = parseInt(Math.random() * 10000 + 1000, 10)
+                console.log(`休息一会，等待${waitTime}秒`)
+                await $.wait(waitTime)
+            }
         }
         if ($.stop) {
             console.log(`脚本被强制停止！`)
