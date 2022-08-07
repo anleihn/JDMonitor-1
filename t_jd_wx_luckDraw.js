@@ -89,6 +89,9 @@ if ($.isNode()) {
     if ($.activityUrl.indexOf("isvjd") != -1) {
         $.activityUrl = $.activityUrl.replace("isvjd", "isvjcloud")
     }
+    if ($.activityUrl.indexOf("cjwx/common")) {
+        $.activityUrl = $.activityUrl.replace("common/entry", "wxTurnTable/0119")
+    }
     for (let i = 0; i < $.runNum; i++) {
         $.Token = "";
         cookie = cookiesArr[i]
@@ -111,7 +114,7 @@ if ($.isNode()) {
             break
         }
         if ($.index % 3 == 0) {
-            waitTime = parseInt(Math.random() * 6000 + 1000, 10)
+            waitTime = parseInt(Math.random() * 1000 + 5000, 10)
             console.log(`休息一会，等待${waitTime}ms`)
             await $.wait(waitTime)
         }
