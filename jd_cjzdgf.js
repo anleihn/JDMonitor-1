@@ -143,6 +143,7 @@ async function jrzd() {
     $.card = [];
     $.saveTeam = false;
     $.Token = ""
+    $.domain = `cjhydz-isv.isvjcloud.com`
     await getCk();
     // await getToken();
     // if($.Token==''){
