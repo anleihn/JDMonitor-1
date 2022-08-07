@@ -189,7 +189,7 @@ async function jdmodule() {
         await $.wait(parseInt(Math.random() * 2000 + 1000, 10))
     }
     if ($.index % 4 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-    if ($.index % 4 == 0) await $.wait(parseInt(Math.random() * 5000 + 100, 10))
+    if ($.index % 4 == 0) await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
 }
 
 function getSign(domain) {
