@@ -247,7 +247,7 @@ async function takePostRequest(type) {
     switch (type) {
         case 'isvObfuscator':
             url = `https://api.m.jd.com/client.action?functionId=isvObfuscator`;
-            
+            body = $.sign
             // console.log("body:" + body)
             break;
         case 'getSimpleActInfoVo':
