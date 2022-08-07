@@ -142,6 +142,7 @@ async function jrzd() {
     $.Token = ""
     $.sid = '', $.userId = '', $.Token = '', $.Pin = '';
     $.saveTeam = false;
+    $.domain = 'lzkjdz-isv.isvjcloud.com'
     await getCk();
     $.retry = false
     await getshopInfo();
