@@ -102,7 +102,11 @@ if ($.isNode()) {
         if ($.stop) {
             break;
         }
-        await $.wait(3000, 5000)
+        if ($.index % 3 == 0) {
+            waitTime = parseInt(Math.random() * 1000 + 5000, 10)
+            console.log(`休息一会，等待${waitTime}ms`)
+            await $.wait(waitTime)
+        }
     }
     if ($.isNode()) {
         if ($.stop) {
