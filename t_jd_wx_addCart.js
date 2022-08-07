@@ -102,7 +102,7 @@ if ($.isNode()) {
         if ($.stop) {
             break;
         }
-        await $.wait(3000)
+        await $.wait(3000, 5000)
     }
     if ($.isNode()) {
         if ($.stop) {
