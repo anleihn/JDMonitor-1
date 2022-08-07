@@ -140,7 +140,7 @@ if ($.isNode()) {
                 break
             }
             console.log('店铺签到完成，请等待...')
-            await $.wait(parseInt(Math.random() * 1000 + 1000, 10))
+            await $.wait(parseInt(Math.random() * 5000 + 1000, 10))
         }
         if ($.stop) {
             console.log(`脚本被强制停止！`)
