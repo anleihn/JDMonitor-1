@@ -110,6 +110,11 @@ if ($.isNode()) {
         if ($.stop) {
             break
         }
+        if ($.index % 3 == 0) {
+            waitTime = parseInt(Math.random() * 6000 + 1000, 10)
+            console.log(`休息一会，等待${waitTime}ms`)
+            await $.wait(waitTime)
+        }
 
     }
     if ($.message != '' && !$.stop) {
@@ -144,7 +149,7 @@ async function jdmodule() {
     await getCK();
     console.log("lzToken=" + activityCookie)
 
-   if ($.redisStatus) {
+    if ($.redisStatus) {
         $.Token = await redisClient.get($.key)
         if ($.Token == '' || $.Token == null) {
             console.log(`未找到缓存的Token，调用Sign接口`)
@@ -159,7 +164,7 @@ async function jdmodule() {
         await takePostRequest("isvObfuscator");
         console.log('Token-->:' + $.Token)
     }
-    
+
     await takePostRequest("getSimpleActInfoVo");
 
     // await takePostRequest("getOpenStatus")
