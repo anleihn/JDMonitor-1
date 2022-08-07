@@ -139,6 +139,7 @@ async function run() {
         $.Token = ''
         $.Pin = ''
         let flag = false
+        $.domain = `lzdz1-isv.isvjcloud.com`
         if ($.redisStatus) {
             $.Token = await redisClient.get($.key)
             if ($.Token == '' || $.Token == null) {
