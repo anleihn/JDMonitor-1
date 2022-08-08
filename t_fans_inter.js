@@ -36,7 +36,6 @@ if ($.redisStatus) {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
 
-
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -202,7 +201,7 @@ async function runMain(_0x40ebb9) {
         if (_0x40ebb9.token == '' || _0x40ebb9.token == null) {
             console.log(`未找到缓存的Token，调用Sign接口`)
             await getSign($.domain)
-            await takePostRequest("isvObfuscator");
+            _0x40ebb9.token = await getToken(_0x40ebb9)
             console.log('Token-->:' + _0x40ebb9.token)
         } else {
             console.log('缓存Token-->:' + _0x40ebb9.token)
@@ -459,6 +458,7 @@ function getSign(domain) {
                 } else {
                     dataObj = JSON.parse(data)
                     $.sign = dataObj.data.convertUrlNew
+                    console.log($.sign);
                 }
             } catch (e) {
                 // console.log(data);
@@ -477,7 +477,7 @@ function getSignRequest(domain, method = "POST") {
         "Accept-Language": "zh-cn",
         "Connection": "keep-alive",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Cookie": cookie,
+        "Cookie": $.cookie,
         "User-Agent": $.UA,
         "X-Requested-With": "XMLHttpRequest"
     }
@@ -493,7 +493,7 @@ function getSignRequest(domain, method = "POST") {
 async function getToken(_0x3c9452) {
     let _0x575ad2 = { 'url': 'https://api.m.jd.com/client.action?functionId=isvObfuscator', 'body': $.sign, 'headers': { 'Host': 'api.m.jd.com', 'accept': '*/*', 'user-agent': 'JD4iPhone/167490 (iPhone; iOS 14.2; Scale/3.00)', 'accept-language': 'zh-Hans-JP;q=1, en-JP;q=0.9, zh-Hant-TW;q=0.8, ja-JP;q=0.7, en-US;q=0.6', 'content-type': 'application/x-www-form-urlencoded', 'Cookie': _0x3c9452.cookie } };
     return new Promise(_0x177e3a => {
-        _0x3c9452.post(_0x575ad2, async (_0x846899, _0x5ddcd4, _0x58ed45) => {
+        $.post(_0x575ad2, async (_0x846899, _0x5ddcd4, _0x58ed45) => {
             try {
                 if (_0x846899) {
                     console.log('' + JSON.stringify(_0x846899));
@@ -620,7 +620,7 @@ async function takePostRequest(_0x22084a, _0x4d19d2, _0x4cee5b = 'activityId=' +
     const _0x2993f8 = { 'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': 'https://' + _0x22084a.host, 'User-Agent': _0x22084a.UA, 'Cookie': ck, 'Host': _0x22084a.host, 'Referer': _0x22084a.thisActivityUrl, 'Accept-Language': 'zh-cn', 'Accept': 'application/json' };
     let _0x1e0fb8 = { 'url': _0x3e5e9, 'method': 'POST', 'headers': _0x2993f8, 'body': _0x4cee5b };
     return new Promise(async _0x4afe88 => {
-        _0x22084a.post(_0x1e0fb8, (_0xa06eab, _0x445f4b, _0x1ac3a4) => {
+        $.post(_0x1e0fb8, (_0xa06eab, _0x445f4b, _0x1ac3a4) => {
             try {
                 dealCK(_0x22084a, _0x445f4b);
                 if (_0x1ac3a4) {
