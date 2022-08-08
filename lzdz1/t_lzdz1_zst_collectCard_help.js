@@ -39,7 +39,7 @@ $.activityId = "168f879faeac4ceea2cf7da3e6ae7047"
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
 $.shareUuid = "59e554dd02694682ade8fc8c23800c3f"
-$.shareUuids = []
+$.shareUuids = ["59e554dd02694682ade8fc8c23800c3f","13ac229ae5544c74911aef729c26e80d"]
 $.helpTimes = 0
 $.shareIndex = 0
 let cookies = []
@@ -104,6 +104,27 @@ var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68
             //     $.shareUuid = $.shareUuids[$.shareIndex]
             //     console.log(`上一个账号助力完成，接下来都会助力第${$.shareIndex + 1}个账号`)
             // }
+            if ($.helpTimes == 3) {
+                console.log(`重跑第一个号`) 
+                cookie = cookiesArr[0];  
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
+                console.log(`\n\n******京东账号 ${$.nickName || $.UserName} 是否能够领取奖励*********\n`);
+                await getUA()
+                await run();
+            }
+
+            // if ($.helpTimes == 6) {
+            //     console.log(`重跑第二个号`) 
+            //     cookie = cookiesArr[1];  
+            //     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            //     $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
+            //     console.log(`\n\n******京东账号 ${$.nickName || $.UserName} 是否能够领取奖励*********\n`);
+            //     await getUA()
+            //     await run();
+            //     $.helpTimes++
+            // }
+
             if (i == 0 && !$.actorUuid) break
             if ($.outFlag || $.activityEnd) break
             console.log(`休息一下别被403了`)
@@ -192,10 +213,12 @@ async function run() {
         }
 
         if ($.helpTimes < 3) {
+            // if ($.helpTimes >= 3) {
+            //     $.shareUuid = $.shareUuids[1]
+            // }
             console.log(`去助力${$.shareUuid}`)
             await takePostRequest("assist")
         }
-
 
 
         if ($.shopFollowStatus == 0) {

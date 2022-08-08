@@ -45,6 +45,11 @@ if ($.redisStatus) {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
 
+// 非凌晨0点-0点45分时候运行的账号
+$.addCartRunNum = process.env.ADD_CART_RUN_NUM ? process.env.ADD_CART_RUN_NUM : 14;
+// 凌晨0点-0点45分时候运行的账号
+$.addCartRunNum2 = process.env.ADD_CART_RUN_NUM2 ? process.env.ADD_CART_RUN_NUM2 : 7;
+
 let activityCookie = ''
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -76,7 +81,23 @@ if ($.isNode()) {
         $.activityUrl = $.activityUrl.replace("isvjd", "isvjcloud")
     }
     console.log(`入口下拉：${$.activityUrl}`)
-    $.runNum = 10
+
+    // 获取当前时间
+    today = moment().format("YYYY-MM-DD")
+    console.log(`当前日期：${today}`)
+    now = moment()
+    overTime = `${today} 00:45:00`
+    overTimeSt = moment(overTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+    busyTimeStatus = false
+    if (now <= overTimeSt) {
+        $.runNum = $.addCartRunNum2
+        console.log(`BusyTime--> 跑前${$.runNum}个号`)
+        busyTimeStatus = true
+    } else {
+        $.runNum = $.addCartRunNum
+        console.log(`NotBusyTime--> 跑前${$.runNum}个号`)
+    }
+
     for (let i = 0; i < $.runNum; i++) {
         $.Token = "";
         cookie = cookiesArr[i];
@@ -102,11 +123,11 @@ if ($.isNode()) {
         if ($.stop) {
             break;
         }
-        if ($.index % 3 == 0) {
-            waitTime = parseInt(Math.random() * 1000 + 5000, 10)
-            console.log(`休息一会，等待${waitTime}ms`)
-            await $.wait(waitTime)
-        }
+
+        waitTime = parseInt(Math.random() * 1000 + 2500, 10)
+        console.log(`休息一会，等待${waitTime}ms`)
+        await $.wait(waitTime)
+
     }
     if ($.isNode()) {
         if ($.stop) {

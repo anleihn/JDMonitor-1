@@ -37,7 +37,10 @@ let activityCookie = ''
 const redis = require('redis');
 $.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
 $.luckDrawOpenCard = process.env.LUCK_DRAW_OPEN_CARD ? process.env.LUCK_DRAW_OPEN_CARD : false;
+// 非凌晨0点-0点45分时候运行的账号
 $.luckDrawRunNum = process.env.LUCK_DRAW_RUN_NUM ? process.env.LUCK_DRAW_RUN_NUM : 10;
+// 凌晨0点-0点45分时候运行的账号
+$.luckDrawRunNum2 = process.env.LUCK_DRAW_RUN_NUM2 ? process.env.LUCK_DRAW_RUN_NUM2 : 5;
 $.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
 if ($.signUrl == '') {
     console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
@@ -97,7 +100,7 @@ if ($.isNode()) {
     overTimeSt = moment(overTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
     busyTimeStatus = false
     if (now <= overTimeSt) {
-        $.runNum = 7
+        $.runNum = $.luckDrawRunNum2
         console.log(`BusyTime--> 跑前${$.runNum}个号`)
         busyTimeStatus = true
     } else {
