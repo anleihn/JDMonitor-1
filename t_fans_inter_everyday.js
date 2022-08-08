@@ -609,8 +609,6 @@ async function takePostRequest(_0x22084a, _0x4d19d2, _0x4cee5b = 'activityId=' +
             _0x4cee5b = '222';
             break;
     }
-    console.log(_0x3e5e9)
-    console.log(`${_0x4cee5b}`)
     let ck = ''
     if ($.LZ_AES_PIN) {
         ck = _0x22084a.cookie + ' LZ_TOKEN_KEY=' + _0x22084a.LZ_TOKEN_KEY + '; LZ_TOKEN_VALUE=' + _0x22084a.LZ_TOKEN_VALUE + '; AUTH_C_USER=' + _0x22084a.pin + '; ' + `LZ_AES_PIN=${$.LZ_AES_PIN};` + _0x22084a.lz_jdpin_token
