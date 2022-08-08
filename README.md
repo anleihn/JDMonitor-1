@@ -1,5 +1,6 @@
 # JDMonitor
 自用，脚本偷CK
+
 请勿传播
 否则随时闭库
 
@@ -8,12 +9,15 @@
 ql repo https://github.com/tttccz/TczMonitor.git "jd_|t_" "backup" "JS_|notify|pk_|magic|USER_AGENTS|jdCookie|sendNotify" "main"
 
 使用教程
+
 1、需要自备sign接口
 
 2、该库支持Redis存放Token操作，可在青龙面板中安装Redis，并设置变量export USE_REDIS=true
+
 tttccz_JDMonitor/t_wx_getToken.js 该文件检测并生成临时Token 12.5分钟后过期
 
 Redis食用方法
+
 一、安装青龙面板
 1.安装青龙依赖
 docker run -dit \
