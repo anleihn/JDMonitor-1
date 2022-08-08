@@ -132,6 +132,7 @@ if ($.isNode()) {
     })
 
 async function jdmodule() {
+    $.retryAddCart = false
     $.domain = $.activityUrl.match(/https?:\/\/([^/]+)/) && $.activityUrl.match(
         /https?:\/\/([^/]+)/)[1] || ''
     $.UA = `jdapp;iPhone;10.2.2;13.1.2;${uuid()};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
@@ -203,6 +204,11 @@ async function jdmodule() {
         $.cpvo = cpvo
         // $.log('products', JSON.stringify($.cpvo.skuId))
         await takePostRequest('addCart')
+        if ($.retryAddCart) {
+            console.log(`商品异常，应该是购物车满了`)
+            $.message += `京东账号${$.UserName} 加购异常，应该是购物车满了`
+            break
+        }
         await $.wait(1500, 1800)
         console.log("需要加购" + $.needCollectionSize)
         console.log("已加购" + $.hasAddCartSize)
@@ -212,6 +218,10 @@ async function jdmodule() {
     }
     if ($.oneKeyAddCart) {
         await takePostRequest('oneKeyAddCart')
+        if ($.retryAddCart) {
+            console.log(`商品异常，应该是购物车满了`)
+            $.message += `京东账号${$.UserName} 加购异常，应该是购物车满了`
+        }
         await $.wait(1500, 1800)
     }
     await takePostRequest('getPrize');
@@ -521,7 +531,9 @@ async function dealReturn(type, data) {
                         }
                     } else {
                         $.log(JSON.stringify(res))
-                        break
+                        if (res.data == 'add_cart_fail') {
+                            $.retryAddCart = true
+                        }
                     }
 
                 }
@@ -534,7 +546,9 @@ async function dealReturn(type, data) {
                         }
                     } else {
                         console.log(JSON.stringify(res))
-                        return
+                        if (res.data == 'add_cart_fail') {
+                            $.retryAddCart = true
+                        }
                     }
                 }
                 break;

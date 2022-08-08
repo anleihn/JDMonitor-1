@@ -54,6 +54,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
+$.domain = `lzkjdz-isv.isvjcloud.com`
 
 !(async () => {
 

