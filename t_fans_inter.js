@@ -14,7 +14,7 @@ $.activityIds = process.env.T_FANS_INTER_ACTIVITY_IDS ? process.env.T_FANS_INTER
 let cookiesArr = [], message = '';
 $.cookie = ''
 $.LZ_AES_PIN = ""
-
+$.domain = `lzkjdz-isv.isvjcloud.com`
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 $.exportActivityIds = "";
