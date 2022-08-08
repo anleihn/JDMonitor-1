@@ -45,7 +45,8 @@ make install
 
 3.运行redis
 cd /usr/local/bin
-./redis-sever
+##甲骨文路径为 /ql/redis/redis-4.0.2/src
+./redis-server
 ## 运行成功后
 ## 后台运行redis
 ctrl+z
