@@ -85,6 +85,7 @@ if ($.redisStatus) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
+    $.domain = `lzkj-isv.isvjcloud.com`
 
     for (let b = 0; b < $.activityIdArr.length; b++) {
         label = 0;
