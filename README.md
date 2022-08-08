@@ -4,7 +4,7 @@
 请勿传播
 否则随时闭库
 
-拉库命令
+# 拉库命令
 
 ql repo https://github.com/tttccz/TczMonitor.git "jd_|t_" "backup" "JS_|notify|pk_|magic|USER_AGENTS|jdCookie|sendNotify" "main"
 
@@ -16,10 +16,12 @@ ql repo https://github.com/tttccz/TczMonitor.git "jd_|t_" "backup" "JS_|notify|p
 
 tttccz_JDMonitor/t_wx_getToken.js 该文件检测并生成临时Token 12.5分钟后过期
 
-Redis食用方法
+# Redis食用方法
 
 一、安装青龙面板
+
 1.安装青龙依赖
+
 docker run -dit \
 -v $PWD/ql-redis/config:/ql/config \
 -v $PWD/ql-redis/log:/ql/log \
@@ -37,7 +39,7 @@ docker run -dit \
 --privileged \
 whyour/qinglong:2.11.3
 
-## --privileged 必须的参数，否则redis安装不上
+--privileged 必须的参数，否则redis安装不上
 
 
 2.进入青龙面板
@@ -67,21 +69,20 @@ make install
 cd /usr/local/bin
 ##甲骨文路径为 /ql/redis/redis-4.0.2/src
 ./redis-server
-## 运行成功后
-## 后台运行redis
+// 运行成功后 后台运行redis
 ctrl+z
 bg 1
 
 三、安装pkc依赖（同样在容器内部）
 1.安装依赖
-# 操作环境，容器内执行。
-# 包依赖
+// 操作环境，容器内执行。
+// 包依赖
 apk add zlib zlib-dev libjpeg-turbo libjpeg-turbo-dev gcc python3-dev libffi-dev musl-dev linux-headers
 
-# 模块依赖
+// 模块依赖
 pip3 install qrcode==7.3.1 Telethon==1.24.0 requests==2.27.1 Pillow==9.0.0 python-socks==1.2.4 async_timeout==4.0.2 prettytable==3.0.0
 
-# 如果安装 Pillow 比较慢 执行以下命令，然后再执行上面命令
+// 如果安装 Pillow 比较慢 执行以下命令，然后再执行上面命令
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple Pillow==9.0.0
 
 2.拉取jbot主要代码
@@ -95,18 +96,18 @@ vi /ql/config/bot.json
 vi /ql/config/diybotset.json
 
 4.启动机器人
-# 删除历史登录session
+// 删除历史登录session
 rm -f /ql/config/user.session
 
-# 通过pm2 后台启动，除了登录验证外，建议使用pm2启动机器人
+// 通过pm2 后台启动，除了登录验证外，建议使用pm2启动机器人
 cd /ql/jbot/
 pm2 start ecosystem.config.js #第一次启动是这样启动，后续启动参考底部相关命令
 
-# 查看日志：看看有没有报错。
+// 查看日志：看看有没有报错。
 tail -100f /ql/log/bot/run.log
 
-# tg机器人会叮咚
-# 向机器人发送 /user 进行登录
+// tg机器人会叮咚
+// 向机器人发送 /user 进行登录
 
 
 
@@ -153,6 +154,7 @@ const redisClient = redis.createClient({
 	     redisClient.quit() )
 	
 五、青龙面板脚本依赖
+
 png-js
 date-fns
 axios
