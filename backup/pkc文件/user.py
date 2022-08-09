@@ -319,6 +319,8 @@ async def activityID(event):
                 continue
             if message.find('i.walle.com') >= 0:
                 message = parse.unquote_plus(message.split('=')[1])
+            if message.find(')') >= 0:
+                message = message.split(')')[0]
                 logger.info("logger3:" + message)
             kvs = re.sub(r'.*export ', 'export ', message)
             kv = kvs.replace("export ", "")
