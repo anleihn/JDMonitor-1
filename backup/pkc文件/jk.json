@@ -166,10 +166,10 @@
             "scriptPath":"/ql/scripts/KingRan_KR_main/jd_wxFansInterActionActivity.js"
         },
         {
-            "isOpen": false,
+            "isOpen": true,
             "name": "豆豆通用任务",
             "envName":"WXGAME_ACT_ID",
-            "scriptPath":"/ql/scripts/tttccz_JDMonitor/jd_game.js"
+            "scriptPath":"/ql/scripts/KingRan_KR_main/jd_game.js"
         },
         {
             "isOpen": true,
