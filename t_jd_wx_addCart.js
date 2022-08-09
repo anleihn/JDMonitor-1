@@ -27,7 +27,7 @@ $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
-
+var moment = require('moment')
 const redis = require('redis');
 $.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
 $.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
