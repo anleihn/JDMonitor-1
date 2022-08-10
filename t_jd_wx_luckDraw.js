@@ -248,7 +248,7 @@ async function jdmodule() {
     // }
     console.log(`可抽奖次数:${$.canDrawTimes}`)
 
-    if ($.index < 3 && $.canDrawTimes == 0) {
+    if ($.index <= 3 && $.canDrawTimes == 0) {
         $.notDrawCount++
         return
     }
