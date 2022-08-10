@@ -22,6 +22,7 @@ $.restartNo = 1
 $.friendUuidId = 0
 $.LZ_AES_PIN = ""
 $.stop = false
+$.errorMessage = ""
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 //IOS等用户直接用NobyDa的jd cookie
@@ -49,6 +50,10 @@ if ($.redisStatus) {
 $.addCartRunNum = process.env.ADD_CART_RUN_NUM ? process.env.ADD_CART_RUN_NUM : 14;
 // 凌晨0点-0点45分时候运行的账号
 $.addCartRunNum2 = process.env.ADD_CART_RUN_NUM2 ? process.env.ADD_CART_RUN_NUM2 : 7;
+// 是否入会
+$.addCartOpenCard = process.env.ADD_CART_OPEN_CARD ? process.env.ADD_CART_OPEN_CARD : false;
+// 大于多少豆去入会
+$.addCartBeanNum = process.env.ADD_CART_BEAN_NUM ? process.env.ADD_CART_BEAN_NUM : 3;
 
 let activityCookie = ''
 if ($.isNode()) {
@@ -131,7 +136,12 @@ if ($.isNode()) {
     }
     if ($.isNode()) {
         if ($.stop) {
-            await notify.sendNotify("加购有礼", `${$.message}\n跳转链接\n${$.activityUrl}\n活动已结束`)
+            if ($.errorMessage == "") {
+                await notify.sendNotify("加购有礼", `${$.message}\n跳转链接\n${$.activityUrl}\n活动已结束`)
+            } else {
+                await notify.sendNotify("加购有礼", `${$.message}\n跳转链接\n${$.activityUrl}\n${$.errorMessage}`)
+            }
+
         }
         else {
             if ($.message != '') {
@@ -194,22 +204,31 @@ async function jdmodule() {
     // await takePostRequest("getUserInfo")
 
     await takePostRequest("activityContent")
+    await takePostRequest("getActMemberInfo");
 
-    // await takePostRequest("getActMemberInfo");
+    if ($.actMemberStatus == 1 && !$.openCardStatus) {
+        console.log(`需要入会，判断京豆是否大于入会阈值`)
+        if ($.addCartOpenCard && $.addCartBeanNum <= $.beanNum) {
+            console.log(`京豆大于入会阈值，去入会-->`)
+            await opencard()
+            if ($.joinErrorTimes >= 4) {
+                return
+            }
+        } else {
+            console.log(`京豆小于入会阈值，跳过、加购-->`)
+            $.message += `京东账号${$.UserName} 京豆不达标，不入会`
+            return
+        }
 
-    // if ($.actMemberStatus == 1 && !$.openCardStatus && retry) {
-    //     await opencard()
-    //     if ($.joinErrorTimes > 4) {
-    //         return
-    //     }
-    // }
+    }
+
     // $.log('content', JSON.stringify($.content));
     $.needCollectionSize = $.content.needCollectionSize;
     $.hasCollectionSize = $.content.hasCollectionSize;
     $.oneKeyAddCart = $.content.oneKeyAddCart * 1 === 1;
     if ($.hasCollectionSize >= $.needCollectionSize) {
         console.log(`已经加购过了`)
-        $.message += `京东账号${$.UserName}已经加购过了`
+        $.message += `京东账号${$.UserName}已经加购过了\n`
         return
     }
     //$.log(`needCollectionSize:${needCollectionSize} needFollow:${needFollow}`, );
@@ -326,6 +345,10 @@ async function takePostRequest(type) {
         case 'getUserInfo':
             url = `https://${$.domain}/wxActionCommon/getUserInfo`;
             body = `pin=${$.enPin}`;
+            break;
+        case 'getActMemberInfo':
+            url = `https://${$.domain}/wxCommonInfo/getActMemberInfo`;
+            body = `venderId=${$.venderId}&activityId=${$.activityId}&pin=${$.enPin}`
             break;
         case 'activityContent':
             url = `https://${$.domain}/wxCollectionActivity/activityContent`;
@@ -460,6 +483,7 @@ async function dealReturn(type, data) {
                     if (res.result && res.result === true) {
                         // console.log(JSON.stringify(res.data))
                         $.content = res.data
+                        $.beanNum = $.content.drawInfo.drawInfo.beanNum || 0
                     } else if (res.errorMessage) {
                         console.log(`${type} ${res.errorMessage || ''}`)
                     } else {
@@ -581,7 +605,10 @@ async function dealReturn(type, data) {
                         $.message += `京东账号${$.UserName} 获得 ${res.data.name}\n`
                     } else {
                         console.log(`${res.errorMessage}`);
-                        $.message += `京东账号${$.UserName}  ${res.errorMessage}\n`
+                        if (res.errorMessage.indexOf(`晚`) != -1 || res.errorMessage.indexOf(`不足`) != -1) {
+                            $.stop = true
+                            $.errorMessage = `奖品已经发完了`
+                        }
                     }
                 }
                 break;
