@@ -25,33 +25,19 @@ tttccz_JDMonitor/t_wx_getToken.js 该文件检测并生成临时Token 12.5分钟
 docker run -dit \
 
 -v $PWD/ql-redis/config:/ql/config \
-
 -v $PWD/ql-redis/log:/ql/log \
-
 -v $PWD/ql-redis/db:/ql/db \
-
 -v $PWD/ql-redis/repo:/ql/repo \
-
 -v $PWD/ql-redis/raw:/ql/raw \
-
 -v $PWD/ql-redis/scripts:/ql/scripts \
-
 -v $PWD/ql-redis/jbot:/ql/jbot \
-
 -v $PWD/ql-redis/ninja:/ql/ninja \
-
 -p 5700:5700 \
-
 -p 5701:5701 \
-
 --name qinglong-redis \
-
 --hostname ql-redis \
-
 --restart unless-stopped \
-
 --privileged \
-
 whyour/qinglong:2.11.3
 
 
@@ -127,7 +113,14 @@ pip3 install qrcode==7.3.1 Telethon==1.24.0 requests==2.27.1 Pillow==9.0.0 pytho
 
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple Pillow==9.0.0
 
-2.拉取jbot主要代码
+2. 安装
+
+// 一键安装
+rm -f install.sh* && wget -q https://raw.githubusercontent.com/curtinlv/gd/main/install.sh && bash install.sh
+
+// 手动安装
+
+// 拉取jbot主要代码
 
 cd /ql/repo && git clone https://github.com/curtinlv/gd.git
 
