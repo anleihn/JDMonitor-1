@@ -24,22 +24,7 @@ tttccz_JDMonitor/t_wx_getToken.js 该文件检测并生成临时Token 12.5分钟
 
 1.安装青龙依赖
 
-docker run -dit \
--v $PWD/ql-redis/config:/ql/config \
--v $PWD/ql-redis/log:/ql/log \
--v $PWD/ql-redis/db:/ql/db \
--v $PWD/ql-redis/repo:/ql/repo \
--v $PWD/ql-redis/raw:/ql/raw \
--v $PWD/ql-redis/scripts:/ql/scripts \
--v $PWD/ql-redis/jbot:/ql/jbot \
--v $PWD/ql-redis/ninja:/ql/ninja \
--p 5700:5700 \
--p 5701:5701 \
---name qinglong-redis \
---hostname ql-redis \
---restart unless-stopped \
---privileged \
-whyour/qinglong:2.11.3
+docker run -dit -v $PWD/ql-redis/config:/ql/config -v $PWD/ql-redis/log:/ql/log -v $PWD/ql-redis/db:/ql/db -v $PWD/ql-redis/repo:/ql/repo -v $PWD/ql-redis/raw:/ql/raw -v $PWD/ql-redis/scripts:/ql/scripts -v $PWD/ql-redis/jbot:/ql/jbot -v $PWD/ql-redis/ninja:/ql/ninja -p 5700:5700 -p 5701:5701 --name qinglong-redis --hostname ql-redis --restart unless-stopped --privileged whyour/qinglong:2.11.3
 
 
 --privileged 必须的参数，否则redis安装不上
@@ -83,9 +68,7 @@ make install
 
 3.运行redis
 
-cd /usr/local/bin
-
-// 甲骨文路径为 /ql/redis/redis-4.0.2/src
+cd /src
 
 ./redis-server
 
@@ -117,6 +100,7 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple Pillow==9.0.0
 2. 安装
 
 // 一键安装
+
 rm -f install.sh* && wget -q https://raw.githubusercontent.com/curtinlv/gd/main/install.sh && bash install.sh
 
 // 手动安装
