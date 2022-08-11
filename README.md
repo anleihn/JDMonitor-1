@@ -1,8 +1,10 @@
 # JDMonitor
-自用，脚本偷CK
+# 自用，脚本偷CK
+# 自用，脚本偷CK
+# 自用，脚本偷CK
 
-请勿传播
-否则随时闭库
+# 请勿传播
+# 否则随时闭库
 
 # 拉库命令
 
@@ -23,7 +25,6 @@ tttccz_JDMonitor/t_wx_getToken.js 该文件检测并生成临时Token 12.5分钟
 1.安装青龙依赖
 
 docker run -dit \
-
 -v $PWD/ql-redis/config:/ql/config \
 -v $PWD/ql-redis/log:/ql/log \
 -v $PWD/ql-redis/db:/ql/db \
@@ -162,41 +163,22 @@ tail -100f /ql/log/bot/run.log
 # 青龙面板脚本依赖
 
 png-js
-
 date-fns
-
 axios
-
 dotenv
-
 got
-
 crypto-js
-
 md5
-
 ts-md5
-
 tslib
-
 @types/node
-
 request
-
 tough-cookie
-
 jsdom
-
 download
-
 tunnel
-
 ws
-
 js-base64
-
 qrcode-terminal
-
 moment
-
 redis
