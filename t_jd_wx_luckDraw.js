@@ -161,9 +161,10 @@ if ($.isNode()) {
     })
     .finally(() => {
         $.done();
-        redisClient.quit()
-        console.log('redis关闭成功')
-
+        if ($.redisStatus) {
+            redisClient.quit()
+            console.log('redis关闭成功')
+        }
     })
 
 function showMsg() {
