@@ -57,7 +57,39 @@ $.activityEnd = false
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
 let lz_cookie = {}
+
+const redis = require('redis');
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+  console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
+  return
+}
+let TokenKey = "TOKEN_KEY:"
+redisClient = null
+if ($.redisStatus) {
+  redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+  });
+} else {
+  console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
+}
+
 !(async () => {
+
+  if ($.redisStatus) {
+    redisClient.on('ready', () => {
+      console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+      console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+  }
+
   if ($.isNode()) {
     if (guaopencard + "" != "true") {
       console.log('如需执行脚本请设置环境变量[guaopencard134]为"true"')
@@ -74,7 +106,7 @@ let lz_cookie = {}
   }
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}`)
   $.shareUuid = ""
-
+  $.domain = `lzdz1-isv.isvjcloud.com`
   $.openCardPin = process.env.openCardPin ? process.env.openCardPin : ""
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -98,6 +130,7 @@ let lz_cookie = {}
     originCookie = cookiesArr[i];
     if (cookie) {
       $.UserName = decodeURIComponent(cookie.match(/pin=([^; ]+)(?=;?)/) && cookie.match(/pin=([^; ]+)(?=;?)/)[1])
+      $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
       $.index = i + 1;
       message = ""
       $.bean = 0
@@ -109,20 +142,25 @@ let lz_cookie = {}
       if (i == 0 && !$.actorUuid) break
       if ($.outFlag || $.activityEnd) break
     }
-  }
-  if ($.outFlag) {
-    let msg = '此ip已被限制，请过10分钟后再执行脚本'
-    $.msg($.name, ``, `${msg}`);
-    if ($.isNode()) await notify.sendNotify(`${$.name}`, `${msg}`);
-  }
-  if (allMessage) {
-    $.msg($.name, ``, `${allMessage}`);
-    // if ($.isNode()) await notify.sendNotify(`${$.name}`, `${allMessage}`);
+    if ($.outFlag) {
+      let msg = '此ip已被限制，请过10分钟后再执行脚本'
+      $.msg($.name, ``, `${msg}`);
+      if ($.isNode()) await notify.sendNotify(`${$.name}`, `${msg}`);
+    }
+    if (allMessage) {
+      $.msg($.name, ``, `${allMessage}`);
+      // if ($.isNode()) await notify.sendNotify(`${$.name}`, `${allMessage}`);
+    }
   }
 })()
   .catch((e) => $.logErr(e))
-  .finally(() => $.done())
-
+  .finally(() => {
+    $.done();
+    if ($.redisStatus) {
+      redisClient.quit()
+      console.log('redis关闭成功')
+    }
+  })
 
 async function run() {
   try {
@@ -132,7 +170,22 @@ async function run() {
     $.Token = ''
     $.Pin = ''
     let flag = false
-    await takePostRequest('isvObfuscator');
+    if ($.redisStatus) {
+      $.Token = await redisClient.get($.key)
+      if ($.Token == '' || $.Token == null) {
+        console.log(`未找到缓存的Token，调用Sign接口`)
+        await getSign($.domain)
+        await takePostRequest('isvObfuscator');
+        console.log('Token-->:' + $.Token)
+      } else {
+        console.log('缓存Token-->:' + $.Token)
+      }
+    } else {
+      await getSign($.domain)
+      await takePostRequest('isvObfuscator');
+      console.log('Token-->:' + $.Token)
+    }
+
     if ($.Token == '') {
       console.log('获取[token]失败！')
       return
@@ -292,6 +345,50 @@ async function run() {
   }
 }
 
+function getSign(domain) {
+  let myRequest = getSignRequest(domain);
+  // console.log(type + '-->'+ JSON.stringify(myRequest))
+  return new Promise(async resolve => {
+    $.post(myRequest, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${$.toStr(err, err)}`)
+          console.log(`sign API请求失败，请检查网路重试`)
+        } else {
+          dataObj = JSON.parse(data)
+          $.sign = dataObj.data.convertUrlNew
+        }
+      } catch (e) {
+        // console.log(data);
+        console.log(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
+function getSignRequest(domain, method = "POST") {
+  let headers = {
+    "Accept": "application/json",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh-cn",
+    "Connection": "keep-alive",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Cookie": cookie,
+    "User-Agent": $.UA,
+    "X-Requested-With": "XMLHttpRequest"
+  }
+  prefixUrl = "https://" + domain
+  bodyInner = `{"url":"${prefixUrl}", "id":""}`
+  let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+  // console.log(headers)
+  // console.log(headers.Cookie)
+  let url = $.signUrl
+  return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
+}
+
+
 async function takePostRequest(type) {
   if ($.outFlag) return
   let domain = 'https://lzdz1-isv.isvjcloud.com';
@@ -301,7 +398,7 @@ async function takePostRequest(type) {
   switch (type) {
     case 'isvObfuscator':
       url = `https://api.m.jd.com/client.action?functionId=isvObfuscator`;
-      body = `body=%7B%22url%22%3A%22https%3A//lzdz1-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=ab640b5dc76b89426f72115f5b2e06e934a5fbe9&client=apple&clientVersion=10.1.4&st=1650250640876&sv=102&sign=7ea66dcb2969eff53c43b5b8a4937dbe`;
+      body = $.sign;
       break;
     case 'getSimpleActInfoVo':
       url = `${domain}/dz/common/getSimpleActInfoVo`;

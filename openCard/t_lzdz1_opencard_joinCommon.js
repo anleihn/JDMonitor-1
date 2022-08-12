@@ -25,18 +25,45 @@ if ($.isNode()) {
   cookiesArr.reverse();
   cookiesArr = cookiesArr.filter((item) => !!item);
 }
+
+const redis = require('redis');
+$.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
+$.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
+if ($.signUrl == '') {
+  console.log(`请自行搭建sign接口，并设置环境变量-->\n  export JD_SIGN_URL="你的接口地址"`)
+  return
+}
+let TokenKey = "TOKEN_KEY:"
+redisClient = null
+if ($.redisStatus) {
+  redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+  });
+} else {
+  console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
+}
+
 !(async () => {
+
+  if ($.redisStatus) {
+    redisClient.on('ready', () => {
+      console.log('redis已准备就绪')
+    })
+
+    redisClient.on('error', err => {
+      console.log("redis异常：" + err)
+
+    })
+    await redisClient.connect()
+    console.log('redis连接成功')
+  }
+
   $.getAuthorCodeListerr = false;
   if (!cookiesArr[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  // authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz112.json')
-  // if ($.getAuthorCodeListerr === false) {
-  //     authorCodeList = [
-  //         '917746a95cae46618c8f6b0ff55dfbc2',
-  //     ]
-  // }
+  $.domain = `lzdz1-isv.isvjcloud.com`
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -59,6 +86,7 @@ if ($.isNode()) {
       originCookie = cookiesArr[i];
       newCookie = "";
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+      $.key = TokenKey + cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = "";
@@ -99,6 +127,10 @@ if ($.isNode()) {
   })
   .finally(() => {
     $.done();
+    if ($.redisStatus) {
+      redisClient.quit()
+      console.log('redis关闭成功')
+    }
   });
 
 async function member() {
@@ -109,7 +141,22 @@ async function member() {
   $.hasOpenAll = false
   lz_cookie = {};
   await getFirstLZCK();
-  await getToken();
+  if ($.redisStatus) {
+    $.token = await redisClient.get($.key)
+    if ($.token == '' || $.token == null) {
+      console.log(`未找到缓存的Token，调用Sign接口`)
+      await getSign($.domain)
+      await getToken();
+      console.log('Token-->:' + $.token)
+    } else {
+      console.log('缓存Token-->:' + $.token)
+    }
+  } else {
+    await getSign($.domain)
+    await getToken();
+    console.log('Token-->:' + $.token)
+  }
+
   await task("dz/common/getSimpleActInfoVo", `activityId=${$.activityId}`, 1);
   if ($.token) {
     await getMyPing();
@@ -126,8 +173,8 @@ async function member() {
       // await task("joinCommon/assist/status", `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&uuid=${$.actorUuid}&shareUuid=${$.authorCode}`);
       await task("joinCommon/assist", `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&uuid=${$.actorUuid}&shareUuid=${$.authorCode}`);
       if ($.hasOpenAll) {
-          console.log(`已全部开卡，并完成助力`)
-          return
+        console.log(`已全部开卡，并完成助力`)
+        return
       }
       $.log("关注店铺");
       await task("joinCommon/doTask", `activityId=${$.activityId}&uuid=${$.actorUuid}&pin=${encodeURIComponent($.secretPin)}&taskType=20&taskValue=`);
@@ -248,7 +295,7 @@ function task(function_id, body, isCommon = 0, own = 0) {
                   break;
                 case "joinCommon/assist/status":
                   $.log(JSON.stringify(data));
-                  
+
                   break;
                 case "joinCommon/assist":
                   $.log(JSON.stringify(data));
@@ -470,6 +517,50 @@ function getFirstLZCK() {
     );
   });
 }
+
+function getSign(domain) {
+  let myRequest = getSignRequest(domain);
+  // console.log(type + '-->'+ JSON.stringify(myRequest))
+  return new Promise(async resolve => {
+    $.post(myRequest, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${$.toStr(err, err)}`)
+          console.log(`sign API请求失败，请检查网路重试`)
+        } else {
+          dataObj = JSON.parse(data)
+          $.sign = dataObj.data.convertUrlNew
+        }
+      } catch (e) {
+        // console.log(data);
+        console.log(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
+function getSignRequest(domain, method = "POST") {
+  let headers = {
+    "Accept": "application/json",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh-cn",
+    "Connection": "keep-alive",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Cookie": cookie,
+    "User-Agent": $.UA,
+    "X-Requested-With": "XMLHttpRequest"
+  }
+  prefixUrl = "https://" + domain
+  bodyInner = `{"url":"${prefixUrl}", "id":""}`
+  let body = `body=${encodeURIComponent(bodyInner)}&functionId=isvObfuscator`
+  // console.log(headers)
+  // console.log(headers.Cookie)
+  let url = $.signUrl
+  return { url: url, method: method, headers: headers, body: body, timeout: 30000 };
+}
+
 function getToken() {
   let opt = {
     url: `https://api.m.jd.com/client.action?functionId=isvObfuscator`,
@@ -483,7 +574,7 @@ function getToken() {
       "Accept-Language": "zh-Hans-CN;q=1",
       "Accept-Encoding": "gzip, deflate, br",
     },
-    body: `body=%7B%22url%22%3A%20%22https%3A//lzkj-isv.isvjcloud.com%22%2C%20%22id%22%3A%20%22%22%7D&uuid=hjudwgohxzVu96krv&client=apple&clientVersion=9.4.0&st=1620476162000&sv=111&sign=f9d1b7e3b943b6a136d54fe4f892af05`,
+    body: $.sign,
   };
   return new Promise((resolve) => {
     $.post(opt, (err, resp, data) => {
