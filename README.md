@@ -99,49 +99,10 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple Pillow==9.0.0
 
 2. 安装
 
-// 一键安装
+参看
 
-rm -f install.sh* && wget -q https://raw.githubusercontent.com/curtinlv/gd/main/install.sh && bash install.sh
+## https://github.com/curtinlv/gd.git
 
-// 手动安装
-
-// 拉取jbot主要代码
-
-cd /ql/repo && git clone https://github.com/curtinlv/gd.git
-
-cp -a /ql/repo/gd/* /ql/jbot && cp -a /ql/jbot/conf/* /ql/config 
-
-cp -a /ql/jbot/jk_script/* /ql/scripts
-
-mkdir /ql/log/bot
-
-
-3.配置tg机器人参数配置 (可在青龙面板-配置文件中配置)
-
-vi /ql/config/bot.json
-
-vi /ql/config/diybotset.json
-
-
-4.启动机器人
-
-// 删除历史登录session
-
-rm -f /ql/config/user.session
-
-// 通过pm2 后台启动，除了登录验证外，建议使用pm2启动机器人
-
-cd /ql/jbot/
-
-pm2 start ecosystem.config.js #第一次启动是这样启动，后续启动参考底部相关命令
-
-// 查看日志：看看有没有报错。
-
-tail -100f /ql/log/bot/run.log
-
-// tg机器人会叮咚
-
-// 向机器人发送 /user 进行登录
 
 	
 # 青龙面板脚本依赖
