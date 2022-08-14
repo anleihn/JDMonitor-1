@@ -39,6 +39,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
+$.cartKoiKey = `WuXian:CartKoiIds`
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -71,6 +72,13 @@ if ($.isNode()) {
     }
     let curtimestamp = Date.parse(new Date());
     console.log(curtimestamp)
+    if ($.redisStatus) {
+        $.activityIds = await redisClient.get($.cartKoiKey) || ""
+        console.log(`启用redis-->从redis获取购物车锦鲤IDS变量`)
+        for (let temp of $.activityIds.split("&")) {
+            console.log(temp)
+        }
+    }
     for (let activityInfo of $.activityIds.split("&")) {
         $.activityId = activityInfo.split(";")[0]
         let actStartTime = activityInfo.split(";")[1]

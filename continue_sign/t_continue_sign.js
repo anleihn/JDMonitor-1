@@ -31,13 +31,6 @@ $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
-$.addressArray = [
-    "山东省,青岛市,市南区,香港西路69号光大国际金融中心,19963236955,266071,370202, 田豆",
-    "山东省,青岛市,李沧区,振华路149号1-3-301,19963236955,266041,370213, 田豆豆",
-    "山东省,青岛市,崂山区,泉岭路8号中商国际大厦,15265297926,266100,370212, 巩大豆"
-    // "山东省,枣庄市,滕州市,解放路杏坛东区6-3-505,13396323685,277500,370481, 田甜豆",
-    // "山东省,枣庄市,滕州市,鑫旺路嘉德城市花园,15163242552，277500,370481, 张豆"
-]
 
 const redis = require('redis');
 $.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
@@ -55,6 +48,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
+$.conSignKey = `WuXian:ConSignIds`
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -84,8 +78,16 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
+    if ($.redisStatus) {
+        $.activityIds = await redisClient.get($.conSignKey) || ""
+        console.log(`启用redis-->从redis获取连续签到IDS变量`)
+        // console.log($.activityIds)
+        for (let temp of $.activityIds.split("&")) {
+            console.log(temp)
+        }
+    }
     if ($.activityIds.indexOf($.rawId) != -1) {
-        console.log(`签到ID已存在，退出`)
+        console.log(`签到ID【${$.rawId}】已存在，退出`)
     } else {
         if ($.rawId.indexOf("cj") != -1) {
             $.activityId = $.rawId.split("_")[1]
@@ -121,13 +123,20 @@ if ($.isNode()) {
                     result = $.activityIds == null || $.activityIds == "" ? $.rawId : $.activityIds + `&${$.rawId}`
                 }
                 console.log(`休息一下别被403了`)
-                await $.wait(parseInt(Math.random() * 5000 + 1000, 10))
+                await $.wait(parseInt(Math.random() * 5000 + 10000, 10))
             }
         }
         if ($.isNode()) {
             if ($.message != '') {
-                await notify.sendNotify("连续签到变量", `export T_CON_SIGN_IDS=\"${result}\"`)
+                // await notify.sendNotify(`export T_CON_SIGN_IDS="${result}"`)
                 await notify.sendNotify("连续签到", `${$.shopName}\n${$.message}\n奖励内容\n${$.priseMsg}\n跳转链接\n${$.activityUrl}`)
+                if ($.redisStatus) {
+                    // console.log(`写入redis--->`)
+                    // console.log(result)
+                    await redisClient.set($.conSignKey, result)
+                    console.log(`查看是否写入--->`)
+                    console.log(await redisClient.get($.conSignKey))
+                }
 
             }
         }

@@ -38,6 +38,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
+$.drawCenterKey = "WuXian:DrawCenterIds"
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -67,6 +68,13 @@ if ($.isNode()) {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
+    }
+    if ($.redisStatus) {
+        $.activityIds = await redisClient.get($.drawCenterKey) || ""
+        console.log(`启用redis-->从redis获取抽奖中心IDS变量`)
+        for (let temp of $.activityIds.split("&")) {
+            console.log(temp)
+        }
     }
     if ($.activityIds.indexOf($.activityId) != -1) {
         console.log('\n活动Id：' + $.activityId + '已存在，退出');
@@ -104,7 +112,12 @@ if ($.isNode()) {
             if ($.message != '') {
                 await notify.sendNotify(`${$.activityName}`, `${$.message}\n 跳转链接：${$.activityUrl}`);
             }
-            await notify.sendNotify('将以下参数写入配置文件', exports);
+            await notify.sendNotify(exports, "");
+            if ($.redisStatus) {
+                await redisClient.set($.drawCenterKey, `${$.activityIds}&${$.activityId}`)
+                console.log(`查看是否写入--->`)
+                console.log(await redisClient.get($.drawCenterKey))
+            }
 
         }
     }

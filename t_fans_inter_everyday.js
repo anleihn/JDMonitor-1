@@ -42,7 +42,8 @@ if ($.redisStatus) {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
 $.domain = `lzkjdz-isv.isvjcloud.com`
-
+$.fansInterKey = `WuXian:FansInterIds`
+$.exportActivityIds = ""
 let activityList = []
 // let activityList = [
 // 	{ 'id': '21bb6b2c605d400a8e60db4ed3899828', 'endTime': 1903932176000 },//
@@ -66,7 +67,11 @@ var __encode = 'jsjiami.com', _a = {}, _0xb483 = ["\x5F\x64\x65\x63\x6F\x64\x65"
         await redisClient.connect()
         console.log('redis连接成功')
     }
-
+    if ($.redisStatus) {
+        $.activityIds = await redisClient.get($.fansInterKey) || ""
+        console.log(`启用redis-->从redis获取粉丝互动IDS变量`)
+        console.log($.activityIds)
+    }
     for (let activity of $.activityIds.split("&")) {
         let activityId = activity.split(";")[0]
         activityList.push({ "id": activityId, "endTime": 2053932176000 })
@@ -79,6 +84,7 @@ var __encode = 'jsjiami.com', _a = {}, _0xb483 = ["\x5F\x64\x65\x63\x6F\x64\x65"
         if (_0x58a1ac < activityList[_0x2e674b].endTime) {
             let _0x3d2098 = 'https://lzkjdz-isv.isvjcloud.com/wxFansInterActionActivity/activity/' + _0x38a02d + '?activityId=' + _0x38a02d;
             $.activityUrl = _0x3d2098
+            $.activityId = _0x38a02d
             console.log('\n活动URL：' + _0x3d2098);
             $.thisActivityUrl = _0x3d2098;
             $.host = 'lzkjdz-isv.isvjcloud.com';
@@ -87,6 +93,11 @@ var __encode = 'jsjiami.com', _a = {}, _0xb483 = ["\x5F\x64\x65\x63\x6F\x64\x65"
         } else {
             console.log('\n活动ID：' + _0x38a02d + ',已过期');
         }
+    }
+    if ($.redisStatus) {
+        await redisClient.set($.fansInterKey, `${$.exportActivityIds}`)
+        console.log(`查看是否写入--->`)
+        console.log(await redisClient.get($.fansInterKey))
     }
 })().catch(_0xce13bb => {
     $.log('', '❌ ' + $.name + ', 失败! 原因: ' + _0xce13bb + '!', '');
@@ -111,6 +122,7 @@ async function main(_0x3f7ec5) {
         _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
         $.key = TokenKey + _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && _0x3f7ec5.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
         console.log('\n********开始【京东账号】' + _0x3f7ec5.UserName + '********\n');
+        $.index = i + 1
         try {
             await runMain(_0x3f7ec5);
         } catch (_0x404e8e) { }
@@ -306,6 +318,11 @@ async function runMain(_0x40ebb9) {
                 message += `地址填写成功！\n`
             }
         }
+    }
+    if ($.index == 1) {
+        $.exportActivityIds += $.exportActivityIds == "" ? $.activityId : `&${$.activityId}`
+        console.log(`粉丝互动每日版变量--->`)
+        console.log($.exportActivityIds)
     }
 }
 

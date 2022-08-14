@@ -35,6 +35,7 @@ if ($.redisStatus) {
 } else {
     console.log(`禁用Redis缓存Token，开启请设置环境变量-->\n  export USE_REDIS=true `)
 }
+$.fansInterKey = `WuXian:FansInterIds`
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -64,19 +65,17 @@ let activityList = [
         await redisClient.connect()
         console.log('redis连接成功')
     }
-
+    if ($.redisStatus) {
+        $.activityIds = await redisClient.get($.fansInterKey) || ""
+        console.log(`启用redis-->从redis获取粉丝互动IDS变量`)
+        console.log($.activityIds)
+    }
     let curtimestamp = Date.parse(new Date());
-    for (let actInfo of $.activityIds.split("&")) {
-        if (actInfo.indexOf(";") != -1) {
-            let actEndTime = actInfo.split(";")[1]
-            if (curtimestamp - actEndTime < 0) {
-                console.log(`活动Id：` + actInfo.split(";")[0] + `已加入export中`)
-                $.exportActivityIds += $.exportActivityIds == "" ? `${actInfo}` : `&${actInfo}`
-            }
-        } else {
-            console.log(`活动Id：` + actInfo + `已加入export中`)
-            $.exportActivityIds += $.exportActivityIds == "" ? `${actInfo}` : `&${actInfo}`
-        }
+    for (let activityId of $.activityIds.split("&")) {
+
+        console.log(`活动Id：` + activityId + `已加入export中`)
+        $.exportActivityIds += $.exportActivityIds == "" ? `${activityId}` : `&${activityId}`
+
     }
     activityList = getRandomArrayElements(activityList, activityList.length);
     if ($.activityIds.indexOf($.activityId) != -1) {
@@ -98,8 +97,16 @@ let activityList = [
                 console.log('\n活动ID：' + _0x38a02d + ',已过期');
             }
         }
-        let exports = `export T_FANS_INTER_ACTIVITY_IDS=\"${$.exportActivityIds}&${$.activityId};${$.endTime}\"`
-        await notify.sendNotify('将以下参数写入配置文件', exports);
+        // let exports = `export T_FANS_INTER_ACTIVITY_IDS=\"${$.exportActivityIds}&${$.activityId};${$.endTime}\"`
+        // await notify.sendNotify('将以下参数写入配置文件\', exports);
+        if ($.redisStatus) {
+            console.log(`写入redis--->`)
+            console.log(`${$.exportActivityIds}&${$.activityId}`)
+            await redisClient.set($.fansInterKey, `${$.exportActivityIds}&${$.activityId}`)
+            console.log(`查看是否写入--->`)
+            console.log(await redisClient.get($.fansInterKey))
+        }
+
     }
 })().catch(_0xce13bb => {
     $.log('', '❌ ' + $.name + ', 失败! 原因: ' + _0xce13bb + '!', '');
